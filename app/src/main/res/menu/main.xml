@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/toggleLocation"
+        android:title="@string/toggle_location"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/mapType"
+        android:icon="@drawable/ic_map_black_24dp"
+        android:title="@string/change_map_type"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/mbtile"
+        android:title="@string/add_mb_tile"
+        app:showAsAction="never" />
+
+    <item
+            android:id="@+id/importExcel"
+            android:title="@string/add_excel"
+            app:showAsAction="never" />
+
+    <item
+        android:id="@+id/importShp"
+        android:title="@string/import_shp"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/importGeoJSON"
+        android:title="@string/import_geo_json"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/connectRtk"
+        android:title="@string/connect_gnss"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/ntripService"
+        android:icon="@drawable/ic_settings_input_antenna_black_24dp"
+        android:title="@string/ntrip_connect"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/exportToShp"
+        android:title="@string/export_to_shp"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/exportLineToShp"
+        android:title="@string/export_line_to_shp"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/exportToGeo"
+        android:title="@string/export_to_geo"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/exportToCsv"
+        android:title="@string/export_to_csv"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/exportPointsToShp"
+        android:title="@string/export_points_to_shp"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/exportStatusRtk"
+        android:title="@string/export_status_rtk"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/checkYuridis"
+        android:title="@string/checkYuridisIsCompalte"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/exportBidangBapenda"
+        android:title="@string/export_bapenda_to_shp"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/exportBidangIP4T"
+        android:title="@string/export_ip4t_to_shp"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/analisisFormSatgas"
+        android:title="@string/analisis_form_satgas"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/petaKerja"
+        android:title="@string/petaKerja"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/show_wws"
+        android:title="@string/show_wms"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/undo"
+        android:icon="@drawable/ic_undo_white_24dp"
+        android:title="@string/undo"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/saksi"
+        android:icon="@drawable/ic_account_circle_white_24dp"
+        android:title="@string/saksi"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="@string/search"
+        app:showAsAction="always" />
+
+
+</menu>

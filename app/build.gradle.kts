@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -98,5 +99,17 @@ dependencies {
     //google sign
 
     implementation(libs.play.services.auth)
+
+    //navigation
+    implementation("androidx.navigation:navigation-fragment-ktx:2.8.5")
+    implementation("androidx.navigation:navigation-ui-ktx:2.8.5")
+
+    //recyclerview view
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("androidx.cardview:cardview:1.0.0")
+
+    //storage
+    implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
+
 
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/selesai"
+        android:title="@string/selesai" />
+    <item
+        android:id="@+id/belum_selesai"
+        android:title="@string/belum_selesai" />
+    <item
+        android:id="@+id/semua"
+        android:title="@string/semua" />
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/search_bar_top"
+        android:title="Search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always|collapseActionView" />
+</menu>

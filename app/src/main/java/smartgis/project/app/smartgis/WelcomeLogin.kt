@@ -98,7 +98,9 @@ class WelcomeLogin : CrashlyticsActivity() {
             if (isPemohon) {
 //                startActivity<HomePemohon>("url" to url)
             } else {
-//                startActivity<Home>("url" to url)
+                val intent = Intent(this@WelcomeLogin, Home::class.java)
+                intent.putExtra("url", url)
+                startActivity(intent)
             }
             finish()
         }.start()

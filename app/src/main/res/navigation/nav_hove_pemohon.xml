@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_hove">
+<!--    app:startDestination="@id/fragmentWorkspacesPemohon"-->
+<!--    >-->
+
+<!--    <fragment-->
+<!--        android:id="@+id/fragmentWorkspaces"-->
+<!--        android:name="smartgis.project.app.smartgis.fragments.FragmentWorkspaces"-->
+<!--        android:label="FragmentWorkspaces">-->
+<!--        <action-->
+<!--            android:id="@+id/action_fragmentWorkspaces_to_fragmentVideoTutorials"-->
+<!--            app:destination="@id/fragmentVideoTutorials" />-->
+<!--    </fragment>-->
+<!--    <fragment-->
+<!--        android:id="@+id/fragmentVideoTutorials"-->
+<!--        android:name="smartgis.project.app.smartgis.fragments.FragmentVideoTutorials"-->
+<!--        android:label="FragmentVideoTutorials" />-->
+<!--    <fragment-->
+<!--        android:id="@+id/fragmentAnnouncements"-->
+<!--        android:name="smartgis.project.app.smartgis.fragments.FragmentAnnouncements"-->
+<!--        android:label="FragmentAnnouncements">-->
+<!--        <action-->
+<!--            android:id="@+id/action_fragmentAnnouncements_to_fragmentWorkspaces"-->
+<!--            app:destination="@id/fragmentWorkspaces" />-->
+<!--    </fragment>-->
+<!--    <fragment-->
+<!--        android:id="@+id/fragmentWorkspacesPemohon"-->
+<!--        android:name="smartgis.project.app.smartgis.fragments.FragmentWorkspacesPemohon"-->
+<!--        android:label="FragmentWorkspacesPemohon" />-->
+</navigation>

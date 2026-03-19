@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
+        android:text="@string/workspace_desc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="32dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/textView">
+
+        <EditText
+            android:id="@+id/textFind"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1000"
+            android:hint="@string/find_hint"
+            app:layout_constraintEnd_toStartOf="@id/btnAddWorkspace"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+
+        <Button
+
+            android:id="@+id/btnAddWorkspace"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/add"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/hint_wipe"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_portal"
+        app:layout_constraintStart_toStartOf="@+id/cardView" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/llNoWorkspace"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:contentDescription="@string/no_workspace_yet"
+                    android:src="@drawable/ic_sentiment_dissatisfied_24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    android:text="@string/no_workspace_yet"
+                    android:textAlignment="center" />
+
+                <Button
+                    android:id="@+id/btnCreateWorkspace"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_add_white_24dp"
+                    android:drawablePadding="10dp"
+                    android:text="@string/create_new_workspace" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/lvWorkspaces"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+<!--            <com.baoyz.swipemenulistview.SwipeMenuListView-->
+<!--                android:id="@+id/lvWorkspaces"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:visibility="gone"-->
+<!--                app:layout_constraintTop_toTopOf="parent">-->
+
+<!--            </com.baoyz.swipemenulistview.SwipeMenuListView>-->
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+
+<!--    <com.google.android.gms.ads.AdView-->
+<!--        android:id="@+id/adView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:visibility="gone"-->
+<!--        app:adSize="BANNER"-->
+<!--        app:adUnitId="ca-app-pub-5553668322899894/5182722220"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
+
+    <TextView
+        android:id="@+id/tv_portal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
+        android:text="Apabila ada kendala ataupun Masukan/kritisi untuk pengembangan App, silahkan hubungi Kami"
+        android:textColor="#000"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/img_wa" />
+
+    <ImageView
+        android:id="@+id/iv_animation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:src="@drawable/vd_vector"
+        app:layout_constraintBottom_toBottomOf="@+id/img_wa"
+        app:layout_constraintEnd_toStartOf="@+id/img_wa"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/img_wa"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/img_wa"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_wa_setting"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_portal"
+        app:layout_constraintEnd_toStartOf="@+id/tv_portal"
+        app:layout_constraintStart_toEndOf="@+id/iv_animation"
+        app:layout_constraintTop_toTopOf="@+id/tv_portal" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

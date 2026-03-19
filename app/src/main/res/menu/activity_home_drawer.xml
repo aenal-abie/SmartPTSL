@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/fragmentWorkspaces"
+            android:icon="@drawable/ic_work_white_24dp"
+            android:title="@string/workspace" />
+        <item
+            android:id="@+id/fragmentVideoTutorials"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/tutorials" />
+
+        <item
+            android:id="@+id/fragmentAnnouncements"
+            android:icon="@drawable/ic_notifications_black_24dp"
+            android:title="@string/announcements" />
+        <item
+            android:id="@+id/fragmentPermohonan"
+            android:icon="@drawable/ic_permohonan"
+            android:title="@string/permohonan" />
+        <item
+            android:id="@+id/fragmentSurvey"
+            android:icon="@drawable/ic_surveyor_menu"
+            android:title="Pengukuran" />
+    </group>
+
+    <item android:title="@string/other_links">
+        <menu>
+            <item
+                android:id="@+id/forum"
+                android:icon="@drawable/ic_chat_white_24dp"
+                android:title="@string/forum" />
+
+            <item
+                android:id="@+id/setNtrip"
+                android:icon="@drawable/ic_chat_white_24dp"
+                android:title="Setting NTRIP" />
+
+        </menu>
+    </item>
+
+    <item android:title="@string/about">
+        <menu>
+            <item
+                android:id="@+id/about"
+                android:icon="@drawable/ic_info_black_24dp"
+                android:title="@string/about_app" />
+            <item
+                android:id="@+id/privacy_policy"
+                android:icon="@drawable/ic_verified_user_black_24dp"
+                android:title="@string/privacy_policy" />
+        </menu>
+    </item>
+
+</menu>

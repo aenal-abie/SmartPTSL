@@ -1,0 +1,848 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="job_items">
+        <item>-</item>
+        <item>Petani</item>
+        <item>Pedagang</item>
+        <item>Nelayan</item>
+        <item>PNS</item>
+        <item>Buruh</item>
+        <item>IRT</item>
+        <item>Lain-lain</item>
+        <item>Wiraswasta</item>
+        <item>Karyawan swasta</item>
+        <item>Sopir</item>
+        <item>Pensiunan</item>
+        <item>Dokter</item>
+        <item>TNI/Polri</item>
+    </string-array>
+
+    <string-array name="cluster_items">
+        <item>-</item>
+        <item>K1</item>
+        <item>K2</item>
+        <item>K3</item>
+        <item>K3.1</item>
+        <item>K3.2</item>
+        <item>K3.3</item>
+        <item>K4</item>
+    </string-array>
+
+    <array name="cluster_fill_colors">
+        <item>@color/yellow_transparent</item>
+        <item>@color/k1_fill</item>
+        <item>@color/k2_fill</item>
+        <item>@color/k3_fill</item>
+        <item>@color/k3_1_fill</item>
+        <item>@color/k3_2_fill</item>
+        <item>@color/k3_3_fill</item>
+        <item>@color/k4_fill</item>
+    </array>
+
+    <array name="cluster_stroke_colors">
+        <item>@color/yellow</item>
+        <item>@color/k1_fill</item>
+        <item>@color/k2</item>
+        <item>@color/k3</item>
+        <item>@color/k3_1</item>
+        <item>@color/k3_2</item>
+        <item>@color/k3_3</item>
+        <item>@color/k4</item>
+    </array>
+
+
+    <string-array name="area_status_items">
+        <item>-</item>
+        <item>Tanah Negara</item>
+        <item>Tanah Milik Adat</item>
+        <item>Tanah Wakaf</item>
+        <item>HM</item>
+        <item>HGB</item>
+        <item>HP</item>
+        <item>Lain-lain</item>
+    </string-array>
+
+    <string-array name="status_penggunaan_items">
+        <item>-</item>
+        <item>Pertanian</item>
+        <item>Non Pertanian</item>
+    </string-array>
+
+    <string-array name="bukti_penguasaan_items">
+        <item>-</item>
+        <item>Letter C/Girik/Petok/Pipil/Ketitir</item>
+        <item>Hibah</item>
+        <item>Waris</item>
+        <item>Jual Beli</item>
+        <item>SPPT</item>
+        <item>SHAT No</item>
+        <item>Lain-Lain</item>
+    </string-array>
+    <string-array name="jenis_hak_items">
+        <item>-</item>
+        <item> HAK MILIK</item>
+        <item> ⁠HAK GUNA BANGUNAN</item>
+        <item> ⁠HAK PAKAI</item>
+        <item> ⁠HAK PENGELOLAAN</item>
+        <item> ⁠HAK GUNA USAHA</item>
+        <item> ⁠HAK MILIK SATUAN RUMAH SUSUN</item>
+        <item> ⁠WAKAF</item>
+    </string-array>
+
+    <string-array name="religion_items">
+        <item>-</item>
+        <item>Islam</item>
+        <item>Kristen Protestan</item>
+        <item>Kristen Katolik</item>
+        <item>Hindu</item>
+        <item>Buddha</item>
+        <item>Khonghucu</item>
+    </string-array>
+
+    <string-array name="image_type_items">
+        <item>@string/choose_image_type</item>
+        <item>KK</item>
+        <item>KTP</item>
+        <item>Alas Hak</item>
+        <item>Bidang Tanah</item>
+        <item>Foto Bidang/Bangunan</item>
+        <item>Sket Bidang Tanah</item>
+    </string-array>
+
+    <string-array name="jenis_kelamin_items">
+        <item>-</item>
+        <item>Laki-laki</item>
+        <item>Perempuan</item>
+    </string-array>
+
+    <string-array name="status_perkawinan_items">
+        <item>-</item>
+        <item>Belum Menikah</item>
+        <item>Menikah</item>
+        <item>Pernah Menikah (Janda)</item>
+        <item>Pernah Menikah (Duda)</item>
+    </string-array>
+
+    <string-array name="line_items">
+        <item>Jalan</item>
+        <item>Gang</item>
+        <item>Sungai</item>
+        <item>Saluran</item>
+        <item>Tembok</item>
+        <item>Blending/batas persil</item>
+    </string-array>
+
+    <array name="line_colors">
+        <item>@color/jalan</item>
+        <item>@color/jalan</item>
+        <item>@color/sungai</item>
+        <item>@color/sungai</item>
+        <item>@color/persil</item>
+    </array>
+
+
+    <string-array name="jenis_pekerjaan_kkp">
+        <item>-</item>
+        <item>Tidak Bekerja</item>
+        <item>Petani</item>
+        <item>Nelayan</item>
+        <item>Usaha Mandiri</item>
+        <item>Pekerja Bangunan</item>
+        <item>Pekerja Angkutan</item>
+        <item>Pedagang</item>
+        <item>Pekerja Jasa</item>
+        <item>Profesional</item>
+        <item>Pegawai Negeri</item>
+        <item>Polisi</item>
+        <item>TNI</item>
+        <item>Karyawan Swasta</item>
+        <item>Wiraswasta</item>
+    </string-array>
+
+    <string-array name="bukti_alas_hak_kkp">
+        <item>-</item>
+        <item>Akta Dibawah Tangan</item>
+        <item>Akta Hibah</item>
+        <item>Akta Jual Beli</item>
+        <item>Akta Pelepasan Hak Atas Tanah</item>
+        <item>AKta Pembagian Hak Bersama</item>
+        <item>Akta Tukar Menukar</item>
+        <item>Berita Acara Penyerahan Tanah</item>
+        <item>Eigendom</item>
+        <item>Girik</item>
+        <item>Grogol</item>
+        <item>Grand Sultan</item>
+        <item>Grose Akta</item>
+        <item>Ikrar Wakaf</item>
+        <item>Kartu Kaveling</item>
+        <item>Kekelir</item>
+        <item>Letter C</item>
+        <item>Petuk</item>
+        <item>Pipil</item>
+        <item>Putusan Pengadilan</item>
+        <item>Janji / Silsilah</item>
+        <item>RIsalah Lelang</item>
+        <item>Sertipikat</item>
+        <item>SK Menteri</item>
+        <item>SK Pelepasan Kawan Hutan</item>
+        <item>SK Redistribusi Tanah</item>
+        <item>SK Tanah Terlantar</item>
+        <item>Surat Ijin Membuka Hutan</item>
+        <item>Surat Ijin Mengerjakan Tanah</item>
+        <item>Surat Izin Lokasi</item>
+        <item>Surat Keputusan Penunjukan Tanah</item>
+        <item>Surat Keterangan Ahli Waris</item>
+        <item>Surat Keterangan Ganti Rugi</item>
+        <item>Surat Keterangan Garapan</item>
+        <item>Surat Keterangan Melepaskan Hak Atas Tanah</item>
+        <item>Surat Keterangan Tanah</item>
+        <item>Surat Keterangan Wali Nagari</item>
+        <item>Surat Oper Alih Garapan</item>
+        <item>Surat Pelepasan HGU</item>
+        <item>Surat Penetapan Lokasi</item>
+        <item>Surat Pengakuan Hak</item>
+        <item>Surat Perjanjian</item>
+        <item>Surat Pernyataan Asset</item>
+        <item>Surat Pernyataan Pelepasan Tanah Adat</item>
+        <item>Surat Pernyataan Pengalihan Penguasaan</item>
+        <item>Surat Pernyataan Penguasaan Fisik</item>
+        <item>Surat Pernyataan Persetujuan Kaum</item>
+        <item>Swapraja</item>
+        <item>Tanah Yayasan</item>
+        <item>TOL Lama</item>
+        <item>Verponding Indonesia</item>
+    </string-array>
+
+    <string-array name="kepemilikan_rumah_bappeda">
+        <item>-</item>
+        <item>Sendiri</item>
+        <item>Orang Tua</item>
+        <item>Sewa</item>
+        <item>Lain-lain</item>
+    </string-array>
+
+    <string-array name="bukti_kepemilikan_bappeda">
+        <item>-</item>
+        <item>Sertipikat</item>
+        <item>Sporadik</item>
+        <item>Tidak Ada</item>
+        <item>Lain-lain</item>
+    </string-array>
+
+    <string-array name="kondisi_rumah_bappeda">
+        <item>-</item>
+        <item>Baik</item>
+        <item>Sederhana</item>
+        <item>Rusak</item>
+        <item>Lain-lain</item>
+    </string-array>
+
+    <string-array name="material_atap_bappeda">
+        <item>-</item>
+        <item>Genteng</item>
+        <item>Seng/Asbes</item>
+        <item>Alang-alang</item>
+        <item>Lain-lain</item>
+    </string-array>
+
+    <string-array name="material_dinding_bappeda">
+        <item>-</item>
+        <item>Tembok</item>
+        <item>Triplek</item>
+        <item>Bedek</item>
+        <item>Lain-lain</item>
+    </string-array>
+
+    <string-array name="material_lantai_bappeda">
+        <item>-</item>
+        <item>Tegel/Keramik</item>
+        <item>PC</item>
+        <item>Tanah Liat</item>
+        <item>Lain-lain</item>
+    </string-array>
+
+    <string-array name="kepemilikan_IMB_bappeda">
+        <item>-</item>
+        <item>Ada</item>
+        <item>Tidak Ada</item>
+    </string-array>
+
+    <string-array name="pengerasan_jalan_bappeda">
+        <item>-</item>
+        <item>Aspal</item>
+        <item>Paving</item>
+        <item>Rabat</item>
+        <item>Tanah</item>
+    </string-array>
+
+    <string-array name="status_kep_sarana_bappeda">
+        <item>-</item>
+        <item>Milik Sendiri</item>
+        <item>Tetangga</item>
+        <item>Umum/Komunal</item>
+        <item>Tidak Punya</item>
+    </string-array>
+
+    <string-array name="status_pem_tinja_bappeda">
+        <item>-</item>
+        <item>Tengki Septik</item>
+        <item>Cubluk</item>
+        <item>Umum/Komunal</item>
+        <item>Kolam Sawah</item>
+        <item>Sungai Irigasi</item>
+        <item>Sistem Saluran Limbah</item>
+        <item>Lainnya</item>
+    </string-array>
+
+    <string-array name="periode_pengurasan_bappeda">
+        <item>-</item>
+        <item>0 sampai 3 Tahun Sekali</item>
+        <item>3 sampai 5 Tahun Sekali</item>
+        <item>Di Atas 5 Tahun</item>
+        <item>Tidak Pernah</item>
+    </string-array>
+
+    <string-array name="akses_dan_status_kamarmandi_bappeda">
+        <item>-</item>
+        <item>Milik Sendiri</item>
+        <item>Tetangga</item>
+        <item>Umum/Komunal</item>
+        <item>Tidak Punya</item>
+    </string-array>
+
+    <string-array name="akses_limbah_cair_bappeda">
+        <item>-</item>
+        <item>Sistem Saluran Limbah</item>
+        <item>Saluran Terbuka/Got</item>
+        <item>Sungai/Irigasi</item>
+        <item>Kolam/Empang</item>
+        <item>Kebun/Lahan</item>
+        <item>Sumur Resapan</item>
+        <item>Lainnya</item>
+    </string-array>
+
+    <string-array name="ketersediaan_lahan_tangki_septik_bappeda">
+        <item>-</item>
+        <item>Ada</item>
+        <item>Tidak Ada</item>
+    </string-array>
+
+    <string-array name="status_sumber_air_bersih_bappeda">
+        <item>-</item>
+        <item>Milik Sendiri</item>
+        <item>Tetangga</item>
+        <item>Umum/Komunal</item>
+        <item>Lainnya</item>
+    </string-array>
+
+    <string-array name="sumber_air_bersih_bappeda">
+        <item>-</item>
+        <item>Perpipaan/PDAM</item>
+        <item>Air Kemasan</item>
+        <item>PAH</item>
+        <item>Sungai/Irigasi</item>
+        <item>Sumur BOR</item>
+        <item>Mata Air</item>
+        <item>Pompa Tangan</item>
+        <item>Kolam/Empang</item>
+        <item>Danau</item>
+        <item>Sumur Gali</item>
+    </string-array>
+
+
+    <string-array name="keterangan_sumber_air_bersih_bappeda">
+        <item>-</item>
+        <item>Terlindungi</item>
+        <item>Tidak Terlindungi</item>
+    </string-array>
+
+    <string-array name="pengolahan_sampah_dirumah_bappeda">
+        <item>-</item>
+        <item>Ada</item>
+        <item>Tidak Ada</item>
+    </string-array>
+
+
+    <string-array name="akses_dan_saranapembuangansampah_bappeda">
+        <item>-</item>
+        <item>Ke TPS Diangkut</item>
+        <item>Ke TPS Buang Sendiri</item>
+        <item>Tetangga</item>
+        <item>Kolam/Empang</item>
+        <item>Lahan Terbuka</item>
+        <item>Sungai/Saluran</item>
+        <item>Lainnya</item>
+    </string-array>
+
+    <string-array name="CTPS_bappeda">
+        <item>-</item>
+        <item>Dalam Rumah</item>
+        <item>Di Luar Rumah</item>
+        <item>Tidak Ada</item>
+    </string-array>
+
+    <string-array name="sumber_daya_listrik_bappeda">
+        <item>-</item>
+        <item>PLN</item>
+        <item>Solar Cell</item>
+        <item>Ngalir Tetangga</item>
+        <item>Tidak Punya</item>
+    </string-array>
+
+    <string-array name="daya_listrik_bappeda">
+        <item>-</item>
+        <item>450 KWH</item>
+        <item>900 KWH</item>
+        <item>1200 KWH</item>
+        <item>1200 KWH Ke Atas</item>
+    </string-array>
+
+
+    <string-array name="penunjuk_items">
+        <item>-</item>
+
+        <item>Pemegang hak atau kuasanya</item>
+        <item>Pihak yang menguasai</item>
+        <item>Pihak lain yang berkepentingan</item>
+        <item>Tidak ada/Perangkat</item>
+    </string-array>
+
+    <string-array name="tanda_batas_items">
+        <item>-</item>
+
+        <item>Pagar beton/tembok</item>
+        <item>Pagar tanaman/bambu</item>
+        <item>Patok beton/besi/paralon</item>
+        <item>Patok kayu/bambu</item>
+        <item>Pematang sawah/sungai/kali/jalan</item>
+        <item>Tidak ada</item>
+    </string-array>
+
+
+    <string-array name="persetujuan_batas_items">
+        <item>-</item>
+
+        <item>Ada</item>
+        <item>Tidak ada</item>
+    </string-array>
+
+    <string-array name="teknik_pengukuran_items">
+        <item>-</item>
+
+        <item>GNSS/Cors</item>
+        <item>Total Station</item>
+        <item>Meteran</item>
+        <item>Delineasi</item>
+        <item>GPS Navigasi</item>
+
+    </string-array>
+
+
+    <string-array name="ketelitian_peta_dasar_items">
+        <item>-</item>
+
+        <item>World View 4</item>
+        <item>Google Earth</item>
+        <item>Bing</item>
+        <item>Citra Lapan</item>
+        <item>Tidak ada</item>
+    </string-array>
+
+    <string-array name="petugas_penetapan_items">
+        <item>-</item>
+
+        <item>Surveyor ASN</item>
+        <item>Suveyor berlisensi</item>
+        <item>Lainnya</item>
+    </string-array>
+
+    <!--ntrip-->
+    <string-array name="info_names">
+        <item>Correction Age</item>
+        <item>Elevation (Feet)</item>
+        <item>Elevation (Meters)</item>
+        <item>Speed (MPH)</item>
+        <item>Speed (Km/h)</item>
+        <item>Heading</item>
+        <item>H-DOP</item>
+        <item>V-DOP</item>
+        <item>P-DOP</item>
+        <item>Latitude</item>
+        <item>Longitude</item>
+        <item>Nothing</item>
+    </string-array>
+    <string-array name="info_codes">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>0</item>
+    </string-array>
+    <string-array name="protocol_names">
+        <item>None</item>
+        <item>NTRIP v1.0</item>
+        <item>Raw TCP/IP</item>
+    </string-array>
+    <string-array name="protocol_codes">
+        <item>none</item>
+        <item>ntripv1</item>
+        <item>rawtcpip</item>
+    </string-array>
+    <string-array name="autoconfig_names">
+        <item>No Auto-Config</item>
+        <item>NovAtel OEMV</item>
+        <item>NovAtel OEMV RTCMv3</item>
+        <item>NovAtel OEMV RTCM</item>
+        <item>NovAtel OEMV CMR+</item>
+        <item>NovAtel OEMV w/Cellular</item>
+        <item>Custom</item>
+    </string-array>
+    <string-array name="autoconfig_codes">
+        <item>none</item>
+        <item>novateloemv</item>
+        <item>novateloemvrtcmv3</item>
+        <item>novateloemvrtcm</item>
+        <item>novateloemvcmr</item>
+        <item>novateloemvcellular</item>
+        <item>custom</item>
+    </string-array>
+    <string-array name="ntriplocation_names">
+        <item>Automatic</item>
+        <item>Manual</item>
+    </string-array>
+    <string-array name="ntriplocation_codes">
+        <item>auto</item>
+        <item>manual</item>
+    </string-array>
+    <string-array name="receiverconnection_names">
+        <item>None (NTRIP Testing Mode)</item>
+        <item>External via Bluetooth</item>
+        <item>Internal via UDP (Development Only)</item>
+    </string-array>
+    <string-array name="receiverconnection_codes">
+        <item>none</item>
+        <item>bluetooth</item>
+        <item>udp</item>
+    </string-array>
+    <string-array name="bluetoothconnection_names">
+        <item>Insecure (Default)</item>
+        <item>Secure</item>
+        <item>Secure via Reflection</item>
+        <item>Insecure via Reflection</item>
+    </string-array>
+    <string-array name="bluetoothconnection_codes">
+        <item>3</item>
+        <item>1</item>
+        <item>0</item>
+        <item>2</item>
+    </string-array>
+
+    <!-- ipt4   -->
+    <string-array name="pekerjaan_items">
+        <item>-</item>
+        <item>Petani</item>
+        <item>Penggarap</item>
+        <item>Nelayan</item>
+        <item>Buruh</item>
+        <item>Karyawan</item>
+        <item>Wiraswasta</item>
+        <item>PNS</item>
+        <item>Lainnnya</item>
+
+    </string-array>
+    <string-array name="statusperkawinan_items">
+        <item>-</item>
+        <item>Belum Menikah</item>
+        <item>Menikah</item>
+        <item>Pernah Menikah </item>
+
+    </string-array>
+    <string-array name="domisili_items">
+        <item>-</item>
+        <item>Desa Ini</item>
+        <item>Desa Lain Berbatasan Langsung</item>
+        <item>Desa Lain Tidak Berbatasan Langsung </item>
+        <item>Di Luar Kecamatan </item>
+        <item>Lainnnya</item>
+
+    </string-array>
+    <string-array name="penguasaan_tanah_items">
+        <item>-</item>
+        <item>Pemilik</item>
+        <item>Bukan Pemilik (Gadai)</item>
+        <item>Bukan Pemilik (Sewa)</item>
+        <item>Bukan Pemilik (Pinjam Pakai)</item>
+        <item>Bukan Pemilik (Penggarap)</item>
+        <item>Bukan Pemilik (Lainnya)</item>
+        <item>Bersama / Ulayat </item>
+        <item>Badan Hukum</item>
+        <item>Pemerintah</item>
+        <item>Tidak Ada</item>
+
+    </string-array>
+    <string-array name="perolehan_tanah_items">
+        <item>-</item>
+        <item>Warisan</item>
+        <item>Jual Beli</item>
+        <item>Tukar Menukar </item>
+        <item>Lainnnya</item>
+
+    </string-array>
+
+
+    <string-array name="pemilikan_tanah_items">
+        <item>-</item>
+        <item>Terdaftar</item>
+        <item>Belum (Tanah Adat)</item>
+        <item>Belum (Tanah Ulayat) </item>
+        <item>Belum (Tanah Negara)</item>
+
+    </string-array>
+    <string-array name="penggunaan_bidang_objek_items">
+        <item>-</item>
+        <item>Permukiman / Perkampungan</item>
+        <item>Sawah Irigasi</item>
+        <item>Sawah Non Irigasi </item>
+        <item>Tegalan / Ladang</item>
+        <item>Kebun Campuran</item>
+        <item>Perairan Darat / Tambak</item>
+        <item>Tanah Terbuka / Tanah Kosong</item>
+        <item>Fasum / Fasos</item>
+        <item>Industri</item>
+        <item>Peternakan</item>
+        <item>Lainnya</item>
+    </string-array>
+
+    <string-array name="jenis_penggunaan_tanah_items">
+        <item>-</item>
+        <item>[1] Untuk Pemanfaatan Tempat Tinggal</item>
+        <item>[2] Untuk Kegiatan Produksi Pertanian</item>
+        <item>[3] Untuk Kegiatan Ekonomi / Perdagangan </item>
+        <item>[4] Untuk Usaha Jasa</item>
+        <item>[5] Untuk Fasos / Fasum</item>
+        <item>[6] Tidak Ada</item>
+
+    </string-array>
+
+    <string-array name="manfaat_penggunaan_tanah_items">
+        <item>-</item>
+        <item>[1] Rumah Tinggal</item>
+        <item>[2] Tanaman Musiman</item>
+        <item>[2] Tanaman Keras </item>
+        <item>[2] Lainnya</item>
+        <item>[3] Kontrakan</item>
+        <item>[3] Toko</item>
+        <item>[3] Kantor</item>
+        <item>[3] Gudang</item>
+        <item>[3] Pabrik/Industri</item>
+        <item>[3] Lainnnya</item>
+        <item>[4] Telekomunikasi</item>
+        <item>[4] Transportasi</item>
+        <item>[4] Lainnnya</item>
+        <item>[5] Sekolah</item>
+        <item>[5] Masjid</item>
+        <item>[5] Kantor Desa</item>
+        <item>[5] Lapangan</item>
+        <item>[5] Taman</item>
+        <item>[5] Puskesmas</item>
+        <item>[5] Lainnya</item>
+        <item>[6] Tidak ada</item>
+    </string-array>
+
+    <string-array name="indikasi_tanah_items">
+        <item>-</item>
+        <item>Terindikasi Terlantar</item>
+        <item>Tidak Terlantar</item>
+
+
+    </string-array>
+    <string-array name="skp_tanah_items">
+        <item>-</item>
+        <item>Sengketa</item>
+        <item>Konflik</item>
+        <item>Berperkara di Pengadilan</item>
+        <item>Tidak SKP</item>
+
+    </string-array>
+    <string-array name="potensi_tanah_items">
+        <item>-</item>
+        <item>Tanah Absentee</item>
+        <item>Tanah Kelebihan Maksimum</item>
+        <item>Tanah Bekas Swapraja</item>
+        <item>Tanah Negara [Eks HGU]</item>
+        <item>Tanah Negara [Pelepasan HGU]</item>
+        <item>Tanah Negara [Tanah Terlantar]</item>
+        <item>Tanah Negara [Tanah Penyelesaian SKP]</item>
+        <item>Tanah Negara [Tanah Pelepasan Kawasan Hutan]</item>
+        <item>Tanah Negara [Tanah Timbul]</item>
+        <item>Tanah Negara [Tanah Bekas Tambang yg direklamasi]</item>
+        <item>Tanah Negara [Tanah Dalam penguasaan masyarakat]</item>
+
+    </string-array>
+    <string-array name="nilai_tanah_items">
+        <item>-</item>
+        <item>Transaksi</item>
+        <item>Penawaran</item>
+    </string-array>
+
+    <string-array name="jaminan_sertifikat_items">
+        <item>-</item>
+        <item>Ya</item>
+        <item>Tidak</item>
+    </string-array>
+
+    <string-array name="potensi_akses_items">
+        <item>-</item>
+        <item>Pertanian</item>
+        <item>Perkebunan</item>
+        <item>Peternakan</item>
+        <item>Perikanan</item>
+        <item>Industri Kecil</item>
+        <item>Lainnya</item>
+
+    </string-array>
+
+    <string-array name="jenis_alas_hak">
+        <item>-</item>
+        <item>Akta Dibawah Tangan</item>
+        <item>Akta Hibah</item>
+        <item>Akta Jual Beli</item>
+        <item>Akta Pelepasan Hak Atas Tanah</item>
+        <item>Akta Pembagian Hak Bersama</item>
+        <item>Akta Tukar Menukar</item>
+        <item>Berita Acara Penyerahan Tanah</item>
+        <item>Eigendom</item>
+        <item>Girik</item>
+        <item>Gogol</item>
+        <item>Grand Sultan</item>
+        <item>Groose Akta</item>
+        <item>Ikrar Wakaf</item>
+        <item>Kartu Kaveling</item>
+        <item>Kekitir</item>
+        <item>Letter C</item>
+        <item>Petuk</item>
+        <item>Pipil</item>
+        <item>Putusan Pengadilan</item>
+        <item>Ranji / Silsilah</item>
+        <item>Risalah Lelang</item>
+        <item>Sertipikat</item>
+        <item>SK Menteri</item>
+        <item>SK Pelepasan Kawasan Hutan</item>
+        <item>SK Redistribusi Tanah</item>
+        <item>SK Tanah Terlantar</item>
+        <item>Surat Ijin Membuka Hutan</item>
+        <item>Surat Ijin Mengerjakan Tanah</item>
+        <item>Surat Izin Lokasi</item>
+        <item>Surat Keputusan Penunjukan Tanah</item>
+        <item>Surat Keterangan Ahli Waris</item>
+        <item>Surat Keterangan Ganti Rugi</item>
+        <item>Surat Keterangan Garapan</item>
+        <item>Surat Keterangan Melepaskan Hak Atas Tanah</item>
+        <item>Surat Keterangan Tanah</item>
+        <item>Surat Keterangan Wali Nagari</item>
+        <item>Surat Oper Alih Garapan</item>
+        <item>Surat Pelepasan Aset</item>
+        <item>Surat Pelepasan HGU</item>
+        <item>Surat Penetapan Lokasi</item>
+        <item>Surat Pengakuan Hak</item>
+        <item>Surat Perjanjian</item>
+        <item>Surat Pernyataan Asset</item>
+        <item>Surat Pernyataan Pelepasan Tanah Adat</item>
+        <item>Surat Pernyataan Pengalihan Penguasaan</item>
+        <item>Surat Pernyataan Penguasaan Fisik</item>
+        <item>Surat Pernyataan Persetujuan Kaum</item>
+        <item>Swapraja</item>
+        <item>Tanah Yasan</item>
+        <item>Tidak Ada</item>
+        <item>TOL Lama</item>
+        <item>Verponding Indonesia</item>
+    </string-array>
+
+    <string-array name="mata_uang">
+        <item>Dollar Singapura</item>
+        <item>Dollar Australia</item>
+        <item>Euro</item>
+        <item>Dollar Brunei</item>
+        <item>Dollar Kanada</item>
+        <item>Franc Swiss</item>
+        <item>Yuan China</item>
+        <item>Krone Denmark</item>
+        <item>Poundsterling</item>
+        <item>Dollar Hongkong</item>
+        <item>Yen</item>
+        <item>Won</item>
+        <item>Dinar</item>
+        <item>Ringgit</item>
+        <item>Krone Norwegia</item>
+        <item>Dollar New Zealand</item>
+        <item>Kina Papua Nugini</item>
+        <item>Peso</item>
+        <item>Riyal</item>
+        <item>Krona Swedia</item>
+        <item>Bath</item>
+        <item>Dong</item>
+        <item>Rupiah</item>
+        <item>Rupiah</item>
+    </string-array>
+
+    <string-array name="mata_uang_singkat">
+        <item>SGD</item>
+        <item>AUD</item>
+        <item>EUR</item>
+        <item>BND</item>
+        <item>CAD</item>
+        <item>CHF</item>
+        <item>CNY</item>
+        <item>DKK</item>
+        <item>GBP</item>
+        <item>HKD</item>
+        <item>JPY</item>
+        <item>KRW</item>
+        <item>KWD</item>
+        <item>MYR</item>
+        <item>NOK</item>
+        <item>NZD</item>
+        <item>PGK</item>
+        <item>PHP</item>
+        <item>SAR</item>
+        <item>SEK</item>
+        <item>THB</item>
+        <item>VND</item>
+        <item>IDR</item>
+        <item>Rp</item>
+    </string-array>
+
+    <string-array name="status_terdaftar">
+        <item>-</item>
+        <item>Terdaftar</item>
+        <item>Belum Terdaftar</item>
+    </string-array>
+
+    <string-array name="jenis_ruang">
+        <item>-</item>
+        <item>HM</item>
+        <item>Sarusun</item>
+        <item>Lainnya</item>
+    </string-array>
+
+    <string-array name="pengtanTerdaftar">
+        <item>-</item>
+        <item>HM</item>
+        <item>HP</item>
+        <item>HMSRS</item>
+        <item>HGB</item>
+        <item>HGU</item>
+        <item>Wakaf</item>
+        <item>HPL</item>
+    </string-array>
+</resources>
+
+
+
