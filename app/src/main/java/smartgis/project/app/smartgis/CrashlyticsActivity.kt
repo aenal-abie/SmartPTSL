@@ -27,10 +27,10 @@ abstract class CrashlyticsActivity : AppCompatActivity() {
     privacyPolicyManager = PrivacyPolicyManager(this)
   }
 
-//  fun showPrivacyPolicyIfNotAgree() {
-//    val isUserAgree = appPreference().getBoolean(USER_AGREE_TO_PRIVACY_POLICY, false)
-//    if (!isUserAgree) privacyPolicyManager.showDialog()
-//  }
+  fun showPrivacyPolicyIfNotAgree() {
+    val isUserAgree = appPreference().getBoolean(USER_AGREE_TO_PRIVACY_POLICY, false)
+    if (!isUserAgree) privacyPolicyManager.showDialog()
+  }
 
 }
 

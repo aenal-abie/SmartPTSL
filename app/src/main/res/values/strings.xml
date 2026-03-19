@@ -1,3 +1,307 @@
 <resources>
-    <string name="app_name">SmartPTSL</string>
+    <string name="app_name">Smart PTSL</string>
+    <string name="google_public_service_key">AIzaSyDWGCxHvFIKEhgrUihFcia6ogi_DiAxlDg</string>
+    <!--    Permissions    -->
+    <string name="permission_rationale_location">Bluetooth, GPS/Location, Memory Read/Write,and Service Permission
+        ia required</string>
+    <string name="location_permission_denied">Require permission to acces Bluetooth, GPS/Location,
+        Read/Write Memori and Running Foreground Service. Please grant acces to this application
+       in order to run normally
+    </string>
+    <string name="permission_required_toast">Location permission is required for this demo.</string>
+
+    <!-- Layers Demo -->
+    <string name="ok">OK</string>
+    <string name="delete">Delete</string>
+    <string name="detail">Detail</string>
+    <string name="delete_point">Delete Point</string>
+    <string name="delete_shape">Delete Polygon</string>
+    <string name="point_distance_menu_label">Distance (meters)</string>
+    <string name="change_distance">Change Distance</string>
+
+    <string name="toggle_location">Show/Hide Location</string>
+    <string name="add_mb_tile">Add MBTile</string>
+    <string name="add_excel">Add Excel</string>
+    <string name="cancel">Cancel</string>
+    <string name="choose">Choose</string>
+    <string name="internal_storage">Internal Storage</string>
+    <string name="mbtiles_extension">mbtiles</string>
+    <string name="excel_extension">xls</string>
+    <string name="trying_login">Login Process</string>
+    <string name="welcome_description">To start using this application, please login with your Google Account</string>
+    <string name="something_wrong">Error occured</string>
+    <string name="login_failed">Login failed</string>
+    <string name="logout">Logout</string>
+    <string name="profile">Profile</string>
+    <string name="choose_workspace">Choose Workspace</string>
+    <string name="no_workspace_yet">No workspace</string>
+    <string name="create_new_workspace">Create new workspace</string>
+    <string name="add_workspace">Add workspace</string>
+    <string name="add">Add</string>
+    <string name="find">Find</string>
+    <string name="find_hint">Find your workspace</string>
+    <string name="workspace_desc">Workspace acts as an arranger for the layer/ polygon you\'ve made. Name you workspace
+        to differentiate it with the other project.</string>
+    <string name="workspace_created">New worksapce has been created!</string>
+    <string name="workspace_name">Workspace name</string>
+    <string name="text_cannot_empty">Require every data filled!</string>
+    <string name="forward">Next</string>
+    <string name="yuri_file_no">Juridical File Number</string>
+    <string name="find_nik_nama_no_yuri">NIK/Name/Juridical File Number</string>
+    <string name="cluster">Cluster</string>
+    <string name="no_sertifikat">No Sertifikat</string>
+    <string name="hak">No Hak</string>
+    <string name="jenis_hak">Jenis Hak</string>
+    <string name="jenis">Line Type</string>
+    <string name="diskripsi">Description</string>
+    <string name="name">Name</string>
+    <string name="nik">NIK</string>
+    <string name="born_address">Birthplace</string>
+    <string name="born_date">Date of Birth</string>
+    <string name="address">Address</string>
+    <string name="job">Occupation</string>
+    <string name="kelurahan">Kelurahan</string>
+    <string name="dusun">Dusun</string>
+    <string name="rt">RT</string>
+    <string name="rw">RW</string>
+    <string name="pbbb_block_no">PBBB Block Number</string>
+    <string name="area_status">Area Status</string>
+    <string name="status_penggunaan">Usage Status</string>
+    <string name="bukti_penguasaan">Ownership Evidence</string>
+    <string name="luas_tanah">Area (square meter)</string>
+    <string name="shat_no">SHAT Number</string>
+    <string name="description">Description</string>
+    <string name="form_container">Form Container</string>
+    <string name="can_not_send_data">Every form require to be filled to send the data</string>
+    <string name="attention">Attention</string>
+    <string name="success_save_data">Save succesfull</string>
+    <string name="saving">Saving</string>
+    <string name="nub">NUB</string>
+    <string name="religions">Religion</string>
+    <string name="jalan_block">Street/Block</string>
+    <string name="njop">NJOP</string>
+    <string name="badan_hukum">Law Firm</string>
+    <string name="akta_pendirian">Incorporation Deed Number</string>
+    <string name="tanggal_akta_pendirian">Date of Incorporation Deed</string>
+    <string name="batas">Area Boundary</string>
+    <string name="timur">East</string>
+    <string name="utara">North</string>
+    <string name="selatan">South</string>
+    <string name="barat">West</string>
+    <string name="statement">Statement</string>
+    <string name="other_statement">Another needed statement</string>
+    <string name="perorangan">Individual</string>
+    <string name="fill_when_badan_hukum">Only be filled if "Law Firm" is Filled</string>
+    <string name="previous">Previous</string>
+    <string name="none_connected_device">No device connected</string>
+    <string name="title_activity_upload_images">Photo File</string>
+    <string name="choose_image_type">Choose Image Type</string>
+    <string name="choose_image">Choose Image</string>
+    <string name="upload">Upload</string>
+    <string name="successful_upload">Uploaded</string>
+    <string name="example">Example</string>
+    <string name="signature">Owner Signature</string>
+    <string name="change_map_type">Change map type</string>
+    <string name="choose_zip">Choose .zip file</string>
+    <string name="tanggal_penguasaan">Owned Since</string>
+    <string name="gambaran_umum">Smart PTSL application is an application that helps accelerate the work of Complete Systematic Land Registration (PTSL). The SmartPTSL application is a GIS (Geography Information System) based application that is run on android media with features that have been tailored to PTSL needs. SmatPTSL application is not a measuring tool but a medium for pouring measurement numbers from meet band, aerial photo interpretation and connection to external GNSS.
+    </string>
+    <string name="credit">The development of this application is based on the learning on various sources with hardwork
+        as a form of service to ATR/BPN Ministry. We hope this aplication will be useful for society   AIf you want to make a donation for the development of this application, please go through         the account listed above (tap the account above to copy the account number).
+    </string>
+    <string name="activate">Activate</string>
+    <string name="add_point">Add Point</string>
+    <string name="update_workspace_title">Update Workspace</string>
+    <string name="confirm_delete_workspace_message">Are you sure you decide to delete this workspace? The data will be wiped
+        permanently and can not be retrieved in the future!
+    </string>
+    <string name="edit">Edit</string>
+    <string name="confirm">Confirm</string>
+    <string name="title_activity_home">Home</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="forum">Forum</string>
+    <string name="other_links">Other Link</string>
+    <string name="workspace">Workspace</string>
+    <string name="tutorials">Tutorial Videos</string>
+    <string name="background">background</string>
+    <string name="hint_wipe">i\*swipe left to draw menu</string>
+    <string name="video_thumbnail">Video Thumbnail</string>
+    <string name="coord_example">-8.922828</string>
+    <string name="area_delete_confirmation">Are you sure you decide to delete this area? The area with its containing data
+        will not be able to be retrieved in the future</string>
+    <string name="connecting">Connecting ...</string>
+    <string name="marker">marker</string>
+    <string name="text_example">Status Fixed</string>
+    <string name="hvrms_example">HRMS: 0.03 - VRMS: 0.01</string>
+    <string name="default_storage_path">/sdcard/SmartPTSL/</string>
+    <string name="copy">Copy</string>
+    <string name="copy_rekening">Copy bank account number</string>
+    <string name="export">Export</string>
+    <string name="bluetooth_unavailable">Bluetooth inactive/unavailable</string>
+    <string name="obtaining_status">Status not abtained yet</string>
+    <string name="copyright">© copyright Cadastralshop 2018</string>
+    <string name="bluetooth_devices_subtitle">Please click the switch to connect with the GNSS device</string>
+    <string name="bluetooth_devices_title">List of connected bluetooth device</string>
+    <string name="no_paired_device">No device connected! Please pair the device with your smartphone before continue.</string>
+    <string name="bluetooth_devices_label">Connect GNSS Device</string>
+    <string name="close">Close</string>
+    <string name="auto_scroll">Autoscroll</string>
+    <string name="import_shp">Import SHP</string>
+    <string name="import_excel">Import Excel</string>
+    <string name="import_geo_json">Import GeoJSON</string>
+    <string name="connect_gnss">Connect GNSS External</string>
+    <string name="export_to_shp">Export Polygon to SHP</string>
+    <string name="export_line_to_shp">Export Line to SHP</string>
+    <string name="export_to_geo">Export Polygon to GeoJSON</string>
+    <string name="export_points_to_shp">Export Point to SHP</string>
+    <string name="export_to_csv">Export Textual Data to CSV</string>
+    <string name="undo">Undo</string>
+    <string name="about_app">About</string>
+    <string name="general_announcements">SmartPTSL Announcement</string>
+    <string name="announcements">Announcement</string>
+    <string name="view_announcement">View Announcement</string>
+    <string name="saksi">Witness</string>
+    <string name="save">Save</string>
+    <string name="clear">Clear</string>
+    <string name="no_internet_pause_current_work">Upload process is postponed. Will automatically uploaded when
+        connected to network
+    </string>
+    <string name="creating_surat_pernyataan">Creating statement document</string>
+    <string name="cant_get_center_bounds_mbtiles">Can not find the coordinate of mbtiles. Something is wrong with
+        the mbtiles file
+    </string>
+    <string name="no_internet_connection">Network is required. Please connect to a network
+    </string>
+    <string name="ignore_iob">If index out of bounce occurred just ignore it. Means our entrymaps will have no value and
+        it will returns null string
+    </string>
+    <string name="preparing_data">Preparing data</string>
+    <string name="store_path_label">Storage Location</string>
+    <string name="jabatan">Position</string>
+    <string name="export_status_rtk">Export RTK Report Status</string>
+    <string name="area_size_containing_rtk_status">The number of area containing RTK status data: %s</string>
+    <string name="please_upgrade">Feature %s only available in Pro version. Please upgrade to enjoy all feature.
+        The payment is for 4 month transaction and will be applied onwards. By purchasing the upgrade of the application
+        you have contributed to the maintenance of server and application
+    </string>
+    <string name="help">Help</string>
+    <string name="donate">Donation</string>
+    <string name="rek_number">1610000598966</string>
+    <string name="donate_desc">You can contribute on the development of this application by donation
+        Your donations will be placed for the development and maintenance of this application server and 10%%
+        of the donations will be placed for charity.\n\nDonation can be sent via Mandiri Bank account:\n%s (Reza
+        Abdullah)
+    </string>
+    <string name="about">About</string>
+    <string name="license_key">
+        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtnjJuDMHUyV7eiTTWsd/v80lTYIy984omvUF5YsjFQVGT2OAbX6kQfp/bQABXFq3iqP81oBrdMpAgb7jeNqDUJe7QOyVPpCvJxr1pebXrV9faGhjOHJzdCpp8sXhS7+zVWZfH4yENA5Zo/skT6oDO2WN04gSQsHMfszqopX52J47/sklW/KZzZILSiBZGF/mZYW/uoT03aYRGdT4AGeNk18DjuXijN/CVQD9Sg1ojBpeOnxL3QCcE3fXQ65HrVhyC8PiHRExLPQ6NKrSHkhPbQ+N7fVj8aZa2j7g0ii8b/rd0NBjiV+TC7v61o5C/VKx31lgRtCanRxFXlInqYhWSQIDAQAB
+    </string>
+    <string name="os_not_supported">Your OS Android Version is not supported to proceed to the purchase product at Play Market
+        Market
+    </string>
+    <string name="error_occured">Error occured</string>
+    <string name="product_item_key">product_item</string>
+    <string name="sedang_membaca_file_shp">Reading shp file</string>
+    <string name="privacy_policy_title">
+        <![CDATA[ To start using this application you are required to agree with the Privacy Policy that we applied. Privacy Policy of Smart PTSL can be viewed on following link: <a href="https://smartptsl.com/privacy_policy.html">Privacy Policy Smart PTSL</a> ]]></string>
+    <string name="agree_to_privacy_policy">I agree to privacy policy applied to SmartPTSL application</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="choose_geojson">Choose GeoJSON file</string>
+    <string name="search">Filter the Polygon by typing name and nik</string>
+    <string name="ntrip_connect">Connect Mode NTRIP</string>
+    <string name="search_hint">Find Name and NIK</string>
+
+    <string name="wgs_84">GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137,298.257223563]],PRIMEM[\"Greenwich\",0],UNIT[\"Degree\",0.017453292519943295]]</string>
+
+
+    <!--form untuk BAPPEDA Kota Mataram-->
+    <string name="pekerjaan">Pekerjaan</string>
+    <string name="kepemilikan_rumah_bappeda">Kepemilikan Rumah</string>
+    <string name="butki_kepemilikan_bappeda">Bukti Kepemilikan</string>
+    <string name="kondisi_rumah_bappeda">Kondisi Rumah</string>
+    <string name="material_atap_rumah_bappeda">Material Atap Rumah</string>
+    <string name="material_dinding_rumah_bappeda">Material Dinding Rumah</string>
+    <string name="material_lantai_rumah_bappeda">Material Lantai Rumah</string>
+    <string name="kepemilikan_imb_bappeda">Kepemilikan IMB</string>
+    <string name="lebar_akses_jalan_bappeda">Lebar Akses Jalan (meter)</string>
+    <string name="pengerasan_jalan_bappeda">Pengerasan Jalan</string>
+    <string name="sts_kepemilikan_jamban_bappeda">Status Kepemilikan Sarana Jamban</string>
+    <string name="tinja_dan_urin_bappeda">Akses dan Sarana Pembuangan Tinja dan Urin</string>
+    <string name="periode_pengurasan_bappeda">Periode Pengurasan</string>
+    <string name="akses_dan_status_kamarmandi_bappeda">Akses dan Status Kamar Mandi</string>
+    <string name="akses_pembuangan_limbah_cair_bappeda">Akses dan Sarana Pembuangan Limbah Cair Bukan Tinja dan Urin</string>
+    <string name="ketersedian_tangki_septik_bappeda">Ketersediaan Lahan Pembangunan Tangki Septik</string>
+    <string name="sts_air_bersih_bappeda">Status Kepemilikan Sumber Air Bersih</string>
+    <string name="sumber_air_bersih_bappeda">Sumber Air Bersih</string>
+    <string name="keterangan_sumber_air_bersih_bappeda">Keterangan Sumber Air Bersih</string>
+    <string name="pengolahan_sampah_bappeda">Pengolahan Sampah di Rumah</string>
+    <string name="akses_dan_sarana_sampah_bappeda">Akses dan Sarana Pembuangan Sampah</string>
+    <string name="ctps_bappeda">Sarana Cuci Tangan Pakai Sabun (CTPS)</string>
+    <string name="sumber_daya_listrik_bappeda">Sumber Daya Listrik</string>
+    <string name="daya_listrik_bappeda">Daya Listrik</string>
+    <string name="jaminan_sosial_bappeda">Jaminan Sosial</string>
+    <string name="jumlah_kk">Jumlah KK</string>
+    <string name="jumlah_anggota_keluarga">Jumlah Anggota Keluarga (Jiwa)</string>
+    <string name="export_bapenda_to_shp">Export Bapenda ke SHP</string>
+    <string name="export_ip4t_to_shp" translatable="false">Export IP4T ke SHP</string>
+
+    <!--data source-->
+    <string name="service_started">NTRIP Service Running</string>
+    <string name="service_label">NTRIP Service</string>
+    <string name="title_activity_ntrip">NTRIPActivity</string>
+    <string name="a1_pemilikan">A1. PEMILIKAN</string>
+    <string name="penggunaan_bidang_tanah_saat_ini" translatable="false">PENGGUNAAN BIDANG TANAH SAAT INI</string>
+    <string name="nomor_sertifikat_surat">Nomor Sertifikat / Surat</string>
+
+    <string name="pemilikan_tanah">PEMILIKAN TANAH</string>
+    <string name="perolehan_tanah">PEROLEHAN TANAH</string>
+    <string name="penguasaan_tanah">PENGUASAAN TANAH</string>
+    <string name="luas_m2">LUAS (M2)</string>
+    <string name="kecamatan">KECAMATAN</string>
+    <string name="rt_rw">RT / RW</string>
+    <string name="export_foto_to_html">Export Foto HTML</string>
+    <string name="upgrade_pro" translatable="false">Upgrade Pro</string>
+    <string name="upgrade_pro_msg">Silahkan upgrade ke premium utuk menghilangkan iklan selama 4 bulan, atau tonton iklan untuk bisa menambahkan 30 bidang pada workspace. Apakah anda akan upgrae ke premium?</string>
+    <string name="msg_load_video_failed">Cek Koneksi internet anda.\nSilahkan tutup workspace ini dan buka kembali untuk         menonton video 5 agar anda bisa melanjutkan pekerjaan atau anda dapat mengupgrade ke versi         premium 4 bulan</string>
+    <string name="msg_load_video_export_failed">Anda harus menonton video minimal sampai tombol keluar untuk bisa proses export, atau upgrade ke premium untuk menghilangkan iklan. Bidang otomatis diexport setelah selesai menonton video.</string>
+    <string name="expire_msg">Lisensi SmartPTSL Pro Anda Habis,, silahkan diperpanjang untuk mendukung Aplikasi kita bersama 😀</string>
+    <string name="nama">Nama</string>
+    <string name="alamat">Nama Lengkap</string>
+    <string name="lokasi">Alamat</string>
+    <string name="kode_pos">Kode Pos</string>
+    <string name="tempat_lahir">Tempat Lahir</string>
+    <string name="tgl_lahir">Tanggal Lahir</string>
+    <string name="agama">Agama</string>
+    <string name="status">Status</string>
+    <string name="gol_darah">Golongan Darah</string>
+    <string name="nomor_kk">Nomor Kartu Keluarga</string>
+    <string name="jenis_kelamin">Jenis Kelamin</string>
+    <string name="laki_laki">Laki-Laki</string>
+    <string name="perempuan">Perempuan</string>
+    <string name="checkYuridisIsCompalte">Kelengkapan Yuridis</string>
+    <string name="ads_rewords_id">ca-app-pub-5553668322899894/3267468341</string>
+    <string name="ads_yuridis_id">ca-app-pub-5553668322899894/3357922475</string>
+    <string name="lengkapi_formulir_yang_kosong">Lengkapi Formulir yang Kosong</string>
+    <string name="show_wms">Tampilkan Layanan Peta</string>
+    <string name="contact_us">https://api.whatsapp.com/send?phone=6285156540042</string>
+    <string name="form_pengtan">Form Pengtan</string>
+    <string name="petaKerja">Peta Dasar Pertanahan</string>
+    <string name="analisis_form_satgas">Cek Kelengkapan SATGAS PENGTAN</string>
+    <string name="why_need_location">Kami akan merekam lokasi Anda selama melakukan pengukuran sebagai wujud SmartPTSL menuju startup E-commerce, jika Anda keluar dari halaman ini, kami tidak melakukan merekam lokasi Anda. Data Loaksi Anda dapat diakses melalui portal.smartptsl.com. Jika Anda memiliki hubungan dengan portal.smartptsl.com, Anda dapat menerima permintaan dari aplikasi untuk merekam lokasi Anda, jika tidak maka histori Anda tidak akan terekam.</string>
+    <string name="reproccess">Anda sudah setuji untuk mengakses/menulis memory perangkat, silahkan lakukan proses tersenut kembali</string>
+    <string name="permohonan">Permohonan</string>
+    <string name="rating_success">Pemberian nilai untuk surveyor berhasil</string>
+    <string name="atur_rencana_pengukuran">Silahkan hubungi Petugas Ukur dengan menu chat untuk menentukan waktu pengukuran</string>
+    <string name="atur_rencana_pengukuran_surveyor">Silahkan jadwal pengukuran dengan menu chat untuk menentukan waktu pengukuran</string>
+    <string name="rating_failure">Gagal memberi penilaian untuk surveyor</string>
+    <string name="pesan_share_lokasi">Dengan menyetuji syarat ini maka, setiap Anda memulai share lokasi maka lokasi anda akan diketahui oleh pemohon, berikan akses lokasi jika anda setuju</string>
+    <string name="pesan_anda_dilokasi">Anda dapat menyelesaikan status pengukuran setelah Anda setelah anda menggambil foto pemohon yang berada di lokasi pengkukuran .</string>
+    <string name="ambil_photo">Foto Saya</string>
+    <string name="selesai">Selesai</string>
+    <string name="belum_selesai">Belum Selesai</string>
+    <string name="semua">Semua</string>
+
+
 </resources>
