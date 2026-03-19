@@ -39,6 +39,28 @@ android {
             jvmTarget.set(JvmTarget.JVM_17)
         }
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    flavorDimensions += "env"
+
+    productFlavors {
+        create("development") {
+            dimension = "env"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+
+            buildConfigField("String", "BASE_URL", "\"https://dev-api.com\"")
+        }
+
+        create("production") {
+            dimension = "env"
+
+            buildConfigField("String", "BASE_URL", "\"https://api.com\"")
+        }
+    }
 }
 
 
@@ -50,4 +72,22 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Import the BoM for the Firebase platform
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.auth)
+    //google maps
+    implementation(libs.play.services.maps)
+    implementation(libs.android.maps.utils)
+
+    //dbf
+    implementation(libs.albfernandez.javadbf)
+    implementation(libs.geodesy)
+    //bentrok dengan geodesy
+    //implementation(libs.jscience)
+    implementation(libs.proj4j)
+
+    implementation(libs.play.services.location)
+
 }

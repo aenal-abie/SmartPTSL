@@ -1,0 +1,111 @@
+{
+  "project_info": {
+    "project_number": "252189693480",
+    "firebase_url": "https://smartgis-1541557963702.firebaseio.com",
+    "project_id": "smartgis-1541557963702",
+    "storage_bucket": "smartgis-1541557963702.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:252189693480:android:c2f3a4194f102545",
+        "android_client_info": {
+          "package_name": "smartgis.project.app.smartgis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "252189693480-f27stitc9nsmnbammqouliu4fpt1dboj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "smartgis.project.app.smartgis",
+            "certificate_hash": "3da8047f29b2f63c85525a2b907cf9ece9302ab9"
+          }
+        },
+        {
+          "client_id": "252189693480-smi4gkkkr9lci72em7kpnlktprvcqphs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "smartgis.project.app.smartgis",
+            "certificate_hash": "a48fa92a6cbbb4cfb8a68c7a187d3c6ee0925c1e"
+          }
+        },
+        {
+          "client_id": "252189693480-4jpsp56kgt0b3la47aki2k2plde85fco.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "smartgis.project.app.smartgis",
+            "certificate_hash": "71d459dddef1eb8e948e1165225a3c52b324731a"
+          }
+        },
+        {
+          "client_id": "252189693480-h1i2us71iq2dpptenphc3gj5j4olbbj6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "smartgis.project.app.smartgis",
+            "certificate_hash": "1958f37e2fcc451a1db123b436c36cc8ebc962eb"
+          }
+        },
+        {
+          "client_id": "252189693480-gs0b0rrt31c18aomto00kn61f40mrnlg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "smartgis.project.app.smartgis",
+            "certificate_hash": "b70c5f46e1ec1187383546d9ea9fd5f5a50a4b86"
+          }
+        },
+        {
+          "client_id": "252189693480-frcikmkhm8h5hcvagv3hi3n5rcgr1ii1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "smartgis.project.app.smartgis",
+            "certificate_hash": "9ac9d7f19c6296487abf026bfebe8e9e3a9523b5"
+          }
+        },
+        {
+          "client_id": "252189693480-oef9c9tfofat5oknea67dol98ffgr8at.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "smartgis.project.app.smartgis",
+            "certificate_hash": "288deec566740ac002cb2942eb0bba44e338f1e4"
+          }
+        },
+        {
+          "client_id": "252189693480-k4h0hj324taf1jbe3ks5dgnj7dt857um.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "smartgis.project.app.smartgis",
+            "certificate_hash": "52cbc4b046f66d9a45d5c72cd1a355590fe6f8f5"
+          }
+        },
+        {
+          "client_id": "252189693480-77uuf0nq67f96vtla7blo0cgfee44a8i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrrAQLLJMgxp3YzvXndyItrgIZMjixIYE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "252189693480-77uuf0nq67f96vtla7blo0cgfee44a8i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
