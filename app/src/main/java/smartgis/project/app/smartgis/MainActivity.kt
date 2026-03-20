@@ -34,6 +34,7 @@ import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.Source
 import smartgis.project.app.smartgis.command.Actionable
 import smartgis.project.app.smartgis.command.PolygonUndoSnapp
 import smartgis.project.app.smartgis.databinding.ActivityMainBinding
@@ -53,8 +54,10 @@ import smartgis.project.app.smartgis.utils.GpsUtils
 import smartgis.project.app.smartgis.utils.LineColorMapping
 import smartgis.project.app.smartgis.utils.SimpleLocation
 import smartgis.project.app.smartgis.utils.appPreference
+import smartgis.project.app.smartgis.utils.computeAreaByCoordinate
 import smartgis.project.app.smartgis.utils.currentUser
 import smartgis.project.app.smartgis.utils.distanceTo
+import smartgis.project.app.smartgis.utils.geometry.Vector2
 import smartgis.project.app.smartgis.utils.getCenter
 import smartgis.project.app.smartgis.utils.gone
 import smartgis.project.app.smartgis.utils.rColor
@@ -65,7 +68,10 @@ import smartgis.project.app.smartgis.utils.toTm3
 import java.util.Locale
 
 class MainActivity :  LoginRequiredActivity(),
-    OnMapReadyCallback,GoogleMap.OnMarkerClickListener {
+    OnMapReadyCallback,GoogleMap.OnMarkerClickListener,GoogleMap.OnPolygonClickListener,
+    GoogleMap.OnMapClickListener,
+    //GoogleMap.OnMarkerDragListener,
+    GoogleMap.OnPolylineClickListener {
     private var map: GoogleMap? = null
     private lateinit var kantah: String
     private lateinit var gpsPosition: LatLng
@@ -1204,6 +1210,276 @@ class MainActivity :  LoginRequiredActivity(),
         } else {
             appPreference().edit().putBoolean("wms", true).apply()
         }
+    }
+
+    override fun onPolygonClick(polygon: Polygon) {
+        binding.btnAddPointInBetween.gone()
+        binding.tvProperty.text = ""
+        binding.tvProperty.show()
+        var shapeIsImported = false
+        var nama = ""
+        var nik = ""
+        var hak = ""
+        if (polygon !in localPolygonDbReference.map { it.polygon }) {
+            shapeIsImported = true
+            clickedImportedShp = shpImported.find { it.polygon == polygon }
+            binding.btnActivateShape.show()
+            binding.btnDeleteActiveShape.gone()
+            binding.btnShapeDetail.gone()
+        } else {
+            binding.btnDeleteActiveShape.show()
+            isPolyline = false
+            binding.btnShapeDetail.show()
+            binding.btnActivateShape.gone()
+        }
+        if (!editing)
+            binding.shapeMenuContainer.expand()
+        binding.addShapeMenuContainer.gone()
+        selectedPolygon.find { it == polygon }
+            ?.apply {
+                strokeWidth = NORMAL_STROKE_WIDTH
+                selectedPolygonCircle.filter { circle -> points.contains(circle.position) }
+                    .forEach { circle ->
+                        circle.remove()
+                        selectedPolygonCircle.remove(circle)
+                    }
+                selectedPolygon.remove(this)
+                if (selectedPolygon.size <= 0)
+                    backToNormal()
+            }
+            ?: let {
+                polygon?.apply {
+                    strokeWidth = 5f
+                    // we don't need the closing point. So <SET> it!
+                    if (!shapeIsImported) /*show marker label only on saved polygon*/
+                        points.toSet().forEachIndexed { index, latLng ->
+                            map?.apply {
+//                                selectedPolygonCircle.add(
+////                                    addMarker(
+////                                        defaultMarker(index + 1)
+////                                            .position(latLng)
+////                                            .zIndex(3f)
+////                                    )
+//                                )
+                            }
+                        }
+
+                    // select only up to 2 polygon at a time
+                    if (selectedPolygon.size >= 2) {
+                        selectedPolygon.firstOrNull()?.apply {
+                            strokeWidth = NORMAL_STROKE_WIDTH
+                            selectedPolygon.remove(this)
+
+                            // reset its circle
+                            selectedPolygonCircle.filter { circle -> points.contains(circle.position) }
+                                .forEach { circle ->
+                                    selectedPolygonCircle.remove(circle)
+                                    circle.remove()
+                                }
+                        }
+                    }
+                    selectedPolygon.add(this)
+                }
+            }
+        if (selectedPolygon.size > 0) {
+            val cPolygon = selectedPolygon.lastOrNull() ?: return
+            val polygon =
+                localPolygonDbReference.withIndex()
+                    .find { decorator -> decorator.value.polygon == cPolygon }
+//            computedArearea = computeAreaByCoordinate(cPolygon.points.map {
+//                val cUtm = it.toUtm()
+//                Vector2(cUtm.coordinates[0], cUtm.coordinates[1])
+//            }).roundToInt()
+            if (shapeIsImported) {
+                clickedImportedShp?.properties?.apply {
+                    when {
+                        keys.contains("NIB") -> nub = get("NIB").toString()
+                        keys.contains("NUB") -> nub = get("NUB").toString()
+                        keys.contains("nub") -> nub = get("nub").toString()
+                        keys.contains("nib") -> nub = get("nib").toString()
+                    }
+                    when {
+                        keys.contains("nama") -> nama = get("nama").toString()
+                        keys.contains("NAMA") -> nama = get("NAMA").toString()
+                        keys.contains("Nama") -> nama = get("Nama").toString()
+                    }
+                    when {
+                        keys.contains("nik") -> nik = get("nik").toString()
+                        keys.contains("NIK") -> nik = get("NIK").toString()
+                    }
+                    when {
+                        keys.contains("hak") -> hak = get("hak").toString()
+                        keys.contains("HAK") -> hak = get("HAK").toString()
+                    }
+                }
+                val properties =
+                    "NUB: $nub, \tLuas: ${computedArea}m2, \tNama: $nama, \tNIK: $nik, \tHAK: $hak"
+                binding.tvProperty.text = properties
+            }
+            if (tetanggaBerbatasan > 0) {
+                Collections.getUserAreaDetailDelinasi(
+                    currentUser()?.email,
+                    polygon?.value?.documentReference?.id
+                )
+                    .get(Source.CACHE)
+//                    .addOnSuccessListener {
+//                        it?.apply {
+//                            nama = it.data?.get(SubjectIdentity.NAMA.prefix(SubjectIdentity.PREFIX)).toString()
+//                            nub =
+//                                it.data?.get(DelinasiGeneral.YURI_FILE_NO.prefix(DelinasiGeneral.PREFIX)).toString()
+//                            var batasPilih = ""
+//                            var Tetangga: String = ""
+//                            if (tetanggaBerbatasan == TETANGGA_UTARA) {
+//                                batasPilih = YuridisGeneral.UTARA.prefix(YuridisGeneral.PREFIX)
+//                                Tetangga = "Utara"
+//                            } else if (tetanggaBerbatasan == TETANGGA_SELATAN) {
+//                                batasPilih = YuridisGeneral.SELATAN.prefix(YuridisGeneral.PREFIX)
+//                                Tetangga = "Selatan"
+//                            } else if (tetanggaBerbatasan == TETANGGA_BARAT) {
+//                                batasPilih = YuridisGeneral.BARAT.prefix(YuridisGeneral.PREFIX)
+//                                Tetangga = "Barat"
+//                            } else if (tetanggaBerbatasan == TETANGGA_TIMUR) {
+//                                batasPilih = YuridisGeneral.TIMUR.prefix(YuridisGeneral.PREFIX)
+//                                Tetangga = "Timur"
+//                            }
+//                            rootLayout.snackbar("Tetangga " + Tetangga + " sudah dipilih")
+//                            Collections.getUserAreaDetailYuridis(currentUser()?.email, tetanggaBerbatasanSelected)
+//                                .set(
+//                                    mapOf(
+//                                        batasPilih to nama
+//                                    ), SetOptions.merge()
+//                                )
+//                            tetanggaBerbatasan = 0
+//                            backToNormal()
+//                        }
+//                    }
+            }
+
+
+            if (!shapeIsImported) {
+                Collections.getUserAreaDetailDelinasi(
+                    currentUser()?.email,
+                    polygon?.value?.documentReference?.id
+                )
+                    .get(Source.CACHE)
+                    .addOnSuccessListener {
+//                        it?.apply {
+//                            nama = it.data?.get(SubjectIdentity.NAMA.prefix(SubjectIdentity.PREFIX)).toString()
+//                            nik = it.data?.get(SubjectIdentity.NIK.prefix(SubjectIdentity.PREFIX)).toString()
+//                            hak = it.data?.get(AreaPosition.KETERANGAN.prefix(AreaPosition.PREFIX)).toString()
+//                                .noNull()
+//                            it.data?.get(DelinasiGeneral.YURI_FILE_NO.prefix(DelinasiGeneral.PREFIX))?.apply {
+//                                if (toString() != "null") nub = toString()
+//                            }
+//                            val properties =
+//                                "NUB: $nub, \tLuas: ${computedArea}m2, \tNama: $nama, \tNIK: $nik, \tHAK: $hak"
+//                            tvProperty.text = properties
+//                        }
+                    }
+            }
+        }
+        addedDistanceLabel.forEach { it.remove() }
+        addedDistanceLabel.clear()
+        selectedPolygon.lastOrNull()?.apply {
+            for (index in 0..points.size - 2) {
+//                map?.apply {
+//                    addedDistanceLabel.add(addMarker(generateLabelBetween(points[index], points[index + 1])))
+//                }
+            }
+        }
+//        toggleDeleteButtonText()
+    }
+
+    override fun onPolylineClick(polyline: Polyline) {
+        isPolyline = true
+        binding.btnAddPointInBetween.gone()
+        binding.tvProperty.text = ""
+        binding.tvProperty.show()
+        binding.btnDeleteActiveShape.show()
+        binding.btnShapeDetail.show()
+        binding.btnActivateShape.gone()
+        binding.addShapeMenuContainer.gone()
+        binding.shapeMenuContainer.expand()
+        selectedPolyline.find { it == polyline }
+            ?.apply {
+                width = 10f
+                selectedPolygonCircle.filter { circle -> points.contains(circle.position) }
+                    .forEach { circle ->
+                        circle.remove()
+                        selectedPolygonCircle.remove(circle)
+                    }
+                selectedPolyline.remove(this)
+            }
+            ?: let {
+                polyline?.apply {
+                    width = 10f
+                    points.toSet().forEachIndexed { index, latLng ->
+                        map?.apply {
+//                            selectedPolygonCircle.add(
+////                                addMarker(
+////                                    defaultMarker(index + 1)
+////                                        .position(latLng)
+////                                        .zIndex(3f)
+////                                )
+//                            )
+                        }
+                    }
+                    // select only up to 2 polyline at a time
+                    if (selectedPolyline.size >= 2) {
+                        selectedPolyline.firstOrNull()?.apply {
+                            selectedPolyline.remove(this)
+
+                            // reset its circle
+                            selectedPolygonCircle.filter { circle -> points.contains(circle.position) }
+                                .forEach { circle ->
+                                    selectedPolygonCircle.remove(circle)
+                                    circle.remove()
+                                }
+                        }
+                    }
+                    selectedPolyline.add(this)
+                }
+
+            }
+        val cPolyline = selectedPolyline.lastOrNull() ?: return
+        val polyline =
+            localPolylineDbReference.withIndex()
+                .find { decorator -> decorator.value.polyline == cPolyline }
+        Collections.getUserPolylineAreaDetail(
+            currentUser()?.email,
+            polyline?.value?.documentReference?.id
+        )
+            .get(Source.CACHE)
+            .addOnSuccessListener {
+//                it?.apply {
+//                    val jenis = it.data?.get(Line.JENIS.prefix(Line.PREFIX)).toString()
+//                    val diskripsi = it.data?.get(Line.DISKRIPSI.prefix(Line.PREFIX)).toString()
+//                    val properties = "Jenis: $jenis, \tKeterangan: $diskripsi"
+//                    tvProperty.text = properties
+//                }
+            }
+
+        addedDistanceLabel.forEach { it.remove() }
+        addedDistanceLabel.clear()
+        selectedPolyline.lastOrNull()?.apply {
+            for (index in 0..points.size - 2) {
+//                map?.apply {
+//                    addedDistanceLabel.add(addMarker(generateLabelBetween(points[index], points[index + 1])))
+//                }
+            }
+        }
+//        toggleDeleteButtonText()
+    }
+
+
+    override fun onMapClick(coordinate: LatLng) {
+        if (addSPenMode) {
+//            coordinate.let { addPointMarkerSession(it) }
+        } else if (!editing) {
+            backToNormal()
+        }
+//        if (viewModel.isWMSActive)
+//            viewModel.clickWms(coordinate, kantah)
     }
 
     private fun backToNormal() {
