@@ -1,5 +1,6 @@
 package smartgis.project.app.smartgis.fragments
 
+import android.R.attr.onClick
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,7 +9,8 @@ import smartgis.project.app.smartgis.databinding.ItemListWorkspaceBinding
 
 class WorkspacesAdapter(
     private val items: MutableList<WorkspaceAndDbReferenceHolder>,
-    private val onMenuClick: (Int) -> Unit
+    private val onMenuClick: (Int) -> Unit,
+    private val onItemClick: (Int) -> Unit
 ) : RecyclerView.Adapter<WorkspacesAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ItemListWorkspaceBinding) :
@@ -30,18 +32,12 @@ class WorkspacesAdapter(
             btnMenu.setOnClickListener {
                 onMenuClick(holder.bindingAdapterPosition)
             }
+
+            item.setOnClickListener {
+                onItemClick(holder.bindingAdapterPosition)
+            }
         }
     }
 
     override fun getItemCount(): Int = items.size
-
-    fun deleteItem(position: Int) {
-        items.removeAt(position)
-        notifyItemRemoved(position)
-    }
-
-//    fun updateItem(position: Int, newValue: String) {
-//        items[position] = newValue
-//        notifyItemChanged(position)
-//    }
 }

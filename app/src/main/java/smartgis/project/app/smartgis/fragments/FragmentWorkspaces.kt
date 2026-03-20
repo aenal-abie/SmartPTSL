@@ -30,6 +30,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
+import smartgis.project.app.smartgis.MainActivity
 //import kotlinx.android.synthetic.main.activity_workspaces.*
 //import kotlinx.android.synthetic.main.activity_workspaces.view.*
 //import smartgis.project.app.smartgis.BuildConfig
@@ -78,16 +79,16 @@ class FragmentWorkspaces : Fragment() {
     }
 
     private fun animateView() {
-        //    AnimatorSet().apply {
-        //      playSequentially(
-        //        ObjectAnimator.ofFloat(iv_animation, "translationX", 20f)
-        //      )
-        //      duration = 500
-        //      doOnEnd {
-        //        start()
-        //      }
-        //      start()
-        //    }
+        AnimatorSet().apply {
+            playSequentially(
+                ObjectAnimator.ofFloat(binding.ivAnimation, "translationX", 20f)
+            )
+            duration = 500
+            doOnEnd {
+                start()
+            }
+            start()
+        }
     }
 
     private fun contactUs() {
@@ -129,7 +130,7 @@ class FragmentWorkspaces : Fragment() {
     }
 
     private fun showMenuDialog(position: Int) {
-        val options = arrayOf("Edit", "Delete")
+        val options = arrayOf("Ubah", "Hapus")
 
         this@FragmentWorkspaces.context?.let {
             AlertDialog.Builder(it)
@@ -144,12 +145,24 @@ class FragmentWorkspaces : Fragment() {
         }
     }
 
+   fun onWorkspaceClick(position: Int) {
+        val intent = Intent(this@FragmentWorkspaces.requireContext(), MainActivity::class.java)
+        intent.putExtra("workspace_id", data[position].workspace)
+        startActivity(intent)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        adapter = WorkspacesAdapter(data) { position ->
-            showMenuDialog(position)
-        }
+
+        adapter = WorkspacesAdapter(
+            data,
+            onMenuClick = { position ->
+                showMenuDialog(position)
+            },
+            onItemClick = { position ->
+                onWorkspaceClick(position)
+            })
+
 
         binding.lvWorkspaces.layoutManager = LinearLayoutManager(this@FragmentWorkspaces.context)
         binding.lvWorkspaces.adapter = adapter
