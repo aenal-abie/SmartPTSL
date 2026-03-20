@@ -1,7 +1,9 @@
 package smartgis.project.app.smartgis
 
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Color
 import android.net.NetworkInfo
 import android.os.Bundle
@@ -17,6 +19,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.MAP_TYPE_SATELLITE
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.Circle
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
@@ -27,29 +30,42 @@ import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.gms.maps.model.TileOverlay
 import com.google.android.gms.maps.model.TileProvider
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
+import smartgis.project.app.smartgis.command.Actionable
+import smartgis.project.app.smartgis.command.PolygonUndoSnapp
 import smartgis.project.app.smartgis.databinding.ActivityMainBinding
 import smartgis.project.app.smartgis.databinding.ActivityWelcomeLoginBinding
 import smartgis.project.app.smartgis.decorators.PolygonDecorator
 import smartgis.project.app.smartgis.decorators.PolylineDecorator
 import smartgis.project.app.smartgis.decorators.ShapeImportedDecorator
+import smartgis.project.app.smartgis.decorators.ShapeWMSDecorator
 import smartgis.project.app.smartgis.documents.Collections
+import smartgis.project.app.smartgis.models.Area
 import smartgis.project.app.smartgis.models.GnssStatusHolder
 import smartgis.project.app.smartgis.models.ReferenceToGnssStatusHolder
 import smartgis.project.app.smartgis.models.Workspace
 import smartgis.project.app.smartgis.utils.CircleFromLatLng
 import smartgis.project.app.smartgis.utils.ClusterColorMapping
+import smartgis.project.app.smartgis.utils.GpsUtils
 import smartgis.project.app.smartgis.utils.LineColorMapping
 import smartgis.project.app.smartgis.utils.SimpleLocation
+import smartgis.project.app.smartgis.utils.appPreference
 import smartgis.project.app.smartgis.utils.currentUser
+import smartgis.project.app.smartgis.utils.distanceTo
+import smartgis.project.app.smartgis.utils.getCenter
 import smartgis.project.app.smartgis.utils.gone
 import smartgis.project.app.smartgis.utils.rColor
+import smartgis.project.app.smartgis.utils.shape.defaultIconGenerator
 import smartgis.project.app.smartgis.utils.show
 import smartgis.project.app.smartgis.utils.timeStamp
+import smartgis.project.app.smartgis.utils.toTm3
+import java.util.Locale
 
 class MainActivity :  LoginRequiredActivity(),
-    OnMapReadyCallback {
+    OnMapReadyCallback,GoogleMap.OnMarkerClickListener {
     private var map: GoogleMap? = null
     private lateinit var kantah: String
     private lateinit var gpsPosition: LatLng
@@ -69,7 +85,7 @@ class MainActivity :  LoginRequiredActivity(),
     private var doneClicked = false
     private var isGPS: Boolean = false
     private lateinit var locationHelper: SimpleLocation
-//    private var tileOverlay: TileOverlay? = null
+    private var tileOverlay: TileOverlay? = null
     private lateinit var tileProvider: TileProvider
     private var showPermissionDeniedDialog = false
     private lateinit var workspace: Workspace
@@ -85,14 +101,14 @@ class MainActivity :  LoginRequiredActivity(),
     private val selectedPolygon = mutableSetOf<Polygon>()
     private val selectedPolyline = mutableSetOf<Polyline>()
     private val selectedPolygonCircle = mutableSetOf<Marker>()
-//    private var clickedImportedShp: ShapeImportedDecorator? = null
+    private var clickedImportedShp: ShapeImportedDecorator? = null
     private var computedArea: Int = 0
     private var nub = ""
     private var draggingPolygonMarker: Polygon? = null
     private var circleRtkPosition: Circle? = null
-//    private val shpImported = mutableListOf<ShapeImportedDecorator>()
-//    private val wmsActived = mutableListOf<ShapeWMSDecorator>()
-//    private val polygonUndoStack = mutableListOf<Actionable>()
+    private val shpImported = mutableListOf<ShapeImportedDecorator>()
+    private val wmsActived = mutableListOf<ShapeWMSDecorator>()
+    private val polygonUndoStack = mutableListOf<Actionable>()
     private val lastTwoMarker = mutableSetOf<LatLng>()
     private val addedDistanceLabel = mutableSetOf<Marker>()
 //    private var importShpController: ImportShpController? = null
@@ -162,7 +178,7 @@ class MainActivity :  LoginRequiredActivity(),
 //        registerEvent()
         clusterColorMaps = ClusterColorMapping(this)
         lineColorMaps = LineColorMapping(this)
-//        askLocationForPermissions()
+        askLocationForPermissions()
 //        listenConnectionState()
 //        importShpController = ImportShpController(this)
 //        importGeoJsonController = ImportGeoJSONController(this)
@@ -252,15 +268,15 @@ class MainActivity :  LoginRequiredActivity(),
             binding.btnTogglePolygonPoint.gone()
             circleMarkers.forEach { circle -> circle.remove() }
             circleMarkers.clear()
-//            if (isMode == POLYLINE_MODE)
-//                addPolylineAreaToDb(pointMarkerSession.toSet())
-//            else if (isMode == POLYGON_MODE && pointMarkerSession.size > 2) {
-//                addAreaToDb(pointMarkerSession.toSet())
-//                polylineDisplay?.points = listOf()
-//            } else {
-//                polylineDisplay?.points = listOf()
-//                polygonDisplay?.points = listOf(map?.cameraPosition?.target)
-//            }
+            if (isMode == POLYLINE_MODE)
+                addPolylineAreaToDb(pointMarkerSession.toSet())
+            else if (isMode == POLYGON_MODE && pointMarkerSession.size > 2) {
+                addAreaToDb(pointMarkerSession.toSet())
+                polylineDisplay?.points = listOf()
+            } else {
+                polylineDisplay?.points = listOf()
+                polygonDisplay?.points = listOf(map?.cameraPosition?.target)
+            }
             addedDistanceLabel.forEach { marker -> marker.remove() }
             addedDistanceLabel.clear()
             pointMarkerSession.clear()
@@ -271,8 +287,8 @@ class MainActivity :  LoginRequiredActivity(),
 
         binding.btnActivateShape.setOnClickListener {
             activatingShape = true
-//            selectedPolygon.lastOrNull()?.points?.toSet()?.let { it1 -> addAreaToDb(it1) }
-//            backToNormal()
+            selectedPolygon.lastOrNull()?.points?.toSet()?.let { it1 -> addAreaToDb(it1) }
+            backToNormal()
         }
 
         binding.btnAddPointInBetween.setOnClickListener {
@@ -967,7 +983,7 @@ class MainActivity :  LoginRequiredActivity(),
 
 //        map?.setOnPolygonClickListener(this)
 //        map?.setOnMapClickListener(this)
-//        map?.setOnMarkerClickListener(this)
+        map?.setOnMarkerClickListener(this)
 //        map?.setOnMarkerDragListener(this)
 //        map?.setOnPolylineClickListener(this)
         map?.mapType = MAP_TYPE_SATELLITE
@@ -977,6 +993,25 @@ class MainActivity :  LoginRequiredActivity(),
         val lng = 110.343225
 
         map?.apply { moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat, lng), 17f)) }
+    }
+
+    @SuppressLint("MissingPermission")
+//    @AfterPermissionGranted(ASK_LOCATION_PERMISSIONS_REQUEST_CODE)
+    private fun askLocationForPermissions() {
+//        if (EasyPermissions.hasPermissions(this, *locationPermissions())) {
+//            Log.i(localClassName, "location grated")
+//            enableGPS()
+//        } else {
+//            // Permission is missing and must be requested.
+//            AlertDialog.Builder(this).apply {
+//                setPositiveButton("Tampilkan Dialog Permission") { _, _ ->
+//                    requestPermissionsCompat(locationPermissions(), ASK_LOCATION_PERMISSIONS_REQUEST_CODE)
+//                }
+//                setNegativeButton("Kembali", null)
+//                setMessage(R.string.why_need_location)
+//                create()
+//            }.show()
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -1074,5 +1109,630 @@ class MainActivity :  LoginRequiredActivity(),
 //            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun performUndo() {
+        if (polygonUndoStack.isNotEmpty())
+            polygonUndoStack.removeAt(polygonUndoStack.size - 1).apply { act() }
+    }
+
+
+    private fun showMbtilesChooserDialog() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "*/*"
+        try {
+            startActivityForResult(intent, SELECT_MBTILE)
+        } catch (e: ActivityNotFoundException) {
+        }
+    }
+
+
+    private fun showExcelChooserDialog() {
+//        ChooserDialog(this)
+//            .withResources(R.string.add_excel, R.string.choose, R.string.cancel)
+//            .withStartFile(appPreference().getString(EXCEL_FOLDER, BASE_STORAGE_PATH))
+//            .withFilter(false, getString(R.string.excel_extension))
+//            .withChosenListener { _, file ->
+//                appPreference().edit().putString(EXCEL_FOLDER, file.parent).apply()
+//                appPreference().edit().putString(EXCEL_FILE, file.path).apply()
+//            }
+//            .build()
+//            .show()
+    }
+
+    private fun showMapTypeChooserDialog() {
+//        dialogInterface = alert {
+//            title = getString(R.string.change_map_type)
+//            customView {
+//                listView {
+//                    adapter = ArrayAdapter<String>(
+//                        this@MainActivity,
+//                        simple_list_item_1,
+//                        listOf("Satellite", "Road Map")
+//                    )
+//                    onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+//                        when (position) {
+//                            0 -> map?.mapType = MAP_TYPE_SATELLITE
+//                            1 -> map?.mapType = MAP_TYPE_NORMAL
+//                        }
+//                        dialogInterface?.dismiss()
+//                    }
+//                }
+//            }
+//        }.show()
+    }
+
+    private fun showWms() {
+//        dialogInterface = alert {
+//            customView {
+//                listView {
+//                    adapter = ArrayAdapter(
+//                        this@MainActivity,
+//                        simple_list_item_1,
+//                        listOf("Tampilkan Peta", "Pengaturan WMS")
+//                    )
+//                    onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+//                        when (position) {
+//                            0 -> {
+//                                wmsShowtoMap()
+//                                dialogInterface?.dismiss()
+//                            }
+//                            1 -> startActivity<WmsActivity>(AREA_ID to "0")
+//                        }
+//                    }
+//                }
+//            }
+//        }.show()
+    }
+
+    private fun wmsShowtoMap() {
+        if (!appPreference().getBoolean("wms", false)) {
+            appPreference().edit().putBoolean("wms", true).apply()
+            Collections.getUserWms(currentUser()?.email).get().addOnSuccessListener {
+//                val wmsUrl = it.get(AddWms.URL.prefix(AddWms.PREFIX)).toString().noNull()
+//                val wmsUser = it.get(AddWms.USER.prefix(AddWms.PREFIX)).toString().noNull()
+//                val wmsPassword = it.get(AddWms.PASSWORD.prefix(AddWms.PREFIX)).toString().noNull()
+//                val wmsVersion = it.get(AddWms.VERSION.prefix(AddWms.PREFIX)).toString().noNull()
+//                val wmsLayer = it.get(AddWms.LAYER.prefix(AddWms.PREFIX)).toString().noNull()
+//                var wmsAuth: String = ""
+//                if (wmsUser.isNotEmpty())
+//                    wmsAuth = Credentials.basic(wmsUser, wmsPassword)
+//                val wmsTileProvider: TileProvider =
+//                    TileProviderFactory.getOsgeoWmsTileProvider(wmsUrl, wmsAuth, wmsLayer, wmsVersion)
+//                map?.addTileOverlay(TileOverlayOptions().tileProvider(wmsTileProvider))
+            }
+        } else {
+            appPreference().edit().putBoolean("wms", true).apply()
+        }
+    }
+
+    private fun backToNormal() {
+        binding.addShapeMenuContainer.show()
+        binding.shapeMenuContainer.collapse()
+        binding.editMeasurementContainer.collapse()
+
+        binding.tvProperty.gone()
+        binding.tvLatPreview.text = ""
+        binding.tvLongPreview.text = ""
+
+        selectedPolygon.forEach {
+            it.strokeWidth = NORMAL_STROKE_WIDTH
+        }
+
+        selectedPolyline.forEach {
+            it.width = 5f
+        }
+
+        selectedPolygonCircle.forEach { it.remove() }
+        val color = mutableListOf<Int>()
+        color.add(R.drawable.ic_map_marker_red)
+        color.add(R.drawable.ic_map_marker_green)
+        color.add(R.drawable.ic_map_marker_yellow)
+        color.add(R.drawable.ic_map_marker_blue)
+
+        selectedPointWithStatus.forEach {
+            it.apply {
+                var statusPoint = 0
+                var pointStatus = markerStatus[it.title?.toInt()]
+                if (pointStatus.equals("Fixed", true)) {
+                    statusPoint = 1
+                } else if (pointStatus.equals("Float RTK", true)) {
+                    statusPoint = 2
+                } else if (pointStatus.equals("Differential", true)) {
+                    statusPoint = 0
+                } else if (pointStatus.equals("", true)) {
+                    statusPoint = 3
+                }
+
+                setIcon(
+                    BitmapDescriptorFactory.fromBitmap(
+                        defaultIconGenerator(color[statusPoint]).makeIcon(
+                            title
+                        )
+                    )
+                )
+            }
+        }
+        selectedCircle.forEach { it.remove() }
+        addedDistanceLabel.forEach { it.remove() }
+
+        lastTwoMarker.clear()
+        addedDistanceLabel.clear()
+        selectedPolygonCircle.clear()
+        selectedPolygon.clear()
+        selectedPolyline.clear()
+        selectedCircle.clear()
+        selectedPointWithStatus.clear()
+        firstSelectedPolygon = null
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun onMarkerClick(currentCircle: Marker): Boolean {
+        val tm3Coordinate = currentCircle?.position?.toTm3()
+//        val utmCoordinate = currentCircle?.position?.toUtm()
+        binding.tvLatPreview.text = tm3Coordinate?.first.toString()
+        binding.tvLongPreview.text = tm3Coordinate?.second.toString()
+        if (currentCircle?.title == null) return true
+        if (editing) {
+//            addPointMarkerSession(currentCircle.position)
+            pointTakenWithGnssStatusses.firstOrNull {
+                GeoPoint(
+                    currentCircle.position.latitude,
+                    currentCircle.position.longitude
+                ) == it.data.point
+            }
+                ?.apply {
+                    Log.i(localClassName, "got status ${data.data()}")
+                    pointWithRtkStatusSession.add(data.data())
+                }
+            return true
+        }
+        if (!editing && selectedPolygon.size <= 0) {
+            currentCircle.apply {
+                setIcon(
+                    BitmapDescriptorFactory.fromBitmap(
+                        defaultIconGenerator(R.drawable.ic_map_marker_grey).makeIcon(
+                            title
+                        )
+                    )
+                )
+                selectedPointWithStatus.add(this)
+            }
+            binding.btnDeleteActiveShape.text = getString(R.string.delete_point)
+            binding.shapeMenuContainer.expand()
+            binding.btnDeleteActiveShape.show()
+            binding.btnShapeDetail.gone()
+            return true
+        }
+        binding.btnAddPointInBetween.gone()
+        var snapped = false
+        binding.editMeasurementContainer.collapse()
+
+        selectedCircle.find { it == currentCircle }
+            ?.apply /*if current tapped circle is active, toggle it!*/ {
+                setIcon(
+                    BitmapDescriptorFactory.fromBitmap(
+                        defaultIconGenerator(R.drawable.ic_map_marker_yellow).makeIcon(
+                            title
+                        )
+                    )
+                )
+                selectedCircle.remove(this)
+
+                selectedCircle.firstOrNull()?.apply /*when there's still one left
+        on the selected circle make it red*/ {
+                    setIcon(
+                        BitmapDescriptorFactory.fromBitmap(
+                            defaultIconGenerator(R.drawable.ic_map_marker_red).makeIcon(
+                                title
+                            )
+                        )
+                    )
+                }
+            }
+            ?: let {
+                // allow only two circle to be selected
+                if (selectedCircle.size >= 2) {
+                    selectedCircle.firstOrNull()?.apply {
+                        setIcon(
+                            BitmapDescriptorFactory.fromBitmap(
+                                defaultIconGenerator(R.drawable.ic_map_marker_yellow).makeIcon(
+                                    title
+                                )
+                            )
+                        )
+                        selectedCircle.remove(this)
+                    }
+                }
+
+                val secondSelectedPolygon =
+                    selectedPolygon.find { polygon -> polygon.points.contains(currentCircle.position) }
+
+                // if circle selected on different polygon. Snap it!
+                if (secondSelectedPolygon != firstSelectedPolygon) {
+                    firstSelectedPolygon?.apply {
+                        polygonUndoStack.add(
+                            PolygonUndoSnapp(
+                                this,
+                                points
+                            ) {}) // polygon -> updatePointsPolygonOnDb(polygon) })
+//                        points =
+//                            points?.map { latLng -> if (latLng == selectedCircle.firstOrNull()?.position) currentCircle.position else latLng }
+//                        updatePointsPolygonOnDb(this)
+                        snapped = true
+                    }
+                } else /*show distance change form*/ {
+                    selectedCircle.firstOrNull()?.apply {
+                        binding.editMeasurementContainer.expand()
+                        val destPoint = currentCircle.position ?: return false
+                        binding.etPointDistance.setText("%.2f".format(Locale.ENGLISH, position.distanceTo(destPoint)))
+                        binding.btnAddPointInBetween.show()
+                    }
+                }
+
+                firstSelectedPolygon = secondSelectedPolygon
+
+                currentCircle.apply {
+                    selectedCircle.add(this)
+                }
+
+                selectedCircle.firstOrNull()?.apply {
+                    try {
+                        setIcon(
+                            BitmapDescriptorFactory.fromBitmap(
+                                defaultIconGenerator(R.drawable.ic_map_marker_red).makeIcon(
+                                    title
+                                )
+                            )
+                        )
+                    } catch (e: IllegalArgumentException) {
+//                        toast("Mohon bersabar").show()
+                    }
+                }
+
+                if (selectedCircle.size > 1) {
+                    selectedCircle.lastOrNull()?.apply {
+                        setIcon(
+                            BitmapDescriptorFactory.fromBitmap(
+                                defaultIconGenerator(R.drawable.ic_map_marker_green).makeIcon(
+                                    title
+                                )
+                            )
+                        )
+                    }
+                }
+
+                if (snapped)
+                    backToNormal()
+            }
+        if (selectedCircle.size > 0) {
+            selectedCircle.firstOrNull()?.isDraggable = false
+            selectedCircle.lastOrNull()?.isDraggable = true
+            lastCircleLocation = selectedCircle.lastOrNull()?.position
+            selectedPolygon.find { lastCircleLocation in it.points }.apply {
+                draggingPolygonMarker = this
+            }
+        }
+        //toggleDeleteButtonText()
+        return true
+    }
+
+    override fun onStart() {
+        super.onStart()
+//        registerEvent()
+        listenConnectionState()
+        Collections.getUserDrawnAreas(currentUser()?.email)
+            .whereEqualTo("workspace_id", workspace.id)
+            .addSnapshotListener(this) { doc, _ ->
+                val docs = doc?.documentChanges?.size
+                bidangWorkspace = docs!!
+                doc.documentChanges.forEach { documentChange ->
+                    if (documentChange.type == DocumentChange.Type.ADDED) {
+                        val snapshot = documentChange.document
+                        if (snapshot.reference !in localPolygonDbReference.map { it.documentReference }) {
+                            snapshot.toObject(Area::class.java).points?.apply {
+                                val createdPolygon =
+                                    createPolygon(this.map { geoPoint ->
+                                        LatLng(
+                                            geoPoint.latitude,
+                                            geoPoint.longitude
+                                        )
+                                    }.toSet())?.apply {
+                                        snapshot.data["syc"]?.apply {
+                                            if (this as Boolean) {
+                                                fillColor = rColor(R.color.red_transparent)
+                                                strokeColor = Color.GREEN
+                                            }
+                                        }
+
+                                        localPolygonDbReference.add(PolygonDecorator(snapshot.reference, this))
+                                        polygonDisplay?.points = listOf(map?.cameraPosition?.target)
+                                        val moveCameraTo = map { LatLng(it.latitude, it.longitude) }.getCenter()
+                                        map?.apply { moveCamera(CameraUpdateFactory.newLatLng(moveCameraTo)) }
+                                        if (activatingShape) {
+                                            var nub = ""
+                                            var nama = ""
+                                            var nik = ""
+                                            var hak = ""
+
+                                            clickedImportedShp?.properties?.apply {
+                                                when {
+                                                    keys.contains("NIB") -> nub = get("NIB").toString()
+                                                    keys.contains("NUB") -> nub = get("NUB").toString()
+                                                    keys.contains("nub") -> nub = get("nub").toString()
+                                                    keys.contains("nib") -> nub = get("nib").toString()
+                                                }
+                                                when {
+                                                    keys.contains("nama") -> nama = get("nama").toString()
+                                                    keys.contains("NAMA") -> nama = get("NAMA").toString()
+                                                    keys.contains("Nama") -> nama = get("Nama").toString()
+                                                }
+                                                when {
+                                                    keys.contains("nik") -> nik = get("nik").toString()
+                                                    keys.contains("NIK") -> nik = get("NIK").toString()
+                                                }
+                                                when {
+                                                    keys.contains("hak") -> hak = get("hak").toString()
+                                                    keys.contains("HAK") -> hak = get("HAK").toString()
+                                                }
+                                            }
+
+                                            Collections.getUserAreaDetailDelinasi(
+                                                currentUser()?.email,
+                                                snapshot.reference.id
+                                            )
+//                                                .set(
+//                                                    mapOf(
+//                                                        DelinasiGeneral.YURI_FILE_NO.prefix(DelinasiGeneral.PREFIX) to nub,
+//                                                        SubjectIdentity.NAMA.prefix(SubjectIdentity.PREFIX) to nama,
+//                                                        SubjectIdentity.NIK.prefix(SubjectIdentity.PREFIX) to nik,
+//                                                        AreaPosition.KETERANGAN.prefix(AreaPosition.PREFIX) to hak
+//                                                    ), SetOptions.merge()
+//                                                )
+                                            Collections.getUserAreaDetailYuridis(
+                                                currentUser()?.email,
+                                                snapshot.reference.id
+                                            )
+//                                                .set(
+//                                                    mapOf(
+//                                                        YuridisGeneral.NUB.prefix(YuridisGeneral.PREFIX) to nub,
+//                                                        YuridisGeneral.UTARA.prefix(YuridisGeneral.PREFIX) to "-",
+//                                                        YuridisGeneral.SELATAN.prefix(YuridisGeneral.PREFIX) to "-",
+//                                                        YuridisGeneral.BARAT.prefix(YuridisGeneral.PREFIX) to "-",
+//                                                        YuridisGeneral.TIMUR.prefix(YuridisGeneral.PREFIX) to "-"
+//                                                    ), SetOptions.merge()
+//                                                )
+                                            binding.btnActivateShape.gone()
+                                            activatingShape = false
+                                        }
+                                    }
+                                Collections.getUserAreaDetailDelinasi(currentUser()?.email, snapshot.id).get()
+                                    .addOnSuccessListener { delinasiSnapshot ->
+                                        delinasiSnapshot.data?.let { it1 ->
+                                            it1.apply {
+//                                                val cluster = get(DelinasiGeneral.CLUSTER.prefix(DelinasiGeneral.PREFIX))
+//                                                changePolygonColorByCluster(cluster.toString(), createdPolygon)
+                                            }
+                                        }
+                                    }
+                            }
+                            if (doneClicked) {
+                                nub = "%s%s-%03d".format(
+                                    workspace.getFormattedRw(),
+                                    workspace.getFormattedRt(),
+                                    workspaceIncrementCounter
+                                )
+                                if ((isRtkConnected && !addSPenMode) || pointWithRtkStatusSession.size > 0) {
+                                    pointWithRtkStatusSession.forEach { statusData ->
+                                        Collections.getUserAreaRtkData(currentUser()?.email, snapshot.reference.id)
+                                            .add(timeStamp(statusData))
+                                    }
+                                    pointWithRtkStatusSession.clear()
+                                }
+                                Collections.getUserAreaDetailDelinasi(currentUser()?.email, snapshot.reference.id)
+//                                    .set(
+//                                        mapOf(
+//                                            DelinasiGeneral.YURI_FILE_NO.prefix(DelinasiGeneral.PREFIX) to nub
+//                                        ), SetOptions.merge()
+//                                    )
+                                Collections.getUserAreaDetailYuridis(currentUser()?.email, snapshot.reference.id)
+//                                    .set(
+//                                        mapOf(
+//                                            YuridisGeneral.NUB.prefix(YuridisGeneral.PREFIX) to nub,
+//                                            YuridisGeneral.UTARA.prefix(YuridisGeneral.PREFIX) to "-",
+//                                            YuridisGeneral.SELATAN.prefix(YuridisGeneral.PREFIX) to "-",
+//                                            YuridisGeneral.BARAT.prefix(YuridisGeneral.PREFIX) to "-",
+//                                            YuridisGeneral.TIMUR.prefix(YuridisGeneral.PREFIX) to "-"
+//                                        ), SetOptions.merge()
+//                                    )
+//                                startActivityForResult(
+//                                    intentFor<DelinasiFormActivity>(
+//                                        AREA_ID to snapshot.id,
+//                                        Workspace.INTENT to workspace,
+//                                        DATA_SIZE to localPolygonDbReference.size,
+//                                        AREA to computedArea
+//                                    ), DONE_CLICKED
+//                                )
+                                doneClicked = false
+                            }
+                        }
+                    }
+                }
+            }
+
+        /**
+         * Polyline listener
+         */
+
+
+        Collections.getUserDrawnPolyAreas(currentUser()?.email)
+            .whereEqualTo("workspace_id", workspace.id)
+            .addSnapshotListener(this) { doc, _ ->
+                doc?.documentChanges?.forEach { documentChange ->
+                    if (documentChange.type == DocumentChange.Type.ADDED) {
+                        val snapshot = documentChange.document
+                        if (snapshot.reference !in localPolylineDbReference.map { it.documentReference }) {
+                            snapshot.toObject(Area::class.java).points?.apply {
+                                val createdPolyline =
+                                    createPolyline(this.map { geoPoint ->
+                                        LatLng(
+                                            geoPoint.latitude,
+                                            geoPoint.longitude
+                                        )
+                                    }.toSet())?.apply {
+                                        localPolylineDbReference.add(PolylineDecorator(snapshot.reference, this))
+                                        polylineDisplay?.points = listOf(map?.cameraPosition?.target)
+                                    }
+
+                                Collections.getUserPolylineAreaDetail(currentUser()?.email, snapshot.id).get()
+                                    .addOnSuccessListener { lineSnapshot ->
+                                        lineSnapshot.data?.let { it1 ->
+                                            it1.apply {
+//                                                val jenis = get(Line.JENIS.prefix(Line.PREFIX))
+//                                                changePolylineColorByJenis(jenis.toString(), createdPolyline)
+                                            }
+                                        }
+                                    }
+                            }
+                        }
+
+                        if (doneClicked) {
+//                            startActivityForResult(
+//                                intentFor<LineFormActivity>(
+//                                    AREA_ID to snapshot.id,
+//                                    Workspace.INTENT to workspace,
+//                                    DATA_SIZE to localPolygonDbReference.size,
+//                                    AREA to computedArea
+//                                ), DONE_CLICKED
+//                            )
+                            doneClicked = false
+                        }
+                    }
+                }
+            }
+
+
+        Collections.workspaceCountTracker().document(workspace?.id.toString())
+            .addSnapshotListener { snapshot, _ ->
+                workspaceIncrementCounter = try {
+                    snapshot?.data?.get("counter_").toString().toInt()
+                } catch (e: Exception) {
+                    Log.i(
+                        localClassName,
+                        "Error while getting increment counter data indicating no value set to it, " +
+                                "so here 0 or continuing the size of area in the workspace assigned to the counter is safe"
+                    )
+                    localPolygonDbReference.size
+                }
+            }
+//        Collections.getUserPurchasedItem(currentUser()?.email).document(BuildConfig.PRO_PRODUCT_ID)
+//            .addSnapshotListener { a, b ->
+//                Log.i(localClassName, "$b")
+//                if (b == null) {
+//                    a?.data?.get(getString(R.string.product_item_key))?.toString()?.noNull()?.apply {
+//                        if (!isEmpty() && equals(BuildConfig.PRO_PRODUCT_ID)) {
+//                            val expire = a?.data?.get("expire_at").toString()
+//                            a?.data?.get("expire_at").toString().noNull().apply {
+//                                if (this.isNotEmpty()) {
+//                                    isProFeaturePurchased = this.toDate() >= getDate().toDate()
+//                                } else {
+//                                    isProFeaturePurchased = true
+//                                    Collections.getUserPurchasedItem(currentUser()?.email)
+//                                        .document(BuildConfig.PRO_PRODUCT_ID).update(
+//                                            mapOf("expire_at" to getExpire())
+//                                        )
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+        Collections.getUserWorkspacePoints(currentUser()?.email, workspace.id)
+            .orderBy("created_at", Query.Direction.ASCENDING)
+            .addSnapshotListener(this) { a, _ ->
+                map?.apply {
+                    a?.documentChanges?.withIndex()?.forEach {
+                        if (it.value.type == DocumentChange.Type.ADDED) {
+                            val status = it.value.document.toObject(GnssStatusHolder::class.java)
+                            if (it.value.document.reference !in pointTakenWithGnssStatusses.map { holder -> holder.doc }) {
+                                pointTakenWithGnssStatusses.add(
+                                    ReferenceToGnssStatusHolder(
+                                        it.value.document.reference,
+                                        status
+                                    )
+                                )
+                                var statusPoint: Int = 0
+                                if (status.status.equals("Fixed", true)) {
+                                    statusPoint = 1
+                                } else if (status.status.equals("Float RTK", true)) {
+                                    statusPoint = 2
+                                } else if (status.status.equals("Differential", true)) {
+                                    statusPoint = 0
+                                } else if (status.status.equals("", true)) {
+                                    statusPoint = 3
+                                }
+
+                                markerStatus[pointTakenWithGnssStatusses.size] = status.status
+
+//                                addMarker(
+//                                    defaultMarkerPoint(pointTakenWithGnssStatusses.size, statusPoint).position(
+//                                        LatLng(
+//                                            status.point.latitude,
+//                                            status.point.longitude
+//                                        )
+//                                    )
+//                                )
+                            }
+                        }
+                    }
+                }
+            }
+        appPreference().edit().putBoolean("wms", false).apply()
+    }
+
+    fun analisisSatgas() {
+//        if (viewModel.checkSatgasPangtan) {
+//            localPolygonDbReference.forEach {
+//                Collections.getUserAreaDetailPengtan(currentUser()?.email, it.documentReference.id).get()
+//                    .addOnSuccessListener { doc ->
+//                        if (!doc.exists()) {
+//                            it.polygon.apply {
+//                                strokeColor = rColor(R.color.jalan)
+//                                strokeWidth = 6f
+//                            }
+//                        } else {
+//                            it.polygon.apply {
+//                                fillColor = rColor(R.color.yellow_transparent)
+//                                strokeWidth = NORMAL_STROKE_WIDTH
+//                                strokeColor = rColor(R.color.yellow)
+//                            }
+//                        }
+//                    }
+//            }
+//        }
+    }
+
+    private fun loadFileSHP() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "application/zip"
+        try {
+            startActivityForResult(intent, UPLOAD_SHP_CODE)
+        } catch (e: ActivityNotFoundException) {
+        }
+    }
+
+    private fun enableGPS() {
+        GpsUtils(this).turnGPSOn { isGPSEnable ->
+            isGPS = isGPSEnable
+        }
+    }
+
+    private fun loadFileGeoJson() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "application/octet-stream"
+        try {
+            startActivityForResult(intent, UPLOAD_GEOJSON_CODE)
+        } catch (e: ActivityNotFoundException) {
+        }
     }
 }
