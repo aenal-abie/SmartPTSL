@@ -2,8 +2,9 @@
 agp = "8.13.2"
 androidMapsUtils = "4.1.1"
 cardview = "1.0.0"
+expandablelayout = "2.9.2"
 fab = "1.6.4"
-firebaseBom = "34.10.0"
+firebaseBom = "34.11.0"
 firebaseStorageKtx = "21.0.2"
 geodesy = "1.1.3"
 javadbfVersion = "1.14.1"
@@ -32,6 +33,7 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
+expandablelayout = { module = "com.github.cachapa:ExpandableLayout", version.ref = "expandablelayout" }
 fab = { module = "com.github.clans:fab", version.ref = "fab" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }

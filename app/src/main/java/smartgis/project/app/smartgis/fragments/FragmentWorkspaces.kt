@@ -147,7 +147,7 @@ class FragmentWorkspaces : Fragment() {
 
    fun onWorkspaceClick(position: Int) {
         val intent = Intent(this@FragmentWorkspaces.requireContext(), MainActivity::class.java)
-        intent.putExtra("workspace_id", data[position].workspace)
+        intent.putExtra(Workspace.INTENT, data[position].workspace)
         startActivity(intent)
     }
 

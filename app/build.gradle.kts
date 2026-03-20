@@ -114,5 +114,8 @@ dependencies {
     //fab menu
     implementation (libs.fab)
 
+    //expand
+    implementation(libs.expandablelayout)
+
 
 }
