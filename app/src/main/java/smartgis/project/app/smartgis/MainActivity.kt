@@ -1,5 +1,6 @@
 package smartgis.project.app.smartgis
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.DialogInterface
@@ -7,6 +8,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.NetworkInfo
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -35,8 +37,14 @@ import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.Source
+import io.reactivex.disposables.Disposable
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.EventBus
+import org.json.JSONArray
 import smartgis.project.app.smartgis.command.Actionable
 import smartgis.project.app.smartgis.command.PolygonUndoSnapp
+import smartgis.project.app.smartgis.controllers.ImportGeoJSONController
+import smartgis.project.app.smartgis.controllers.ImportShpController
 import smartgis.project.app.smartgis.databinding.ActivityMainBinding
 import smartgis.project.app.smartgis.databinding.ActivityWelcomeLoginBinding
 import smartgis.project.app.smartgis.decorators.PolygonDecorator
@@ -44,6 +52,7 @@ import smartgis.project.app.smartgis.decorators.PolylineDecorator
 import smartgis.project.app.smartgis.decorators.ShapeImportedDecorator
 import smartgis.project.app.smartgis.decorators.ShapeWMSDecorator
 import smartgis.project.app.smartgis.documents.Collections
+import smartgis.project.app.smartgis.events.*;
 import smartgis.project.app.smartgis.models.Area
 import smartgis.project.app.smartgis.models.GnssStatusHolder
 import smartgis.project.app.smartgis.models.ReferenceToGnssStatusHolder
@@ -61,10 +70,15 @@ import smartgis.project.app.smartgis.utils.geometry.Vector2
 import smartgis.project.app.smartgis.utils.getCenter
 import smartgis.project.app.smartgis.utils.gone
 import smartgis.project.app.smartgis.utils.rColor
+import smartgis.project.app.smartgis.utils.shape.defaultCircle
 import smartgis.project.app.smartgis.utils.shape.defaultIconGenerator
 import smartgis.project.app.smartgis.utils.show
 import smartgis.project.app.smartgis.utils.timeStamp
 import smartgis.project.app.smartgis.utils.toTm3
+import smartgis.project.app.smartgis.utils.waktu
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 
 class MainActivity :  LoginRequiredActivity(),
@@ -117,14 +131,14 @@ class MainActivity :  LoginRequiredActivity(),
     private val polygonUndoStack = mutableListOf<Actionable>()
     private val lastTwoMarker = mutableSetOf<LatLng>()
     private val addedDistanceLabel = mutableSetOf<Marker>()
-//    private var importShpController: ImportShpController? = null
-//    private var importGeoJsonController: ImportGeoJSONController? = null
+    private var importShpController: ImportShpController? = null
+    private var importGeoJsonController: ImportGeoJSONController? = null
     private val changedDistanceCircle = mutableSetOf<CircleFromLatLng>()
     private var pausingRtk = false
     private var isMode = 1
     private var isRtkConnected = false
     private var state: NetworkInfo.State? = null
-//    private var connectionStateDisposable: Disposable? = null
+    private var connectionStateDisposable: Disposable? = null
     private var globalIndefiniteSnackbar: Snackbar? = null
     private var isCreatingSuratPernyataan: Boolean = false
     private var gnssStatusHolder = GnssStatusHolder()
@@ -968,58 +982,6 @@ class MainActivity :  LoginRequiredActivity(),
         )
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
-
-        polygonDisplay = map?.addPolygon(
-            PolygonOptions()
-                .fillColor(rColor(R.color.yellow_transparent))
-                .strokeWidth(1f)
-                .zIndex(1f)
-                .add(map?.cameraPosition?.target)
-        )
-        polylineDisplay = map?.addPolyline(
-            PolylineOptions().apply {
-                color(Color.YELLOW)
-                    .zIndex(1f)
-                add(map?.cameraPosition?.target)
-                width(width / 2)
-            }
-        )
-
-//        map?.setOnPolygonClickListener(this)
-//        map?.setOnMapClickListener(this)
-        map?.setOnMarkerClickListener(this)
-//        map?.setOnMarkerDragListener(this)
-//        map?.setOnPolylineClickListener(this)
-        map?.mapType = MAP_TYPE_SATELLITE
-        map?.uiSettings?.isCompassEnabled = true
-
-        val lat = -7.7827188
-        val lng = 110.343225
-
-        map?.apply { moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat, lng), 17f)) }
-    }
-
-    @SuppressLint("MissingPermission")
-//    @AfterPermissionGranted(ASK_LOCATION_PERMISSIONS_REQUEST_CODE)
-    private fun askLocationForPermissions() {
-//        if (EasyPermissions.hasPermissions(this, *locationPermissions())) {
-//            Log.i(localClassName, "location grated")
-//            enableGPS()
-//        } else {
-//            // Permission is missing and must be requested.
-//            AlertDialog.Builder(this).apply {
-//                setPositiveButton("Tampilkan Dialog Permission") { _, _ ->
-//                    requestPermissionsCompat(locationPermissions(), ASK_LOCATION_PERMISSIONS_REQUEST_CODE)
-//                }
-//                setNegativeButton("Kembali", null)
-//                setMessage(R.string.why_need_location)
-//                create()
-//            }.show()
-//        }
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         return true
@@ -1211,6 +1173,396 @@ class MainActivity :  LoginRequiredActivity(),
             appPreference().edit().putBoolean("wms", true).apply()
         }
     }
+
+    private fun showWMSKantah() {
+        fun loadWms() {
+//            Collections.getUserLocation(currentUser()?.email).document("kantah").get()
+//                .addOnSuccessListener {
+//                    kantah = it.data?.get("id").toString()
+//                    viewModel.isWMSActive = true
+//                    val type = appPreference().getInt("type_wms", 1)
+//
+//                    if(tileOverlays.isEmpty()) {
+//                        wmsTileProvider1 = KantahTileProviderFactory.getOsgeoWmsTileProvider(kantah)
+//                        val over1 = TileOverlayOptions().tileProvider(wmsTileProvider1)
+//                        wmsTileProvider2 = KantahDroneTileProviderFactory.getOsgeoWmsTileProvider(kantah)
+//                        val over2 = TileOverlayOptions().tileProvider(wmsTileProvider2)
+//                        wmsTileProvider3 = KantahUAVTileProviderFactory.getOsgeoWmsTileProvider(kantah)
+//                        val over3 = TileOverlayOptions().tileProvider(wmsTileProvider3)
+//                        map?.let { it1 -> tileOverlays.add(it1.addTileOverlay(over1)) }
+//                        map?.let { it1 -> tileOverlays.add(it1.addTileOverlay(over2)) }
+//                        map?.let { it1 -> tileOverlays.add(it1.addTileOverlay(over3)) }
+//                    }
+//
+//                    when (type) {
+//                        0 -> {
+//                            tileOverlays[0].isVisible = true
+//                            tileOverlays[1].isVisible = false
+//                            tileOverlays[2].isVisible = false
+//                        }
+//
+//                        1 -> {
+//                            tileOverlays[0].isVisible = false
+//                            tileOverlays[1].isVisible = true
+//                            tileOverlays[2].isVisible = false
+//                        }
+//
+//                        2 -> {
+//                            tileOverlays[0].isVisible = false
+//                            tileOverlays[1].isVisible = false
+//                            tileOverlays[2].isVisible = true
+//                        }
+//                    }
+//                }.addOnFailureListener {
+//                    longToast("Kantah tidak ditemukan")
+//                }
+        }
+
+//        dialogInterface = alert {
+//            customView {
+//                listView {
+//                    adapter = ArrayAdapter(
+//                        this@MainActivity,
+//                        simple_list_item_1,
+//                        listOf("Index", "Foto Drone/UAV", "Peta Kerja")
+//                    )
+//                    onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+//                        when (position) {
+//                            0 -> {
+//                                appPreference().edit().putInt("type_wms", 1).apply()
+//                                loadWms()
+//                                dialogInterface?.dismiss()
+//                            }
+//
+//                            1 -> {
+//                                appPreference().edit().putInt("type_wms", 2).apply()
+//                                loadWms()
+//                                dialogInterface?.dismiss()
+//                            }
+//
+//                            2 -> {
+//                                appPreference().edit().putInt("type_wms", 0).apply()
+//                                loadWms()
+//                                dialogInterface?.dismiss()
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }.show()
+
+    }
+
+    private fun load(from: Int, to: Int, features: JSONArray) {
+//        val size = features.length()
+//        var to = to
+//        var active = features[size - 1].toString()
+//        if (active == "1") {
+//            to -= 1
+//        }
+//
+//        Observable.range(from, to)
+//            .subscribeOn(Schedulers.newThread())
+//            .observeOn(Schedulers.computation())
+//            .map { it1 ->
+//                val points = mutableListOf<LatLng>()
+//                val geometry = features.getJSONObject(it1).get("geometry").toString()
+//                if (geometry != "null") {
+//                    val geometryObject = JSONObject(geometry)
+//                    val data = geometryObject
+//                        .getJSONArray("coordinates")
+//                        .getJSONArray(0)
+//                    pointMarkerSession.clear()
+//                    for (index in 0 until data.length()) {
+//                        points.add(
+//                            LatLng(
+//                                data.getJSONArray(index).getDouble(1),
+//                                data.getJSONArray(index).getDouble(0)
+//                            )
+//                        )
+//                    }
+//                }
+//                ImportedHolder(features.getJSONObject(it1).getJSONObject("properties"), points)
+//            }
+//            .subscribeOn(Schedulers.newThread())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe({ importedHolder ->
+//                if (active.equals("1")) {
+//                    val mapData =
+//                        Gson().fromJson<Map<String, Any>>(
+//                            importedHolder.properties.toString(),
+//                            HashMap::class.java
+//                        )
+//                    val iskedImportedShp =
+//                        ShapeImportedDecorator(mapData, createShpPolygon(importedHolder.points))
+//                    addAreaToDb(importedHolder.points.toSet(), iskedImportedShp, true)
+//                } else {
+//                    val mapData =
+//                        Gson().fromJson<Map<String, Any>>(
+//                            importedHolder.properties.toString(),
+//                            HashMap::class.java
+//                        )
+//                    shpImported.add(ShapeImportedDecorator(mapData, createShpPolygon(importedHolder.points)))
+//                    map?.apply {
+//                        moveCamera(
+//                            CameraUpdateFactory.newLatLngZoom(
+//                                importedHolder.points[0],
+//                                cameraPosition.zoom
+//                            )
+//                        )
+//                    }
+//                }
+//            }, { Log.i(localClassName, it.localizedMessage) }, {}).isDisposed
+    }
+
+    private fun addPointMarkerSession(position: LatLng) {
+//        map?.apply {
+//            val number = circleMarkers.size + 1
+//            circleMarkers.add(
+//                addMarker(
+//                    defaultMarker(number)
+//                        .position(position)
+//                )
+//            )
+//            pointMarkerSession.add(position)
+//            if (isMode == POLYGON_MODE)
+//                polygonDisplay?.points = pointMarkerSession
+//            polylineDisplay?.points = pointMarkerSession
+//            lastTwoMarker.add(position)
+//            if (lastTwoMarker.size > 1) {
+//                map?.apply {
+//                    val origin = lastTwoMarker.firstOrNull() ?: return
+//                    val distance = lastTwoMarker.lastOrNull() ?: return
+//                    addedDistanceLabel.add(addMarker(generateLabelBetween(origin, distance)))
+//                }
+//                lastTwoMarker.remove(lastTwoMarker.firstOrNull())
+//            }
+//        }
+    }
+
+    private fun loadMbTiles(file: File) {
+//        tileProvider = ExpandedMBTilesTileProvider(file, 256, 256)
+//        tileOverlay = map?.addTileOverlay(TileOverlayOptions().tileProvider(tileProvider))
+//        try {
+//            val db = SQLiteDatabase.openDatabase(file.path, null, SQLiteDatabase.OPEN_READONLY)
+//            val cursor = db.rawQuery("SELECT value FROM metadata WHERE name='bounds';", null)
+//            cursor.moveToFirst()
+//            val coordinates = cursor.getString(0).split(",").map { it.toDouble() }.toList()
+//            val p1 = LatLng(coordinates[1], coordinates[0])
+//            val p2 = LatLng(coordinates[3], coordinates[2])
+//            val bounds = LatLngBounds(p1, p2)
+//            cursor.close()
+//            db.close()
+//            map?.apply {
+//                moveCamera(
+//                    CameraUpdateFactory.newLatLngZoom(
+//                        bounds.center,
+//                        cameraPosition.zoom
+//                    )
+//                )
+//            }
+//        } catch (e: Exception) {
+//            rootLayout.longSnackbar(getString(R.string.cant_get_center_bounds_mbtiles))
+//        }
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap
+
+        polygonDisplay = map?.addPolygon(
+            PolygonOptions()
+                .fillColor(rColor(R.color.yellow_transparent))
+                .strokeWidth(1f)
+                .zIndex(1f)
+                .add(map?.cameraPosition?.target)
+        )
+        polylineDisplay = map?.addPolyline(
+            PolylineOptions().apply {
+                color(Color.YELLOW)
+                    .zIndex(1f)
+                add(map?.cameraPosition?.target)
+                width(width / 2)
+            }
+        )
+
+//        map?.setOnPolygonClickListener(this)
+//        map?.setOnMapClickListener(this)
+        map?.setOnMarkerClickListener(this)
+//        map?.setOnMarkerDragListener(this)
+//        map?.setOnPolylineClickListener(this)
+        map?.mapType = MAP_TYPE_SATELLITE
+        map?.uiSettings?.isCompassEnabled = true
+
+        val lat = -7.7827188
+        val lng = 110.343225
+
+        map?.apply { moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat, lng), 17f)) }
+    }
+
+    @SuppressLint("MissingPermission")
+//    @AfterPermissionGranted(ASK_LOCATION_PERMISSIONS_REQUEST_CODE)
+    private fun askLocationForPermissions() {
+//        if (EasyPermissions.hasPermissions(this, *locationPermissions())) {
+//            Log.i(localClassName, "location grated")
+//            enableGPS()
+//        } else {
+//            // Permission is missing and must be requested.
+//            AlertDialog.Builder(this).apply {
+//                setPositiveButton("Tampilkan Dialog Permission") { _, _ ->
+//                    requestPermissionsCompat(locationPermissions(), ASK_LOCATION_PERMISSIONS_REQUEST_CODE)
+//                }
+//                setNegativeButton("Kembali", null)
+//                setMessage(R.string.why_need_location)
+//                create()
+//            }.show()
+//        }
+    }
+
+
+    private fun askBluetoothForPermissions() {
+//        if (EasyPermissions.hasPermissions(this, *bluetoothPermissions())) {
+//            startActivity<BluetoothDevices>()
+//        } else {
+//            requestPermissionsCompat(bluetoothPermissions(), ASK_BLUETOOTH_PERMISSIONS_REQUEST_CODE)
+//        }
+    }
+
+    private fun askStorageForPermissions(): Boolean {
+        return  false;
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+//            return true;
+//        }
+//        else if (!EasyPermissions.hasPermissions(this, *storagePermissions())) {
+//            requestPermissionsCompat(storagePermissions(), ASK_STORAGE_PERMISSIONS_REQUEST_CODE)
+//        }
+//        return EasyPermissions.hasPermissions(this, *storagePermissions())
+    }
+
+    private fun locationPermissions() =
+        arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.FOREGROUND_SERVICE
+        )
+
+    private fun storagePermissions() =
+        arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        )
+
+    private fun bluetoothPermissions() =
+        arrayOf(
+            Manifest.permission.BLUETOOTH,
+            Manifest.permission.BLUETOOTH_ADMIN,
+            Manifest.permission.BLUETOOTH_CONNECT,
+            Manifest.permission.BLUETOOTH_SCAN,
+        )
+
+
+    override
+    fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+//        when {
+//            requestCode == ASK_LOCATION_PERMISSIONS_REQUEST_CODE -> {
+//                enableGPS()
+//            }
+//            requestCode == ASK_BLUETOOTH_PERMISSIONS_REQUEST_CODE -> {
+//                startActivity<BluetoothDevices>()
+//            }
+//            requestCode == ASK_STORAGE_PERMISSIONS_REQUEST_CODE &&
+//                    checkSelfPermissionCompat(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ->
+//                longToast(R.string.reproccess)
+//        }
+    }
+
+    override
+    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+//        if (resultCode == Activity.RESULT_OK) {
+//            when (requestCode) {
+//                SELECT_MBTILE -> {
+//                    data?.data?.let { uri ->
+//                        val inputStream = this.contentResolver.openInputStream(uri)
+//                        val outputFile = File.createTempFile("_shp_", ".mbtiles", this.cacheDir)
+//                        val outputStream = FileOutputStream(outputFile)
+//                        inputStream?.use {
+//                            it.copyTo(outputStream)
+//                        }
+//                        loadMbTiles(outputFile)
+//                    }
+//
+//                }
+//
+//                SEARCH_REQUEST_CODE -> {
+//                    localPolygonDbReference.firstOrNull {
+//                        it.documentReference.id == data?.getStringExtra(
+//                            HandleNameNIKSearch.SEARCH_RESULT
+//                        )
+//                    }
+//                        ?.let {
+//                            map?.animateCamera(
+//                                CameraUpdateFactory.newLatLngZoom(
+//                                    it.polygon.points.getCenter(),
+//                                    20f
+//                                )
+//                            )
+//
+//                            onPolygonClick(it.polygon)
+//                        }
+//                }
+//                UPLOAD_SHP_CODE -> {
+//                    data?.data?.let { uri ->
+//                        val inputStream = this.contentResolver.openInputStream(uri)
+//                        val outputFile = File.createTempFile("_shp_", ".zip", this.cacheDir)
+//                        val outputStream = FileOutputStream(outputFile)
+//                        inputStream?.use {
+//                            it.copyTo(outputStream)
+//                        }
+//                        importShpController?.handle(outputFile, getFileName(uri)) { load(0, it.length(), it) }
+//                    }
+//                }
+//                UPLOAD_GEOJSON_CODE -> {
+//                    data?.data?.let { uri ->
+//                        val inputStream = this.contentResolver.openInputStream(uri)
+//                        val outputFile = File.createTempFile("_shp_", ".zip", this.cacheDir)
+//                        val outputStream = FileOutputStream(outputFile)
+//                        inputStream?.use {
+//                            it.copyTo(outputStream)
+//                        }
+//                        importGeoJsonController?.handle(outputFile, getFileName(uri)) {
+//                            load(
+//                                0,
+//                                it.length(),
+//                                it
+//                            )
+//                        }
+//                    }
+//
+//                }
+//                else -> super.onActivityResult(requestCode, resultCode, data)
+//            }
+//        }
+    }
+
+//    override
+    fun onPermissionsDenied(requestCode: Int, list: List<String>) {
+        // Un-check the box until the layer has been enabled
+        // and show dialog box with permission rationale.
+        showPermissionDeniedDialog = true
+    }
+
+//    override
+    fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+
+    }
+
+
 
     override fun onPolygonClick(polygon: Polygon) {
         binding.btnAddPointInBetween.gone()
@@ -1693,6 +2045,57 @@ class MainActivity :  LoginRequiredActivity(),
         return true
     }
 
+
+    private fun toggleDeleteButtonText() {
+        if (selectedCircle.size > 0)
+            binding.btnDeleteActiveShape.text = getString(R.string.delete_point)
+        else if (selectedPolygon.size > 0)
+            binding.btnDeleteActiveShape.text = getString(R.string.delete_shape)
+    }
+
+    private fun updatePointsPolygonOnDb(polygon: Polygon) {
+        polygon.apply {
+            localPolygonDbReference.find { decorator -> decorator.polygon == this }?.apply {
+                documentReference
+                    .update(mapOf("points" to points.map { latLng ->
+                        GeoPoint(
+                            latLng.latitude,
+                            latLng.longitude
+                        )
+                    }))
+                    .addOnSuccessListener { Log.i(TAG, "[${documentReference.id}] updated") }
+            }
+        }
+    }
+
+    private fun unregisterEvent() {
+        Log.i(localClassName, "unregistering event")
+//        if (EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this)
+    }
+
+    private fun registerEvent() {
+//        if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this)
+    }
+
+    override fun onDestroy() {
+        Log.i(localClassName, "ondestroy")
+        unregisterEvent()
+        //connectionStateDisposable?.dispose()
+        super.onDestroy()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        //connectionStateDisposable?.dispose()
+    }
+
+    override fun onResume() {
+        registerEvent()
+        listenConnectionState()
+        analisisSatgas()
+        super.onResume()
+    }
+
     override fun onStart() {
         super.onStart()
 //        registerEvent()
@@ -1964,6 +2367,561 @@ class MainActivity :  LoginRequiredActivity(),
                 }
             }
         appPreference().edit().putBoolean("wms", false).apply()
+    }
+    private fun changePolygonColorByCluster(clusterName: String, createdPolygon: Polygon?) {
+//        val polygonColor = clusterColorMaps.colorMaps[clusterName]
+//        polygonColor?.let { colors ->
+//            createdPolygon?.fillColor = rColor(colors.fillColor)
+//            createdPolygon?.strokeColor = rColor(colors.strokeColor)
+//        }
+    }
+
+    private fun changePolylineColorByJenis(jenis: String, createdPolyline: Polyline?) {
+//        val polylineColor = lineColorMaps.colorMaps[jenis]
+//        polylineColor?.let { colors ->
+//            createdPolyline?.color = rColor(colors.color)
+//        }
+    }
+
+//    override
+    fun onMarkerDragStart(p0: Marker?) {}
+
+//    override
+    fun onMarkerDrag(p0: Marker?) {}
+
+//    override
+    fun onMarkerDragEnd(p0: Marker?) {
+//        draggingPolygonMarker?.apply {
+//            polygonUndoStack.add(PolygonUndoSnapp(this, points) { polygon ->
+//                updatePointsPolygonOnDb(polygon)
+//                onPolygonClick(polygon)
+//                onPolygonClick(polygon)
+//            })
+//            points = points.map { if (it == lastCircleLocation) p0?.position else it }
+//            updatePointsPolygonOnDb(this)
+//            onPolygonClick(this)
+//            onPolygonClick(this)
+//        }
+//        lastCircleLocation = p0?.position
+    }
+
+//    @Subscribe
+//    fun onHrmsVrms(event: HrmsVrmsEvent) {
+//        setHvrms(event.hrms, event.vrms, event.rms)
+//    }
+
+
+//    @Subscribe
+//    fun onNtripMessage(event: NtripEvent) {
+//        longToast(event.message)
+//    }
+
+//    @Subscribe
+//    fun onMountpoint(event: MountpointEvent) {
+//        if (event.selected) {
+//            stopService(
+//                Intent(
+//                    this,
+//                    smartgis.project.app.smartgis.ntrip.service.NTRIPService::class.java
+//                )
+//            )
+//            mountPoint()
+//        }
+//    }
+
+
+    private fun setHvrms(hrms: Double, vrms: Double, rms: Double) {
+        binding.tvHvrms.show()
+        binding.tvHvrms.text = "HRMS: %.3f - VRMS: %.3f".format(hrms, vrms)
+        gnssStatusHolder.hrms = hrms
+        gnssStatusHolder.vrms = vrms
+        gnssStatusHolder.rms = rms
+    }
+
+    @Subscribe
+    fun onLocation(event: LocationEvent) {
+        binding.tvLatPreview.text = event.location?.latitude.toString()
+        binding.tvLongPreview.text = event.location?.longitude.toString()
+        if (!pausingRtk)
+            map?.apply {
+                moveCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                        event.location?.let { LatLng(it.latitude, it.longitude) } as LatLng,
+                        maxZoomLevel
+                    )
+                )
+
+                circleRtkPosition?.let {
+                    it.remove()
+                    circleRtkPosition =
+                        addCircle(
+                            defaultCircle()
+                                .center(event.location?.let { it1 -> LatLng(it1.latitude, it1.longitude) } as LatLng)
+                                .fillColor(rColor(R.color.colorPrimary))
+                                .strokeColor(rColor(R.color.colorPrimary))
+                        )
+
+                } ?: let {
+                    circleRtkPosition = addCircle(
+                        defaultCircle()
+                            .center(event.location.let { it1 -> LatLng(it1.latitude, it1.longitude) } as LatLng)
+                            .fillColor(rColor(R.color.colorPrimary))
+                            .strokeColor(rColor(R.color.colorPrimary))
+                    )
+                }
+            }
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Subscribe
+    fun onRtkData(event: RtkDataEvent) {
+//        logShower?.show(event.message)
+//        event.message.hvrms().apply {
+//            if (size > 0) {
+//                setHvrms(get(0), get(1), get(2))
+//            }
+//        }
+//
+//        event.message.altitude()?.apply {
+//            Log.i("ALT", "lat $this")
+//        }
+    }
+
+    @Subscribe
+    fun onSatellite(event: SatelliteStatusEvent) {
+        gnssStatusHolder.hdop = event.hdop
+        gnssStatusHolder.vdop = event.vdop
+        gnssStatusHolder.pdop = event.pdop
+    }
+
+    @Subscribe
+    fun onQuality(event: QualityEvent) {
+        binding.tvRtkStatus.show()
+        binding.tvRtkStatus.text = "Status: ${event.quality}"
+        event.altitude?.let {
+            gnssStatusHolder.altitude = it.toFloat()
+        }
+        gnssStatusHolder.status = event.quality.toString()
+        gnssStatusHolder.origin = event.origin.toString()
+    }
+
+    @Subscribe
+    fun onRtkEvent(event: RtkEvent) {
+        Log.i(localClassName, "connecting rtk")
+        isRtkConnected = true
+        if (!event.connect) {
+            Log.i(localClassName, "dissconnecting rtk")
+//            stopService(
+//                Intent(
+//                    this,
+//                    smartgis.project.app.smartgis.ntrip.service.NTRIPService::class.java
+//                )
+//            )
+            isRtkConnected = false
+            binding.tvHvrms.gone()
+            binding.tvRtkStatus.gone()
+            circleRtkPosition?.remove()
+        }
+    }
+
+//    @Subscribe
+//    fun onFormData(data: FormDataEvent) {
+//        if (!selectedPolyline.isEmpty()) {
+//            val jenis = data.data?.get(Line.JENIS.prefix(Line.PREFIX)).toString()
+//            changePolylineColorByJenis(jenis, selectedPolyline.lastOrNull())
+//        }
+//
+//        if (!selectedPolygon.isEmpty()) {
+//            val cluster =
+//                data.data?.get(DelinasiGeneral.CLUSTER.prefix(DelinasiGeneral.PREFIX)).toString()
+//            changePolygonColorByCluster(cluster, selectedPolygon.lastOrNull())
+//        }
+//    }
+
+
+//    inner class ShowData : ToParse {
+//        private val data = mutableListOf<String>()
+//        private val adapter = ArrayAdapter<String>(this@MainActivity, R.layout.simple_small_item, data)
+//        private var lvLog: ListView? = null
+//        private var autoScroll: Boolean = false
+//        private var sendLog: Boolean = false
+//
+//        fun showDialog() {
+//            alert {
+//                customView {
+//                    verticalLayout {
+//                        lparams(width = matchParent, height = matchParent)
+//                        lvLog = listView {
+//                            title = "Log Data RTK"
+//                            adapter = this@ShowData.adapter
+//                        }.lparams(width = matchParent, height = dip(0), weight = 1f)
+//                        checkBox {
+//                            text = context.getString(R.string.auto_scroll)
+//                            onCheckedChange { _, isChecked -> autoScroll = isChecked }
+//                        }
+//                        checkBox {
+//                            text = "Kirim Log Data"
+//                            onCheckedChange { _, isChecked -> sendLog = isChecked }
+//                        }
+//                    }
+//                }
+//                positiveButton(getString(R.string.close)) { it.dismiss() }
+//            }.show()
+//        }
+//
+//        private fun scrollToLast() {
+//            lvLog?.setSelection(data.size - 1)
+//        }
+//
+//        override fun show(data: String?) {
+//            this@ShowData.data.add("$data")
+//            adapter.notifyDataSetChanged()
+//            if (autoScroll)
+//                scrollToLast()
+//            if (sendLog)
+//                Collections.getRtkData()
+//                    .add(
+//                        timeStamp(
+//                            mutableMapOf(
+//                                "from" to currentUser()?.email.toString(),
+//                                "data" to data.toString()
+//                            )
+//                        )
+//                    )
+//        }
+//    }
+
+
+    fun selectMenuTetangga() {
+        val detailMenus =
+            listOf(
+                "Tetangga Utara",
+                "Tetangga Selatan",
+                "Tetangga Barat",
+                "Tetangga Timur"
+            )
+
+        var dialogInterfaceMenu: DialogInterface? = null
+
+//        dialogInterfaceMenu = alert {
+//            customView {
+//                listView {
+//                    adapter = ArrayAdapter<String>(context, simple_list_item_1, detailMenus)
+//                    onItemClickListener =
+//                        AdapterView.OnItemClickListener { _, _, position, _ ->
+//                            tetanggaBerbatasan = position + 1
+//                            dialogInterfaceMenu?.dismiss()
+//                        }
+//                }
+//            }
+//            cancelButton { }
+//        }.show()
+    }
+
+    private fun saveImportSHPAttribut(
+        isImportedShp: ShapeImportedDecorator? = null,
+        id: String = ""
+    ) {
+        var nub = ""
+        var nama = ""
+        var nik = ""
+        var hak = ""
+
+        isImportedShp?.properties?.apply {
+            when {
+                keys.contains("NIB") -> nub = get("NIB").toString()
+                keys.contains("NUB") -> nub = get("NUB").toString()
+                keys.contains("nub") -> nub = get("nub").toString()
+                keys.contains("nib") -> nub = get("nib").toString()
+            }
+            when {
+                keys.contains("nama") -> nama = get("nama").toString()
+                keys.contains("NAMA") -> nama = get("NAMA").toString()
+                keys.contains("Nama") -> nama = get("Nama").toString()
+            }
+            when {
+                keys.contains("nik") -> nik = get("nik").toString()
+                keys.contains("NIK") -> nik = get("NIK").toString()
+            }
+            when {
+                keys.contains("hak") -> hak = get("hak").toString()
+                keys.contains("HAK") -> hak = get("HAK").toString()
+            }
+        }
+
+//        Collections.getUserAreaDetailDelinasi(currentUser()?.email, id)
+//            .set(
+//                mapOf(
+//                    DelinasiGeneral.YURI_FILE_NO.prefix(DelinasiGeneral.PREFIX) to nub,
+//                    SubjectIdentity.NAMA.prefix(SubjectIdentity.PREFIX) to nama,
+//                    SubjectIdentity.NIK.prefix(SubjectIdentity.PREFIX) to nik,
+//                    AreaPosition.KETERANGAN.prefix(AreaPosition.PREFIX) to hak
+//                ), SetOptions.merge()
+//            )
+//        Collections.getUserAreaDetailYuridis(currentUser()?.email, id)
+//            .set(
+//                mapOf(
+//                    YuridisGeneral.NUB.prefix(YuridisGeneral.PREFIX) to nub,
+//                    YuridisGeneral.UTARA.prefix(YuridisGeneral.PREFIX) to "-",
+//                    YuridisGeneral.SELATAN.prefix(YuridisGeneral.PREFIX) to "-",
+//                    YuridisGeneral.BARAT.prefix(YuridisGeneral.PREFIX) to "-",
+//                    YuridisGeneral.TIMUR.prefix(YuridisGeneral.PREFIX) to "-"
+//                ), SetOptions.merge()
+//            )
+
+    }
+
+    private fun mountPoint() {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(baseContext)
+        val Entries = ArrayList<String>()
+        val EntryValues = ArrayList<String>()
+        Entries.add("Refresh Stream List")
+        EntryValues.add("")
+        val sourcetable = preferences.getString("ntripsourcetable", "")
+        val lines =
+            sourcetable!!.split("\\r?\\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
+        for (i in lines.indices) {
+            val fields = lines[i].split(";".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
+            if (fields.size > 4) {
+                if (fields[0].lowercase(Locale.ENGLISH) == "str") {
+                    Entries.add(fields[1])
+                    EntryValues.add(fields[1])
+                }
+            }
+        }
+        EntryValues[0] = "Refresh Stream List"
+
+        val detailMenus = EntryValues
+
+//        this.dialogInterface = alert {
+//            customView {
+//                listView {
+//                    adapter = ArrayAdapter<String>(context, simple_list_item_1, detailMenus)
+//                    onItemClickListener =
+//                        AdapterView.OnItemClickListener { _, _, position, _ ->
+//
+//                            val ntripstream = if (position == 0) "" else EntryValues[position]
+//                            preferences.edit().putString("ntripstream", ntripstream).commit()
+//                            startService(
+//                                Intent(
+//                                    this@MainActivity,
+//                                    smartgis.project.app.smartgis.ntrip.service.NTRIPService::class.java
+//                                )
+//                            )
+//                            this@MainActivity.dialogInterface?.dismiss()
+//                        }
+//                }
+//            }
+//            cancelButton { }
+//        }.show()
+    }
+
+    private fun loadAds() {
+//        billingContainer =
+//            BillingProcessor.newBillingProcessor(this, getString(R.string.license_key), this)
+//        billingContainer.initialize()
+//
+//        MobileAds.initialize(this)
+    }
+
+    private fun showMobs() {
+
+    }
+
+    fun showDialogAds() {
+//        alert {
+//            message = getString(R.string.upgrade_pro_msg)
+//            title = getString(R.string.upgrade_pro)
+//            positiveButton("Upgrade") {
+//                if (billingContainer.isOneTimePurchaseSupported && BillingProcessor.isIabServiceAvailable(
+//                        this@MainActivity
+//                    )
+//                )
+//                    billingContainer.purchase(this@MainActivity, BuildConfig.PRO_PRODUCT_ID)
+//                else alert(getString(R.string.os_not_supported), getString(R.string.attention)) {}.show()
+//            }
+//            negativeButton("Tonton Video") { dialogInterface1 ->
+//                dialogInterface1.dismiss()
+//                showMobs()
+//            }
+//        }.show()
+    }
+
+//    override
+    fun onBillingInitialized() {
+
+    }
+
+//    override
+    fun onPurchaseHistoryRestored() {
+
+    }
+
+//    override
+//    fun onProductPurchased(productId: String, details: PurchaseInfo?) {
+//
+//    }
+
+//    override
+    fun onBillingError(errorCode: Int, error: Throwable?) {
+//        alert(
+//            error?.localizedMessage.toString(),
+//            "${getString(R.string.error_occured)}: $errorCode"
+//        ).show()
+    }
+    fun getExpire(): String {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.MONTH, 4)
+        val date = calendar.time
+        val format1 = SimpleDateFormat("yyyy/MM/dd")
+        return format1.format(date)
+    }
+
+    private fun getDate(): String {
+        val calendar = Calendar.getInstance()
+        val date = calendar.time
+        val format1 = SimpleDateFormat("yyyy/MM/dd")
+        return format1.format(date)
+
+    }
+
+    private fun checkYuridisIsComplete() {
+//        val typeDoc =
+//            mutableListOf(
+//                "yuridis_ptsl_$PERORANGAN",
+//                "yuridis_ptsl_$BPHTB",
+//                "yuridis_ptsl_$ALAS_HAK"
+//            )
+//
+//        val yuridisHelper = BerkasYuridisHelper()
+//
+//        localPolygonDbReference.forEach { polygon ->
+//            val id = polygon.documentReference.id
+//            Collections.getUserAreaDetailYuridisPTSLCollections(currentUser()?.email, id).get()
+//                .addOnSuccessListener { result ->
+//                    var typeDocExist: MutableList<String> = mutableListOf()
+//                    result.forEach { doc ->
+//                        typeDocExist.add(doc.id)
+//                    }
+//                    val difference = typeDoc.toSet().minus(typeDocExist?.toSet())
+//                    if (difference.isNotEmpty() || !yuridisHelper.getComplateByParent(id)) {
+//                        polygon.polygon.strokeWidth = 5f
+//                        polygon.polygon.strokeColor = Color.RED
+//                        polygon.polygon.fillColor = resources.getColor(R.color.red_transparent)
+//                    } else {
+//                        polygon.polygon.strokeColor = Color.GREEN
+//                        polygon.polygon.strokeWidth = NORMAL_STROKE_WIDTH
+//                        polygon.polygon.fillColor = resources.getColor(R.color.yellow_transparent)
+//                    }
+//
+//                }
+//        }
+    }
+
+    private fun setupLocation() {
+//        locationHelper = SimpleLocation(
+//            this,
+//            true,
+//            false,
+//            updateIntervalInMilliseconds
+//        )
+//        locationHelper.setListener(this)
+//        locationHelper.beginUpdates()
+//        getLastLocation()
+    }
+
+//    override
+    fun onPositionChanged() {
+//        try {
+//            altitude = locationHelper.altitude
+//            accuracy = locationHelper.lastLocation.accuracy
+//            gpsPosition = LatLng(locationHelper.latitude, locationHelper.longitude)
+//            if (accuracy <= 50 && gpsPosition.distanceTo(lastLocation) > 30)
+//                saveLocation(locationHelper.latitude, locationHelper.longitude)
+//        } catch (e: Exception) {
+//        }
+    }
+
+    fun saveLocation(latitude: Double, longitude: Double) {
+        Collections.getUserLocation(currentUser()?.email).document("current")
+            .update(
+                timeStamp(
+                    mutableMapOf(
+                        "lokasi" to GeoPoint(latitude, longitude),
+                    )
+                )
+            )
+            .addOnSuccessListener { reference ->
+                Log.i(localClassName, "Success $reference")
+            }
+            .addOnFailureListener {
+            }
+
+        Collections.trackUserLocation(currentUser()?.email).add(
+            waktu(
+                mutableMapOf(
+                    "lokasi" to GeoPoint(latitude, longitude),
+                )
+            )
+        )
+            .addOnSuccessListener { reference ->
+                Log.i(localClassName, "Success $reference")
+            }
+            .addOnFailureListener {
+            }
+    }
+
+    private fun getLastLocation() {
+        Collections.getUserLocation(currentUser()?.email).document("current")
+            .addSnapshotListener { snapshot, _ ->
+                try {
+                    snapshot?.data?.get("lokasi")?.let {
+                        val location = it as GeoPoint
+                        lastLocation = LatLng(location.latitude, location.longitude)
+                    } ?: addLocationIfNotExist()
+                } catch (e: Exception) {
+                }
+            }
+    }
+
+    private fun addLocationIfNotExist() {
+        val lat = -7.7827188
+        val lng = 110.343225
+        Collections.getUserLocation(currentUser()?.email).document("current").set(
+            timeStamp(
+                mutableMapOf(
+                    "lokasi" to GeoPoint(lat, lng),
+                )
+            )
+        )
+    }
+
+    private fun wmsObservers() {
+//        viewModel.wmsShapeDecorator.observe(this, { wms ->
+//            createDialogWMS(wms)
+//        })
+    }
+
+    private fun createDialogWMS(wms: ShapeWMSDecorator) {
+//        alert {
+//            title = "Info Bidang/PERSIL"
+//            positiveButton("Tutup") {}
+//            negativeButton("Aktifkan Bidang") {
+//                createShpPolygon(wms.polygon)
+//            }
+//            customView {
+//                linearLayout {
+//                    textView(
+//                        "NIB: ${wms.properties.nib}\n" +
+//                                "TIPE HAK: ${wms.properties.tipe_hak}\n" +
+//                                "NAMA: ${wms.properties.nama}\n" +
+//                                "NO HAK: ${wms.properties.no_hak}\n" +
+//                                "KETERANGAN: ${wms.properties.keterangan}\n"
+//                    )
+//                    padding = dip(26)
+//                }
+//            }
+//        }.show()
     }
 
     fun analisisSatgas() {

@@ -117,5 +117,21 @@ dependencies {
     //expand
     implementation(libs.expandablelayout)
 
+    //eventbus
+    implementation(libs.eventbus)
+
+    //excel
+    implementation(libs.poi)
+
+    //gson
+    implementation(libs.gson)
+
+    //zip
+    implementation(libs.zt.zip)
+
+    //reactive
+    implementation(libs.rxjava)
+    implementation(libs.rxandroid)
+
 
 }
