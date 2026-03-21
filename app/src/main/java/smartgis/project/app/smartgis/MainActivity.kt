@@ -64,22 +64,26 @@ import smartgis.project.app.smartgis.utils.LineColorMapping
 import smartgis.project.app.smartgis.utils.SimpleLocation
 import smartgis.project.app.smartgis.utils.appPreference
 import smartgis.project.app.smartgis.utils.computeAreaByCoordinate
+import smartgis.project.app.smartgis.utils.computeBearing
 import smartgis.project.app.smartgis.utils.currentUser
 import smartgis.project.app.smartgis.utils.distanceTo
 import smartgis.project.app.smartgis.utils.geometry.Vector2
 import smartgis.project.app.smartgis.utils.getCenter
+import smartgis.project.app.smartgis.utils.getNewCoordinateWith
 import smartgis.project.app.smartgis.utils.gone
 import smartgis.project.app.smartgis.utils.rColor
 import smartgis.project.app.smartgis.utils.shape.defaultCircle
 import smartgis.project.app.smartgis.utils.shape.defaultIconGenerator
 import smartgis.project.app.smartgis.utils.show
 import smartgis.project.app.smartgis.utils.timeStamp
+import smartgis.project.app.smartgis.utils.toPositiveDegree
 import smartgis.project.app.smartgis.utils.toTm3
 import smartgis.project.app.smartgis.utils.waktu
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import kotlin.math.absoluteValue
 
 class MainActivity :  LoginRequiredActivity(),
     OnMapReadyCallback,GoogleMap.OnMarkerClickListener,GoogleMap.OnPolygonClickListener,
@@ -199,17 +203,17 @@ class MainActivity :  LoginRequiredActivity(),
         clusterColorMaps = ClusterColorMapping(this)
         lineColorMaps = LineColorMapping(this)
         askLocationForPermissions()
-//        listenConnectionState()
-//        importShpController = ImportShpController(this)
-//        importGeoJsonController = ImportGeoJSONController(this)
+        listenConnectionState()
+        importShpController = ImportShpController(this)
+        importGeoJsonController = ImportGeoJSONController(this)
 
         workspace = intent.getParcelableExtra(Workspace.INTENT)!!
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
 //        setSupportActionBar(toolbar)
         supportActionBar?.subtitle = workspace.name
         mapFragment.getMapAsync(this)
-//        setupLocation()
-//        addLocationIfNotExist()
+        setupLocation()
+        addLocationIfNotExist()
         binding.btnSPen.setOnClickListener {
             addSPenMode = true
             isMode = POLYGON_MODE
@@ -219,7 +223,7 @@ class MainActivity :  LoginRequiredActivity(),
             binding.addShapeMenuContainer.gone()
             binding.btnAddMark.gone()
         }
-//        wmsObservers()
+        wmsObservers()
         binding.btnToggleListenRtkEvent.setOnClickListener {
             pausingRtk = !pausingRtk
             if (pausingRtk) {
@@ -320,36 +324,36 @@ class MainActivity :  LoginRequiredActivity(),
             val polygonPointsSize = tmpPolygon.points.toSet().size
             val firstPlusLast = firstIndex + lastIndex
             val isLastAndFirst = firstPlusLast == polygonPointsSize - 1
-//            val isMarkerSideBySide = firstIndex.minus(lastIndex).absoluteValue == 1
+            val isMarkerSideBySide = firstIndex.minus(lastIndex).absoluteValue == 1
 
-//            if (isMarkerSideBySide || isLastAndFirst) {
-//                first.apply {
+            if (isMarkerSideBySide || isLastAndFirst) {
+                first.apply {
                     val lastCircleCenter = last.position
-//                    val bearing = position.computeBearing(last.position)
-//                    val newDestCoordinate =
-//                        position.getNewCoordinateWith(
-//                            bearing.toPositiveDegree(),
-//                            (position.distanceTo(lastCircleCenter) / 2).toDouble()
-//                        )
-//                    val p = firstSelectedPolygon?.points
-//                    p?.apply {
-//                        var insertPosition = 0
-//                        if (isMarkerSideBySide) {
-//                            insertPosition = if (firstIndex < lastIndex) firstIndex + 1 else lastIndex + 1
-//                        } else if (isLastAndFirst) insertPosition = size
-//                        add(insertPosition, newDestCoordinate)
-//                        firstSelectedPolygon?.points = this.toSet().toList()
-//                        updatePointsPolygonOnDb(tmpPolygon)
-//                        onPolygonClick(firstSelectedPolygon)
-//                        onPolygonClick(tmpPolygon)
-//                    }
-//                }
-//            }
+                    val bearing = position.computeBearing(last.position)
+                    val newDestCoordinate =
+                        position.getNewCoordinateWith(
+                            bearing.toPositiveDegree(),
+                            (position.distanceTo(lastCircleCenter) / 2).toDouble()
+                        )
+                    val p = firstSelectedPolygon?.points
+                    p?.apply {
+                        var insertPosition = 0
+                        if (isMarkerSideBySide) {
+                            insertPosition = if (firstIndex < lastIndex) firstIndex + 1 else lastIndex + 1
+                        } else if (isLastAndFirst) insertPosition = size
+                        add(insertPosition, newDestCoordinate)
+                        firstSelectedPolygon?.points = this.toSet().toList()
+                        updatePointsPolygonOnDb(tmpPolygon)
+                        onPolygonClick(firstSelectedPolygon!!)
+                        onPolygonClick(tmpPolygon)
+                    }
+                }
+            }
 //            else toast("Silahkan pilih marker yang berjarak tidak lebih dari 1").show()
         }
 
         binding.btnDeleteActiveShape.setOnClickListener {
-            if (selectedPointWithStatus.size > 0) {
+            if (selectedPointWithStatus.isNotEmpty()) {
                 selectedPointWithStatus.forEach { marker ->
                     pointTakenWithGnssStatusses.firstOrNull {
                         GeoPoint(
@@ -364,27 +368,27 @@ class MainActivity :  LoginRequiredActivity(),
                 }
                 selectedPointWithStatus.clear()
             }
-//            if (selectedCircle.size > 0) {
-//                var whichPolygon: Polygon? = null
-//                selectedCircle.forEach { circle ->
-//                    circle.remove()
-//                    selectedPolygon.find { polygon -> polygon.points.contains(circle.position) }?.apply {
-//                        whichPolygon = this
-//                        polygonUndoStack.add(PolygonUndoSnapp(this, points) { polygon ->
-//                            updatePointsPolygonOnDb(polygon)
-//                            onPolygonClick(polygon)
-//                            onPolygonClick(polygon)
-//                        })
-//                        points = points.filter { latLng -> latLng != circle.position }
-//                        updatePointsPolygonOnDb(this)
-//                    }
-//                }
-//                onPolygonClick(whichPolygon)
-//                onPolygonClick(whichPolygon)
-//                selectedCircle.clear()
-//                editMeasurementContainer.collapse()
-//            } else {
-//                if (selectedPolygon.size > 0)
+            if (selectedCircle.isNotEmpty()) {
+                var whichPolygon: Polygon? = null
+                selectedCircle.forEach { circle ->
+                    circle.remove()
+                    selectedPolygon.find { polygon -> polygon.points.contains(circle.position) }?.apply {
+                        whichPolygon = this
+                        polygonUndoStack.add(PolygonUndoSnapp(this, points) { polygon ->
+                            updatePointsPolygonOnDb(polygon)
+                            onPolygonClick(polygon)
+                            onPolygonClick(polygon)
+                        })
+                        points = points.filter { latLng -> latLng != circle.position }
+                        updatePointsPolygonOnDb(this)
+                    }
+                }
+                onPolygonClick(whichPolygon!!)
+                onPolygonClick(whichPolygon)
+                selectedCircle.clear()
+                binding.editMeasurementContainer.collapse()
+            } else {
+                if (selectedPolygon.size > 0)
 //                    alert {
 //                        message = getString(R.string.area_delete_confirmation)
 //                        title = getString(R.string.confirm)
@@ -398,7 +402,7 @@ class MainActivity :  LoginRequiredActivity(),
 //                        }
 //                        negativeButton(getString(R.string.cancel)) { dialogInterface1 -> dialogInterface1.dismiss() }
 //                    }.show()
-//                if (selectedPolyline.size > 0) {
+                if (selectedPolyline.size > 0) {
 //                    alert {
 //                        message = getString(R.string.area_delete_confirmation)
 //                        title = getString(R.string.confirm)
@@ -411,12 +415,12 @@ class MainActivity :  LoginRequiredActivity(),
 //                        }
 //                        negativeButton(getString(R.string.cancel)) { dialogInterface1 -> dialogInterface1.dismiss() }
 //                    }.show()
-//                }
-//            }
-//
-//            toggleDeleteButtonText()
-//            if (selectedPolygon.size <= 0 && selectedPolyline.size <= 0)
-//                backToNormal()
+                }
+            }
+
+            toggleDeleteButtonText()
+            if (selectedPolygon.size <= 0 && selectedPolyline.size <= 0)
+                backToNormal()
         }
 
         binding.btnShapeDetail.setOnClickListener {
