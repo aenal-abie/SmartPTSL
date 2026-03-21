@@ -996,8 +996,8 @@ class MainActivity :  LoginRequiredActivity(),
         when (item?.itemId) {
 //            R.id.undo -> performUndo()
             R.id.mbtile -> {
-//                if (askStorageForPermissions())
-//                    showMbtilesChooserDialog()
+                if (askStorageForPermissions())
+                    showMbtilesChooserDialog()
             }
             R.id.importExcel -> {
 //                if (askStorageForPermissions())

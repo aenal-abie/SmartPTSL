@@ -957,3 +957,5 @@ local.properties
 /library/gdal-release/build/.transforms/fae947427be5ec354237bef424d5f7f2.bin
 /library/gdal-release/build/.transforms/fdb8e25515588f989d5b8810716172c0.bin
 /library/gdal-release/build/.transforms/fff858cc5d0164ed11e952b111c8e26a.bin
+/library/bluetooth/build/intermediates/annotation_processor_list/productionUnitTest/javaPreCompileProductionUnitTest/annotationProcessors.json
+/library/bluetooth/build/intermediates/compile_and_runtime_not_namespaced_r_class_jar/productionUnitTest/generateProductionUnitTestStubRFile/R.jar

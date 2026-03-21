@@ -121,7 +121,7 @@ dependencies {
     implementation(libs.eventbus)
 
     //excel
-    implementation(libs.poi)
+//    implementation(libs.poi)
 
     //gson
     implementation(libs.gson)
