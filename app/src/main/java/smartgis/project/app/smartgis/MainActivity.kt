@@ -12,10 +12,6 @@ import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.MAP_TYPE_SATELLITE
@@ -39,14 +35,12 @@ import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.Source
 import io.reactivex.disposables.Disposable
 import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.EventBus
 import org.json.JSONArray
 import smartgis.project.app.smartgis.command.Actionable
 import smartgis.project.app.smartgis.command.PolygonUndoSnapp
 import smartgis.project.app.smartgis.controllers.ImportGeoJSONController
 import smartgis.project.app.smartgis.controllers.ImportShpController
 import smartgis.project.app.smartgis.databinding.ActivityMainBinding
-import smartgis.project.app.smartgis.databinding.ActivityWelcomeLoginBinding
 import smartgis.project.app.smartgis.decorators.PolygonDecorator
 import smartgis.project.app.smartgis.decorators.PolylineDecorator
 import smartgis.project.app.smartgis.decorators.ShapeImportedDecorator
@@ -63,17 +57,17 @@ import smartgis.project.app.smartgis.utils.GpsUtils
 import smartgis.project.app.smartgis.utils.LineColorMapping
 import smartgis.project.app.smartgis.utils.SimpleLocation
 import smartgis.project.app.smartgis.utils.appPreference
-import smartgis.project.app.smartgis.utils.computeAreaByCoordinate
 import smartgis.project.app.smartgis.utils.computeBearing
 import smartgis.project.app.smartgis.utils.currentUser
 import smartgis.project.app.smartgis.utils.distanceTo
-import smartgis.project.app.smartgis.utils.geometry.Vector2
 import smartgis.project.app.smartgis.utils.getCenter
 import smartgis.project.app.smartgis.utils.getNewCoordinateWith
 import smartgis.project.app.smartgis.utils.gone
 import smartgis.project.app.smartgis.utils.rColor
-import smartgis.project.app.smartgis.utils.shape.defaultCircle
-import smartgis.project.app.smartgis.utils.shape.defaultIconGenerator
+import smartgis.project.app.smartgis.shape.defaultCircle
+import smartgis.project.app.smartgis.shape.defaultIconGenerator
+import smartgis.project.app.smartgis.shape.defaultMarker
+import smartgis.project.app.smartgis.shape.generateLabelBetween
 import smartgis.project.app.smartgis.utils.show
 import smartgis.project.app.smartgis.utils.timeStamp
 import smartgis.project.app.smartgis.utils.toPositiveDegree
@@ -278,8 +272,8 @@ class MainActivity :  LoginRequiredActivity(),
                     } else
                         pointWithRtkStatusSession.add(gnssStatusHolder.data())
                 }
-//                if (isMode != POINT_MODE)
-//                    addPointMarkerSession(it1)
+                if (isMode != POINT_MODE)
+                    addPointMarkerSession(it1)
             }
         }
 
@@ -920,7 +914,7 @@ class MainActivity :  LoginRequiredActivity(),
             .addOnSuccessListener { reference ->
                 Log.i(localClassName, "Success ${reference.id}")
                 if (active) {
-//                    saveImportSHPAttribut(isImportedShp, reference.id)
+                    saveImportSHPAttribut(isImportedShp, reference.id)
                 }
             }
             .addOnFailureListener { Log.i(localClassName, "failed ${it.localizedMessage}") }
@@ -1320,28 +1314,30 @@ class MainActivity :  LoginRequiredActivity(),
     }
 
     private fun addPointMarkerSession(position: LatLng) {
-//        map?.apply {
-//            val number = circleMarkers.size + 1
-//            circleMarkers.add(
-//                addMarker(
-//                    defaultMarker(number)
-//                        .position(position)
-//                )
-//            )
-//            pointMarkerSession.add(position)
-//            if (isMode == POLYGON_MODE)
-//                polygonDisplay?.points = pointMarkerSession
-//            polylineDisplay?.points = pointMarkerSession
-//            lastTwoMarker.add(position)
-//            if (lastTwoMarker.size > 1) {
-//                map?.apply {
-//                    val origin = lastTwoMarker.firstOrNull() ?: return
-//                    val distance = lastTwoMarker.lastOrNull() ?: return
-//                    addedDistanceLabel.add(addMarker(generateLabelBetween(origin, distance)))
-//                }
-//                lastTwoMarker.remove(lastTwoMarker.firstOrNull())
-//            }
-//        }
+        map?.apply {
+            val number = circleMarkers.size + 1
+            addMarker(
+                defaultMarker(number)
+                    .position(position)
+            )?.let {
+                circleMarkers.add(
+                    it
+                )
+            }
+            pointMarkerSession.add(position)
+            if (isMode == POLYGON_MODE)
+                polygonDisplay?.points = pointMarkerSession
+            polylineDisplay?.points = pointMarkerSession
+            lastTwoMarker.add(position)
+            if (lastTwoMarker.size > 1) {
+                map?.apply {
+                    val origin = lastTwoMarker.firstOrNull() ?: return
+                    val distance = lastTwoMarker.lastOrNull() ?: return
+                    addMarker(generateLabelBetween(origin, distance))?.let { addedDistanceLabel.add(it) }
+                }
+                lastTwoMarker.remove(lastTwoMarker.firstOrNull())
+            }
+        }
     }
 
     private fun loadMbTiles(file: File) {
@@ -1600,7 +1596,7 @@ class MainActivity :  LoginRequiredActivity(),
                         selectedPolygonCircle.remove(circle)
                     }
                 selectedPolygon.remove(this)
-                if (selectedPolygon.size <= 0)
+                if (selectedPolygon.isEmpty())
                     backToNormal()
             }
             ?: let {
@@ -1611,11 +1607,11 @@ class MainActivity :  LoginRequiredActivity(),
                         points.toSet().forEachIndexed { index, latLng ->
                             map?.apply {
 //                                selectedPolygonCircle.add(
-////                                    addMarker(
-////                                        defaultMarker(index + 1)
-////                                            .position(latLng)
-////                                            .zIndex(3f)
-////                                    )
+//                                    addMarker(
+//                                        defaultMarker(index + 1)
+//                                            .position(latLng)
+//                                            .zIndex(3f)
+//                                    )
 //                                )
                             }
                         }
@@ -1678,8 +1674,8 @@ class MainActivity :  LoginRequiredActivity(),
                     polygon?.value?.documentReference?.id
                 )
                     .get(Source.CACHE)
-//                    .addOnSuccessListener {
-//                        it?.apply {
+                    .addOnSuccessListener {
+                        it?.apply {
 //                            nama = it.data?.get(SubjectIdentity.NAMA.prefix(SubjectIdentity.PREFIX)).toString()
 //                            nub =
 //                                it.data?.get(DelinasiGeneral.YURI_FILE_NO.prefix(DelinasiGeneral.PREFIX)).toString()
@@ -1706,9 +1702,9 @@ class MainActivity :  LoginRequiredActivity(),
 //                                    ), SetOptions.merge()
 //                                )
 //                            tetanggaBerbatasan = 0
-//                            backToNormal()
-//                        }
-//                    }
+                            backToNormal()
+                        }
+                    }
             }
 
 
