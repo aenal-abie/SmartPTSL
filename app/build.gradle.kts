@@ -89,9 +89,11 @@ dependencies {
     //dbf
     implementation(libs.albfernandez.javadbf)
     implementation(libs.geodesy)
-    //bentrok dengan geodesy
-    //implementation(libs.jscience)
+    implementation(libs.jscience) {
+        exclude(group = "org.javolution", module = "javolution")
+    }
     implementation(libs.proj4j)
+    //implementation(libs.shapefile)
 
     //location
     implementation(libs.play.services.location)
@@ -132,5 +134,9 @@ dependencies {
     //reactive
     implementation(libs.rxjava)
     implementation(libs.rxandroid)
+
+    //messaging
+    implementation(libs.firebase.messaging)
+
 
 }

@@ -7,13 +7,17 @@ import com.google.android.gms.maps.model.LatLngBounds
 import org.gavaghan.geodesy.Ellipsoid
 import org.gavaghan.geodesy.GeodeticCalculator
 import org.gavaghan.geodesy.GlobalCoordinates
-//import org.jscience.geography.coordinates.LatLong
-//import org.jscience.geography.coordinates.UTM
+import org.jscience.geography.coordinates.LatLong
+import org.jscience.geography.coordinates.UTM
+import org.locationtech.proj4j.BasicCoordinateTransform
+import org.locationtech.proj4j.CRSFactory
+import org.locationtech.proj4j.ProjCoordinate
 //import org.osgeo.proj4j.BasicCoordinateTransform
 //import org.osgeo.proj4j.CRSFactory
 //import org.osgeo.proj4j.ProjCoordinate
 import smartgis.project.app.smartgis.utils.geometry.Circle
 import smartgis.project.app.smartgis.utils.geometry.Vector2
+import javax.measure.unit.NonSI
 //import javax.measure.unit.NonSI
 import kotlin.math.absoluteValue
 
@@ -57,20 +61,20 @@ fun Double.toPositiveDegree(): Double {
   return if (this > 0) this else 360 + this
 }
 
-//fun CircleFromLatLng.toGeometryCircle(): Circle =
-//  Circle(Vector2(originCoordinate().x, originCoordinate().y), radius())
+fun CircleFromLatLng.toGeometryCircle(): Circle =
+  Circle(Vector2(originCoordinate().x, originCoordinate().y), radius())
 
-//fun LatLng.toUtm(): UTM {
-//  val converter = LatLong.CRS.getConverterTo(UTM.CRS)
-//  val latLongSource = LatLong.valueOf(latitude, longitude, NonSI.DEGREE_ANGLE)
-//  return converter.convert(latLongSource)
-//}
-//
-//fun UTM.toLatLng(): LatLng {
-//  val reverter = coordinateReferenceSystem.getConverterTo(LatLong.CRS)
-//  val latlong = reverter.convert(this)
-//  return LatLng(latlong.coordinates[0], latlong.coordinates[1])
-//}
+fun LatLng.toUtm(): UTM {
+  val converter = LatLong.CRS.getConverterTo(UTM.CRS)
+  val latLongSource = LatLong.valueOf(latitude, longitude, NonSI.DEGREE_ANGLE)
+  return converter.convert(latLongSource)
+}
+
+fun UTM.toLatLng(): LatLng {
+  val reverter = coordinateReferenceSystem.getConverterTo(LatLong.CRS)
+  val latlong = reverter.convert(this)
+  return LatLng(latlong.coordinates[0], latlong.coordinates[1])
+}
 
 fun computeAreaByCoordinate(coordinates: List<Vector2>): Double {
   val operatedCoordinates = coordinates.toSet().withIndex().map {
@@ -82,17 +86,17 @@ fun computeAreaByCoordinate(coordinates: List<Vector2>): Double {
 
 fun LatLng.toTm3(): Pair<Double, Double> {
   try {
-//    val epsgCode = getTm3Zone()?.epsgCode()
-//    Log.i("epsg", "Got $epsgCode from $longitude")
-//    val factory = CRSFactory()
-//    val srcCrs = factory.createFromName("EPSG:4326")
-//    val dstCrs = factory.createFromName(epsgCode)
-//    val transform = BasicCoordinateTransform(srcCrs, dstCrs)
-//    // Note these are x, y so lng, lat
-//    val srcCoord = ProjCoordinate(longitude, latitude)
-//    val dstCoord = ProjCoordinate()
-//    transform.transform(srcCoord, dstCoord)
-//    return Pair(dstCoord.x, dstCoord.y)
+    val epsgCode = getTm3Zone()?.epsgCode()
+    Log.i("epsg", "Got $epsgCode from $longitude")
+    val factory = CRSFactory()
+    val srcCrs = factory.createFromName("EPSG:4326")
+    val dstCrs = factory.createFromName(epsgCode)
+    val transform = BasicCoordinateTransform(srcCrs, dstCrs)
+    // Note these are x, y so lng, lat
+    val srcCoord = ProjCoordinate(longitude, latitude)
+    val dstCoord = ProjCoordinate()
+    transform.transform(srcCoord, dstCoord)
+    return Pair(dstCoord.x, dstCoord.y)
       return  Pair(0.0, 0.0)
   } catch (e: IllegalStateException) {
     Log.i("transformation", e.localizedMessage)

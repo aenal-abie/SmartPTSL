@@ -12,6 +12,7 @@ import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.MAP_TYPE_SATELLITE
@@ -27,6 +28,7 @@ import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.gms.maps.model.TileOverlay
 import com.google.android.gms.maps.model.TileProvider
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.GeoPoint
@@ -34,9 +36,11 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.Source
 import io.reactivex.disposables.Disposable
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.json.JSONArray
 import smartgis.project.app.smartgis.command.Actionable
+import smartgis.project.app.smartgis.command.PolygonUndoDelete
 import smartgis.project.app.smartgis.command.PolygonUndoSnapp
 import smartgis.project.app.smartgis.controllers.ImportGeoJSONController
 import smartgis.project.app.smartgis.controllers.ImportShpController
@@ -68,16 +72,15 @@ import smartgis.project.app.smartgis.shape.defaultCircle
 import smartgis.project.app.smartgis.shape.defaultIconGenerator
 import smartgis.project.app.smartgis.shape.defaultMarker
 import smartgis.project.app.smartgis.shape.generateLabelBetween
-import smartgis.project.app.smartgis.utils.show
-import smartgis.project.app.smartgis.utils.timeStamp
-import smartgis.project.app.smartgis.utils.toPositiveDegree
-import smartgis.project.app.smartgis.utils.toTm3
-import smartgis.project.app.smartgis.utils.waktu
+import smartgis.project.app.smartgis.utils.*
+import smartgis.project.app.smartgis.utils.geometry.Vector2
+import smartgis.project.app.smartgis.utils.shape.defaultMarkerPoint
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import kotlin.math.absoluteValue
+import kotlin.math.roundToInt
 
 class MainActivity :  LoginRequiredActivity(),
     OnMapReadyCallback,GoogleMap.OnMarkerClickListener,GoogleMap.OnPolygonClickListener,
@@ -382,33 +385,41 @@ class MainActivity :  LoginRequiredActivity(),
                 selectedCircle.clear()
                 binding.editMeasurementContainer.collapse()
             } else {
-                if (selectedPolygon.size > 0)
-//                    alert {
-//                        message = getString(R.string.area_delete_confirmation)
-//                        title = getString(R.string.confirm)
-//                        okButton {
-//                            selectedPolygon.forEach { polygon ->
-//                                deletePolygonFromDb(polygon)
-//                                polygonUndoStack.add(PolygonUndoDelete(polygon) { polygon1 -> addAreaToDb(polygon1.points.toSet()) })
-//                            }
-//                            selectedPolygon.clear()
-//                            backToNormal()
-//                        }
-//                        negativeButton(getString(R.string.cancel)) { dialogInterface1 -> dialogInterface1.dismiss() }
-//                    }.show()
-                if (selectedPolyline.size > 0) {
-//                    alert {
-//                        message = getString(R.string.area_delete_confirmation)
-//                        title = getString(R.string.confirm)
-//                        okButton {
-//                            selectedPolyline.forEach { polyline ->
-//                                deletePolylineFromDb(polyline)
-//                            }
-//                            selectedPolyline.clear()
-//                            backToNormal()
-//                        }
-//                        negativeButton(getString(R.string.cancel)) { dialogInterface1 -> dialogInterface1.dismiss() }
-//                    }.show()
+                if (selectedPolygon.isNotEmpty())
+                    AlertDialog.Builder(this)
+                        .setTitle(getString(R.string.confirm))
+                        .setMessage(getString(R.string.area_delete_confirmation))
+                        .setPositiveButton("OK") { _, _ ->
+                            selectedPolygon.forEach { polygon ->
+                                deletePolygonFromDb(polygon)
+                                polygonUndoStack.add(
+                                    PolygonUndoDelete(polygon) { polygon1 ->
+                                        addAreaToDb(polygon1.points.toSet())
+                                    }
+                                )
+                            }
+                            selectedPolygon.clear()
+                            backToNormal()
+                        }
+                        .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .show()
+                if (selectedPolyline.isNotEmpty()) {
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle(getString(R.string.confirm))
+                        .setMessage(getString(R.string.area_delete_confirmation))
+                        .setPositiveButton("OK") { _, _ ->
+                            selectedPolyline.forEach { polyline ->
+                                deletePolylineFromDb(polyline)
+                            }
+                            selectedPolyline.clear()
+                            backToNormal()
+                        }
+                        .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .show()
                 }
             }
 
@@ -418,108 +429,139 @@ class MainActivity :  LoginRequiredActivity(),
         }
 
         binding.btnShapeDetail.setOnClickListener {
-//            if (isPolyline) {
-//                val polygon =
-//                    localPolylineDbReference.withIndex()
-//                        .find { decorator -> decorator.value.polyline == selectedPolyline.lastOrNull() }
-//                val areaId = polygon?.value?.documentReference?.id
+            if (isPolyline) {
+                val polygon =
+                    localPolylineDbReference.withIndex()
+                        .find { decorator -> decorator.value.polyline == selectedPolyline.lastOrNull() }
+                val areaId = polygon?.value?.documentReference?.id
 //                startActivity<LineFormActivity>(
 //                    AREA_ID to areaId,
 //                    Workspace.INTENT to workspace
 //                )
-//            } else {
-//                val polygon =
-//                    localPolygonDbReference.withIndex()
-//                        .find { decorator -> decorator.value.polygon == selectedPolygon.lastOrNull() }
-//                val areaId = polygon?.value?.documentReference?.id
-//                val detailMenus =
-//                    listOf(
-//                        "Data Fisik",
-//                        "Data Yuridis",
-//                        "Data Yuridis II",
-//                        "Data IP4T",
-//                        "Foto",
-//                        "Tanda Tangan",
-//                        "Surat Pernyataan",
-//                        "Import Data dari Excel",
-//                        "Tetangga Berbatasan",
-//                        "Pendataan Terpadu Rumah Tangga",
-//                        "SATGAS PENGTAN"
-//                    )
-//                this.dialogInterface = alert {
-//                    customView {
-//                        listView {
-//                            adapter = ArrayAdapter<String>(context, simple_list_item_1, detailMenus)
-//                            onItemClickListener =
-//                                AdapterView.OnItemClickListener { _, _, position, _ ->
-//                                    when (position) {
-//                                        0 -> startActivity<DelinasiFormActivity>(
-//                                            AREA_ID to areaId,
-//                                            Workspace.INTENT to workspace,
-//                                            DATA_SIZE to polygon?.index?.plus(1),
-//                                            AREA to computedArea
-//                                        )
-//                                        1 -> {
-//                                            menuYuridisSelect(areaId!!, polygon?.index?.plus(1)!!, workspace.name)
-//                                        }
-//
-//                                        2 -> startActivity<Yuridis2FormActivity>(
-//                                            AREA_ID to areaId,
-//                                            Workspace.INTENT to workspace,
-//                                            DATA_SIZE to polygon?.index?.plus(1)
-//                                        )
-//                                        3 -> startActivity<ip4tFormActivity>(
-//                                            AREA_ID to areaId,
-//                                            Workspace.INTENT to workspace,
-//                                            DATA_SIZE to polygon?.index?.plus(1)
-//                                        )
-//                                        4 -> startActivity<UploadImageFormActivity>(AREA_ID to areaId)
-//                                        5 -> startActivity<SignatureFormActivity>(AREA_ID to areaId)
-//                                        6 -> prepareAndCreateSuratPernyataan(areaId.toString().noNull())
-//                                        7 -> startActivity<ExcelDataChooser>(
-//                                            AREA_ID to areaId,
-//                                            Workspace.INTENT to workspace,
-//                                            AREA to computedArea
-//                                        )
-//                                        8 -> {
-//                                            tetanggaBerbatasanSelected = areaId.toString()
-//                                            selectMenuTetangga()
-//                                        }
-//                                        9 -> startActivity<BapedaFormActivity>(
-//                                            AREA_ID to areaId,
-//                                            Workspace.INTENT to workspace,
-//                                            DATA_SIZE to polygon?.index?.plus(1),
-//                                            AREA to computedArea
-//                                        )
-//                                        10 -> startActivity<PengtanFormActivity>(
-//                                            AREA_ID to areaId,
-//                                            Workspace.INTENT to workspace,
-//                                            DATA_SIZE to polygon?.index?.plus(1),
-//                                            AREA to computedArea
-//                                        )
-//                                    }
-//                                    this@MainActivity.dialogInterface?.dismiss()
-//                                }
-//                        }
-//                    }
-//                    cancelButton { }
-//                }.show()
-//            }
+            }
+            else {
+                val polygon =
+                    localPolygonDbReference.withIndex()
+                        .find { decorator -> decorator.value.polygon == selectedPolygon.lastOrNull() }
+                val areaId = polygon?.value?.documentReference?.id
+                val detailMenus =
+                    listOf(
+                        "Data Fisik",
+                        "Data Yuridis",
+                        "Data Yuridis II",
+                        "Data IP4T",
+                        "Foto",
+                        "Tanda Tangan",
+                        "Surat Pernyataan",
+                        "Import Data dari Excel",
+                        "Tetangga Berbatasan",
+                        "Pendataan Terpadu Rumah Tangga",
+                        "SATGAS PENGTAN"
+                    )
+                val items = detailMenus.toTypedArray()
+
+                val dialog = MaterialAlertDialogBuilder(this)
+                    .setItems(items) { dialogInterface, position ->
+                        when (position) {
+                            0 -> {
+//                                val intent = Intent(this, DelinasiFormActivity::class.java)
+//                                intent.putExtra("AREA_ID", areaId)
+//                                intent.putExtra("WORKSPACE", workspace)
+//                                intent.putExtra("DATA_SIZE", polygon?.index?.plus(1))
+//                                intent.putExtra("AREA", computedArea)
+//                                startActivity(intent)
+                            }
+
+                            1 -> {
+                                menuYuridisSelect(areaId!!, polygon?.index?.plus(1)!!, workspace.name)
+                            }
+
+                            2 -> {
+//                                val intent = Intent(this, Yuridis2FormActivity::class.java)
+//                                intent.putExtra("AREA_ID", areaId)
+//                                intent.putExtra("WORKSPACE", workspace)
+//                                intent.putExtra("DATA_SIZE", polygon?.index?.plus(1))
+//                                startActivity(intent)
+                            }
+
+                            3 -> {
+//                                val intent = Intent(this, ip4tFormActivity::class.java)
+//                                intent.putExtra("AREA_ID", areaId)
+//                                intent.putExtra("WORKSPACE", workspace)
+//                                intent.putExtra("DATA_SIZE", polygon?.index?.plus(1))
+//                                startActivity(intent)
+                            }
+
+                            4 -> {
+//                                val intent = Intent(this, UploadImageFormActivity::class.java)
+//                                intent.putExtra("AREA_ID", areaId)
+//                                startActivity(intent)
+                            }
+
+                            5 -> {
+//                                val intent = Intent(this, SignatureFormActivity::class.java)
+//                                intent.putExtra("AREA_ID", areaId)
+//                                startActivity(intent)
+                            }
+
+                            6 -> {
+                                prepareAndCreateSuratPernyataan(areaId.toString())
+                            }
+
+                            7 -> {
+//                                val intent = Intent(this, ExcelDataChooser::class.java)
+//                                intent.putExtra("AREA_ID", areaId)
+//                                intent.putExtra("WORKSPACE", workspace)
+//                                intent.putExtra("AREA", computedArea)
+//                                startActivity(intent)
+                            }
+
+                            8 -> {
+                                tetanggaBerbatasanSelected = areaId.toString()
+                                selectMenuTetangga()
+                            }
+
+                            9 -> {
+//                                val intent = Intent(this, BapedaFormActivity::class.java)
+//                                intent.putExtra("AREA_ID", areaId)
+//                                intent.putExtra("WORKSPACE", workspace)
+//                                intent.putExtra("DATA_SIZE", polygon?.index?.plus(1))
+//                                intent.putExtra("AREA", computedArea)
+//                                startActivity(intent)
+                            }
+
+                            10 -> {
+//                                val intent = Intent(this, PengtanFormActivity::class.java)
+//                                intent.putExtra("AREA_ID", areaId)
+//                                intent.putExtra("WORKSPACE", workspace)
+//                                intent.putExtra("DATA_SIZE", polygon?.index?.plus(1))
+//                                intent.putExtra("AREA", computedArea)
+//                                startActivity(intent)
+                            }
+                        }
+
+                        dialogInterface.dismiss()
+                    }
+                    .setNegativeButton(getString(R.string.cancel), null)
+                    .create()
+
+                dialog.show()
+            }
         }
 
         binding.btnChangeDistance.setOnClickListener {
-//            if (etPointDistance.text.trim().isEmpty()) return@setOnClickListener
-//            selectedCircle.firstOrNull()?.apply {
-//                val lastCircle = selectedCircle.lastOrNull() ?: return@setOnClickListener
-//                val destinationPosition = lastCircle.position
-//                val bearing = position.computeBearing(lastCircle.position)
-//                val distance = etPointDistance.text.toString().toDouble()
-//                var newDestCoordinate = position.getNewCoordinateWith(bearing.toPositiveDegree(), distance)
-//                lastCircle.position = newDestCoordinate
-//
-//                changedDistanceCircle.add(CircleFromLatLng(position, newDestCoordinate))
-//
-//                if (changedDistanceCircle.size > 1) {
+            if (binding.etPointDistance.text.trim().isEmpty()) return@setOnClickListener
+            selectedCircle.firstOrNull()?.apply {
+                val lastCircle = selectedCircle.lastOrNull() ?: return@setOnClickListener
+                val destinationPosition = lastCircle.position
+                val bearing = position.computeBearing(lastCircle.position)
+                val distance = binding.etPointDistance.text.toString().toDouble()
+                var newDestCoordinate = position.getNewCoordinateWith(bearing.toPositiveDegree(), distance)
+                lastCircle.position = newDestCoordinate
+
+                changedDistanceCircle.add(CircleFromLatLng(position, newDestCoordinate))
+
+                if (changedDistanceCircle.size > 1) {
 //                    val firstCircle = changedDistanceCircle.firstOrNull()?.toGeometryCircle()
 //                    val secondCircle = changedDistanceCircle.lastOrNull()?.toGeometryCircle()
 //                    CircleCircleIntersection(firstCircle, secondCircle)
@@ -534,16 +576,16 @@ class MainActivity :  LoginRequiredActivity(),
 //                                    METRE
 //                                )
 //                                    .toLatLng()
-//                            // use threshold tollerants
-//                            // use new location only when it's distance to the previous location is less then 1m
+                            // use threshold tollerants
+                            // use new location only when it's distance to the previous location is less then 1m
 //                            if (destinationPosition.distanceTo(newLocation) < 1) {
 //                                newDestCoordinate = newLocation
 //                                lastCircle.position = newLocation
 //                            }
-//                        }
-//                    changedDistanceCircle.remove(changedDistanceCircle.firstOrNull())
+                        }
+                    changedDistanceCircle.remove(changedDistanceCircle.firstOrNull())
 //                }
-//
+
 //                firstSelectedPolygon?.apply {
 //                    polygonUndoStack.add(PolygonUndoSnapp(this, points) { polygon ->
 //                        updatePointsPolygonOnDb(
@@ -554,23 +596,23 @@ class MainActivity :  LoginRequiredActivity(),
 //                        points.map { latLng -> if (latLng == destinationPosition) newDestCoordinate else latLng }
 //                    updatePointsPolygonOnDb(this)
 //                }
-//
-//                if (selectedPolygon.size > 1) {
-//                    val first = selectedPolygon.firstOrNull()
-//                    val second = selectedPolygon.lastOrNull()
-//
-//                    onPolygonClick(selectedPolygon.firstOrNull())
-//                    onPolygonClick(selectedPolygon.lastOrNull())
-//
-//                    onPolygonClick(first)
-//                    onPolygonClick(second)
-//                } else {
-//                    firstSelectedPolygon.apply {
-//                        onPolygonClick(this)
-//                        onPolygonClick(this)
-//                    }
-//                }
-//            }
+
+                if (selectedPolygon.size > 1) {
+                    val first = selectedPolygon.firstOrNull()
+                    val second = selectedPolygon.lastOrNull()
+
+                    onPolygonClick(selectedPolygon.firstOrNull()!!)
+                    onPolygonClick(selectedPolygon.lastOrNull()!!)
+
+                    onPolygonClick(first!!)
+                    onPolygonClick(second!!)
+                } else {
+                    firstSelectedPolygon.apply {
+                        onPolygonClick(this!!)
+                        onPolygonClick(this)
+                    }
+                }
+            }
         }
 
         binding.btnUndoLastPoint.setOnClickListener {
@@ -1600,19 +1642,21 @@ class MainActivity :  LoginRequiredActivity(),
                     backToNormal()
             }
             ?: let {
-                polygon?.apply {
+                polygon.apply {
                     strokeWidth = 5f
                     // we don't need the closing point. So <SET> it!
                     if (!shapeIsImported) /*show marker label only on saved polygon*/
                         points.toSet().forEachIndexed { index, latLng ->
                             map?.apply {
-//                                selectedPolygonCircle.add(
-//                                    addMarker(
-//                                        defaultMarker(index + 1)
-//                                            .position(latLng)
-//                                            .zIndex(3f)
-//                                    )
-//                                )
+                                addMarker(
+                                    defaultMarker(index + 1)
+                                        .position(latLng)
+                                        .zIndex(3f)
+                                )?.let { element ->
+                                    selectedPolygonCircle.add(
+                                        element
+                                    )
+                                }
                             }
                         }
 
@@ -1633,15 +1677,15 @@ class MainActivity :  LoginRequiredActivity(),
                     selectedPolygon.add(this)
                 }
             }
-        if (selectedPolygon.size > 0) {
+        if (selectedPolygon.isNotEmpty()) {
             val cPolygon = selectedPolygon.lastOrNull() ?: return
             val polygon =
                 localPolygonDbReference.withIndex()
                     .find { decorator -> decorator.value.polygon == cPolygon }
-//            computedArearea = computeAreaByCoordinate(cPolygon.points.map {
-//                val cUtm = it.toUtm()
-//                Vector2(cUtm.coordinates[0], cUtm.coordinates[1])
-//            }).roundToInt()
+            computedArea = computeAreaByCoordinate(cPolygon.points.map {
+                val cUtm = it.toUtm()
+                Vector2(cUtm.coordinates[0], cUtm.coordinates[1])
+            }).roundToInt()
             if (shapeIsImported) {
                 clickedImportedShp?.properties?.apply {
                     when {
@@ -1734,12 +1778,12 @@ class MainActivity :  LoginRequiredActivity(),
         addedDistanceLabel.clear()
         selectedPolygon.lastOrNull()?.apply {
             for (index in 0..points.size - 2) {
-//                map?.apply {
-//                    addedDistanceLabel.add(addMarker(generateLabelBetween(points[index], points[index + 1])))
-//                }
+                map?.apply {
+                    addMarker(generateLabelBetween(points[index], points[index + 1]))?.let { addedDistanceLabel.add(it) }
+                }
             }
         }
-//        toggleDeleteButtonText()
+        toggleDeleteButtonText()
     }
 
     override fun onPolylineClick(polyline: Polyline) {
@@ -1826,7 +1870,7 @@ class MainActivity :  LoginRequiredActivity(),
 
     override fun onMapClick(coordinate: LatLng) {
         if (addSPenMode) {
-//            coordinate.let { addPointMarkerSession(it) }
+            coordinate.let { addPointMarkerSession(it) }
         } else if (!editing) {
             backToNormal()
         }
@@ -1897,12 +1941,12 @@ class MainActivity :  LoginRequiredActivity(),
     @SuppressLint("SetTextI18n")
     override fun onMarkerClick(currentCircle: Marker): Boolean {
         val tm3Coordinate = currentCircle?.position?.toTm3()
-//        val utmCoordinate = currentCircle?.position?.toUtm()
+        val utmCoordinate = currentCircle?.position?.toUtm()
         binding.tvLatPreview.text = tm3Coordinate?.first.toString()
         binding.tvLongPreview.text = tm3Coordinate?.second.toString()
         if (currentCircle?.title == null) return true
         if (editing) {
-//            addPointMarkerSession(currentCircle.position)
+            addPointMarkerSession(currentCircle.position)
             pointTakenWithGnssStatusses.firstOrNull {
                 GeoPoint(
                     currentCircle.position.latitude,
@@ -1984,9 +2028,9 @@ class MainActivity :  LoginRequiredActivity(),
                                 this,
                                 points
                             ) {}) // polygon -> updatePointsPolygonOnDb(polygon) })
-//                        points =
-//                            points?.map { latLng -> if (latLng == selectedCircle.firstOrNull()?.position) currentCircle.position else latLng }
-//                        updatePointsPolygonOnDb(this)
+                        points =
+                            points?.map { latLng -> if (latLng == selectedCircle.firstOrNull()?.position) currentCircle.position else latLng }!!
+                        updatePointsPolygonOnDb(this)
                         snapped = true
                     }
                 } else /*show distance change form*/ {
@@ -2041,7 +2085,7 @@ class MainActivity :  LoginRequiredActivity(),
                 draggingPolygonMarker = this
             }
         }
-        //toggleDeleteButtonText()
+        toggleDeleteButtonText()
         return true
     }
 
@@ -2074,19 +2118,19 @@ class MainActivity :  LoginRequiredActivity(),
     }
 
     private fun registerEvent() {
-//        if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this)
+        if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this)
     }
 
     override fun onDestroy() {
         Log.i(localClassName, "ondestroy")
         unregisterEvent()
-        //connectionStateDisposable?.dispose()
+        connectionStateDisposable?.dispose()
         super.onDestroy()
     }
 
     override fun onPause() {
         super.onPause()
-        //connectionStateDisposable?.dispose()
+        connectionStateDisposable?.dispose()
     }
 
     override fun onResume() {
@@ -2098,7 +2142,7 @@ class MainActivity :  LoginRequiredActivity(),
 
     override fun onStart() {
         super.onStart()
-//        registerEvent()
+        registerEvent()
         listenConnectionState()
         Collections.getUserDrawnAreas(currentUser()?.email)
             .whereEqualTo("workspace_id", workspace.id)
@@ -2353,14 +2397,14 @@ class MainActivity :  LoginRequiredActivity(),
 
                                 markerStatus[pointTakenWithGnssStatusses.size] = status.status
 
-//                                addMarker(
-//                                    defaultMarkerPoint(pointTakenWithGnssStatusses.size, statusPoint).position(
-//                                        LatLng(
-//                                            status.point.latitude,
-//                                            status.point.longitude
-//                                        )
-//                                    )
-//                                )
+                                addMarker(
+                                    defaultMarkerPoint(pointTakenWithGnssStatusses.size, statusPoint).position(
+                                        LatLng(
+                                            status.point.latitude,
+                                            status.point.longitude
+                                        )
+                                    )
+                                )
                             }
                         }
                     }
@@ -2369,18 +2413,18 @@ class MainActivity :  LoginRequiredActivity(),
         appPreference().edit().putBoolean("wms", false).apply()
     }
     private fun changePolygonColorByCluster(clusterName: String, createdPolygon: Polygon?) {
-//        val polygonColor = clusterColorMaps.colorMaps[clusterName]
-//        polygonColor?.let { colors ->
-//            createdPolygon?.fillColor = rColor(colors.fillColor)
-//            createdPolygon?.strokeColor = rColor(colors.strokeColor)
-//        }
+        val polygonColor = clusterColorMaps.colorMaps[clusterName]
+        polygonColor?.let { colors ->
+            createdPolygon?.fillColor = rColor(colors.fillColor)
+            createdPolygon?.strokeColor = rColor(colors.strokeColor)
+        }
     }
 
     private fun changePolylineColorByJenis(jenis: String, createdPolyline: Polyline?) {
-//        val polylineColor = lineColorMaps.colorMaps[jenis]
-//        polylineColor?.let { colors ->
-//            createdPolyline?.color = rColor(colors.color)
-//        }
+        val polylineColor = lineColorMaps.colorMaps[jenis]
+        polylineColor?.let { colors ->
+            createdPolyline?.color = rColor(colors.color)
+        }
     }
 
 //    override
@@ -2405,29 +2449,29 @@ class MainActivity :  LoginRequiredActivity(),
 //        lastCircleLocation = p0?.position
     }
 
-//    @Subscribe
-//    fun onHrmsVrms(event: HrmsVrmsEvent) {
-//        setHvrms(event.hrms, event.vrms, event.rms)
-//    }
+    @Subscribe
+    fun onHrmsVrms(event: HrmsVrmsEvent) {
+        setHvrms(event.hrms, event.vrms, event.rms)
+    }
 
 
-//    @Subscribe
-//    fun onNtripMessage(event: NtripEvent) {
+    @Subscribe
+    fun onNtripMessage(event: NtripEvent) {
 //        longToast(event.message)
-//    }
+    }
 
-//    @Subscribe
-//    fun onMountpoint(event: MountpointEvent) {
-//        if (event.selected) {
+    @Subscribe
+    fun onMountpoint(event: MountpointEvent) {
+        if (event.selected) {
 //            stopService(
 //                Intent(
 //                    this,
 //                    smartgis.project.app.smartgis.ntrip.service.NTRIPService::class.java
 //                )
 //            )
-//            mountPoint()
-//        }
-//    }
+            mountPoint()
+        }
+    }
 
 
     private fun setHvrms(hrms: Double, vrms: Double, rms: Double) {
@@ -2476,15 +2520,15 @@ class MainActivity :  LoginRequiredActivity(),
     @Subscribe
     fun onRtkData(event: RtkDataEvent) {
 //        logShower?.show(event.message)
-//        event.message.hvrms().apply {
-//            if (size > 0) {
-//                setHvrms(get(0), get(1), get(2))
-//            }
-//        }
-//
-//        event.message.altitude()?.apply {
-//            Log.i("ALT", "lat $this")
-//        }
+        event.message.hvrms().apply {
+            if (size > 0) {
+                setHvrms(get(0), get(1), get(2))
+            }
+        }
+
+        event.message.altitude()?.apply {
+            Log.i("ALT", "lat $this")
+        }
     }
 
     @Subscribe

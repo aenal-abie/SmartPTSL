@@ -5,24 +5,23 @@ import smartgis.project.app.smartgis.R
 
 class ClusterColorMapping(private val ctx: Context) {
 
-//  val colorMaps = clusterColorMaps()
+  val colorMaps = clusterColorMaps()
 
-//  private fun clusterColorMaps(): Map<String, PolygonColorHolder> {
-////    val strokeColors = ctx.resources.obtainTypedArray(R.array.cluster_stroke_colors)
-////    val fillColors = ctx.resources.obtainTypedArray(R.array.cluster_fill_colors)
-////    val clusters = ctx.resources.getStringArray(R.array.cluster_items)
-////    val mapped = clusters
-////      .withIndex()
-////      .map {
-////        it.value to PolygonColorHolder(
-////          strokeColors.getResourceId(it.index, R.color.yellow),
-////          fillColors.getResourceId(it.index, R.color.yellow_transparent)
-////        )
-////      }.toMap()
-////    strokeColors.recycle()
-////    fillColors.recycle()
-////    return mapped
-//  }
+  private fun clusterColorMaps(): Map<String, PolygonColorHolder> {
+    val strokeColors = ctx.resources.obtainTypedArray(R.array.cluster_stroke_colors)
+    val fillColors = ctx.resources.obtainTypedArray(R.array.cluster_fill_colors)
+    val clusters = ctx.resources.getStringArray(R.array.cluster_items)
+    val mapped = clusters
+        .withIndex().associate {
+            it.value to PolygonColorHolder(
+                strokeColors.getResourceId(it.index, R.color.yellow),
+                fillColors.getResourceId(it.index, R.color.yellow_transparent)
+            )
+        }
+      strokeColors.recycle()
+    fillColors.recycle()
+    return mapped
+  }
 
 }
 
