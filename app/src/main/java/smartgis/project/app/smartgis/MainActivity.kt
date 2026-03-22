@@ -5,13 +5,16 @@ import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.NetworkInfo
+import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -1418,7 +1421,7 @@ class MainActivity :  LoginRequiredActivity(),
 //            rootLayout.longSnackbar(getString(R.string.cant_get_center_bounds_mbtiles))
 //        }
     }
-
+    //fix
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
 
@@ -1491,11 +1494,21 @@ class MainActivity :  LoginRequiredActivity(),
 //        return EasyPermissions.hasPermissions(this, *storagePermissions())
     }
 
-    private fun locationPermissions() =
-        arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.FOREGROUND_SERVICE
-        )
+    private fun locationPermissions(): Array<String> {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // Android 10+ (optional kalau butuh background location)
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        } else {
+            // Android 9 ke bawah
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        }
+    }
 
     private fun storagePermissions() =
         arrayOf(
@@ -1503,35 +1516,60 @@ class MainActivity :  LoginRequiredActivity(),
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
         )
 
-    private fun bluetoothPermissions() =
-        arrayOf(
-            Manifest.permission.BLUETOOTH,
-            Manifest.permission.BLUETOOTH_ADMIN,
-            Manifest.permission.BLUETOOTH_CONNECT,
-            Manifest.permission.BLUETOOTH_SCAN,
-        )
+    private fun bluetoothPermissions(): Array<String> {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // Android 12+
+            arrayOf(
+                Manifest.permission.BLUETOOTH_CONNECT,
+                Manifest.permission.BLUETOOTH_SCAN
+            )
+        } else {
+            // Android 11 ke bawah
+            arrayOf(
+                Manifest.permission.BLUETOOTH,
+                Manifest.permission.BLUETOOTH_ADMIN
+            )
+        }
+    }
 
 
-    override
-    fun onRequestPermissionsResult(
+    override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
-//        when {
-//            requestCode == ASK_LOCATION_PERMISSIONS_REQUEST_CODE -> {
-//                enableGPS()
-//            }
-//            requestCode == ASK_BLUETOOTH_PERMISSIONS_REQUEST_CODE -> {
-//                startActivity<BluetoothDevices>()
-//            }
-//            requestCode == ASK_STORAGE_PERMISSIONS_REQUEST_CODE &&
-//                    checkSelfPermissionCompat(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ->
-//                longToast(R.string.reproccess)
-//        }
+
+        if (grantResults.isEmpty()) return
+
+        val allGranted = grantResults.all { it == PackageManager.PERMISSION_GRANTED }
+
+        when (requestCode) {
+
+            ASK_LOCATION_PERMISSIONS_REQUEST_CODE -> {
+                if (allGranted) {
+                    enableGPS()
+                } else {
+                    //toast("Location permission ditolak")
+                }
+            }
+
+            ASK_BLUETOOTH_PERMISSIONS_REQUEST_CODE -> {
+                if (allGranted) {
+//                    startActivity(Intent(this, BluetoothDevices::class.java))
+                } else {
+//                    toast("Bluetooth permission ditolak")
+                }
+            }
+
+            ASK_STORAGE_PERMISSIONS_REQUEST_CODE -> {
+                if (allGranted) {
+//                    toast("Silakan ulangi proses")
+                } else {
+//                    toast("Storage permission ditolak")
+                }
+            }
+        }
     }
 
     override
