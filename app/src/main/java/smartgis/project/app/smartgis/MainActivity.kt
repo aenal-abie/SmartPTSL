@@ -35,10 +35,15 @@ import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.Source
+import com.google.gson.Gson
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.json.JSONArray
+import org.json.JSONObject
 import smartgis.project.app.smartgis.command.Actionable
 import smartgis.project.app.smartgis.command.PolygonUndoDelete
 import smartgis.project.app.smartgis.command.PolygonUndoSnapp
@@ -53,6 +58,7 @@ import smartgis.project.app.smartgis.documents.Collections
 import smartgis.project.app.smartgis.events.*;
 import smartgis.project.app.smartgis.models.Area
 import smartgis.project.app.smartgis.models.GnssStatusHolder
+import smartgis.project.app.smartgis.models.ImportedHolder
 import smartgis.project.app.smartgis.models.ReferenceToGnssStatusHolder
 import smartgis.project.app.smartgis.models.Workspace
 import smartgis.project.app.smartgis.utils.CircleFromLatLng
@@ -85,7 +91,7 @@ import kotlin.math.roundToInt
 class MainActivity :  LoginRequiredActivity(),
     OnMapReadyCallback,GoogleMap.OnMarkerClickListener,GoogleMap.OnPolygonClickListener,
     GoogleMap.OnMapClickListener,
-    //GoogleMap.OnMarkerDragListener,
+    GoogleMap.OnMarkerDragListener,
     GoogleMap.OnPolylineClickListener {
     private var map: GoogleMap? = null
     private lateinit var kantah: String
@@ -905,22 +911,24 @@ class MainActivity :  LoginRequiredActivity(),
 //        }
     }
 
+    //fix
     private fun deletePolygonFromDb(polygon: Polygon) {
-//        localPolygonDbReference.find { decorator -> decorator.polygon == polygon }?.apply {
-//            documentReference.delete()
-//                .addOnSuccessListener { Log.i(TAG, "Doc ${documentReference.id} deleted!") }
-//            localPolygonDbReference.remove(this)
-//        }
-//        polygon.remove()
-//
-//        selectedPolygonCircle.filter { circle -> circle.position in polygon.points }
-//            .forEach { circle ->
-//                circle.remove()
-//                selectedPolygonCircle.remove(circle)
-//            }
+        localPolygonDbReference.find { decorator -> decorator.polygon == polygon }?.apply {
+            documentReference.delete()
+                .addOnSuccessListener { Log.i(TAG, "Doc ${documentReference.id} deleted!") }
+            localPolygonDbReference.remove(this)
+        }
+        polygon.remove()
+
+        selectedPolygonCircle.filter { circle -> circle.position in polygon.points }
+            .forEach { circle ->
+                circle.remove()
+                selectedPolygonCircle.remove(circle)
+            }
     }
 
 
+    //fix
     private fun deletePolylineFromDb(polyline: Polyline) {
 
         localPolylineDbReference.find { decorator -> decorator.polyline == polyline }?.apply {
@@ -937,6 +945,7 @@ class MainActivity :  LoginRequiredActivity(),
             }
     }
 
+    //fix
     private fun addAreaToDb(
         map: Set<LatLng>, isImportedShp: ShapeImportedDecorator? = null, active: Boolean = false
         /*use <SET> data structure since we don't need any same point in the polygon*/
@@ -963,6 +972,7 @@ class MainActivity :  LoginRequiredActivity(),
 
     }
 
+    //fix
     private fun addPolylineAreaToDb(
         map: Set<LatLng>
         /*use <SET> data structure since we don't need any same point in the polygon*/
@@ -986,7 +996,7 @@ class MainActivity :  LoginRequiredActivity(),
 
     }
 
-
+    //fix
     private fun createPolygon(points: Set<LatLng>): Polygon? {
         return map?.addPolygon(
             PolygonOptions()
@@ -998,7 +1008,7 @@ class MainActivity :  LoginRequiredActivity(),
                 .zIndex(2f)
         )
     }
-
+    //fix
     private fun createPolyline(points: Set<LatLng>): Polyline? {
         return map?.addPolyline(
             PolylineOptions()
@@ -1009,7 +1019,7 @@ class MainActivity :  LoginRequiredActivity(),
                 .zIndex(2f)
         )
     }
-
+    //fix
     private fun createShpPolygon(points: List<LatLng>): Polygon? {
         return map?.addPolygon(
             PolygonOptions()
@@ -1021,12 +1031,13 @@ class MainActivity :  LoginRequiredActivity(),
                 .zIndex(1f)
         )
     }
-
+    //fix
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
 
+    //todo: no fix
     @SuppressLint("MissingPermission")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
@@ -1118,7 +1129,7 @@ class MainActivity :  LoginRequiredActivity(),
         }
         return super.onOptionsItemSelected(item)
     }
-
+    //fix
     private fun performUndo() {
         if (polygonUndoStack.isNotEmpty())
             polygonUndoStack.removeAt(polygonUndoStack.size - 1).apply { act() }
@@ -1294,67 +1305,67 @@ class MainActivity :  LoginRequiredActivity(),
     }
 
     private fun load(from: Int, to: Int, features: JSONArray) {
-//        val size = features.length()
-//        var to = to
-//        var active = features[size - 1].toString()
-//        if (active == "1") {
-//            to -= 1
-//        }
-//
-//        Observable.range(from, to)
-//            .subscribeOn(Schedulers.newThread())
-//            .observeOn(Schedulers.computation())
-//            .map { it1 ->
-//                val points = mutableListOf<LatLng>()
-//                val geometry = features.getJSONObject(it1).get("geometry").toString()
-//                if (geometry != "null") {
-//                    val geometryObject = JSONObject(geometry)
-//                    val data = geometryObject
-//                        .getJSONArray("coordinates")
-//                        .getJSONArray(0)
-//                    pointMarkerSession.clear()
-//                    for (index in 0 until data.length()) {
-//                        points.add(
-//                            LatLng(
-//                                data.getJSONArray(index).getDouble(1),
-//                                data.getJSONArray(index).getDouble(0)
-//                            )
-//                        )
-//                    }
-//                }
-//                ImportedHolder(features.getJSONObject(it1).getJSONObject("properties"), points)
-//            }
-//            .subscribeOn(Schedulers.newThread())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe({ importedHolder ->
-//                if (active.equals("1")) {
-//                    val mapData =
-//                        Gson().fromJson<Map<String, Any>>(
-//                            importedHolder.properties.toString(),
-//                            HashMap::class.java
-//                        )
-//                    val iskedImportedShp =
-//                        ShapeImportedDecorator(mapData, createShpPolygon(importedHolder.points))
-//                    addAreaToDb(importedHolder.points.toSet(), iskedImportedShp, true)
-//                } else {
-//                    val mapData =
-//                        Gson().fromJson<Map<String, Any>>(
-//                            importedHolder.properties.toString(),
-//                            HashMap::class.java
-//                        )
-//                    shpImported.add(ShapeImportedDecorator(mapData, createShpPolygon(importedHolder.points)))
-//                    map?.apply {
-//                        moveCamera(
-//                            CameraUpdateFactory.newLatLngZoom(
-//                                importedHolder.points[0],
-//                                cameraPosition.zoom
-//                            )
-//                        )
-//                    }
-//                }
-//            }, { Log.i(localClassName, it.localizedMessage) }, {}).isDisposed
-    }
+        val size = features.length()
+        var to = to
+        var active = features[size - 1].toString()
+        if (active == "1") {
+            to -= 1
+        }
 
+        Observable.range(from, to)
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(Schedulers.computation())
+            .map { it1 ->
+                val points = mutableListOf<LatLng>()
+                val geometry = features.getJSONObject(it1).get("geometry").toString()
+                if (geometry != "null") {
+                    val geometryObject = JSONObject(geometry)
+                    val data = geometryObject
+                        .getJSONArray("coordinates")
+                        .getJSONArray(0)
+                    pointMarkerSession.clear()
+                    for (index in 0 until data.length()) {
+                        points.add(
+                            LatLng(
+                                data.getJSONArray(index).getDouble(1),
+                                data.getJSONArray(index).getDouble(0)
+                            )
+                        )
+                    }
+                }
+                ImportedHolder(features.getJSONObject(it1).getJSONObject("properties"), points)
+            }
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ importedHolder ->
+                if (active.equals("1")) {
+                    val mapData =
+                        Gson().fromJson<Map<String, Any>>(
+                            importedHolder.properties.toString(),
+                            HashMap::class.java
+                        )
+                    val iskedImportedShp =
+                        ShapeImportedDecorator(mapData, createShpPolygon(importedHolder.points))
+                    addAreaToDb(importedHolder.points.toSet(), iskedImportedShp, true)
+                } else {
+                    val mapData =
+                        Gson().fromJson<Map<String, Any>>(
+                            importedHolder.properties.toString(),
+                            HashMap::class.java
+                        )
+                    shpImported.add(ShapeImportedDecorator(mapData, createShpPolygon(importedHolder.points)))
+                    map?.apply {
+                        moveCamera(
+                            CameraUpdateFactory.newLatLngZoom(
+                                importedHolder.points[0],
+                                cameraPosition.zoom
+                            )
+                        )
+                    }
+                }
+            }, { Log.i(localClassName, it.localizedMessage) }, {}).isDisposed
+    }
+    //fix
     private fun addPointMarkerSession(position: LatLng) {
         map?.apply {
             val number = circleMarkers.size + 1
@@ -1430,7 +1441,7 @@ class MainActivity :  LoginRequiredActivity(),
         map?.setOnPolygonClickListener(this)
         map?.setOnMapClickListener(this)
         map?.setOnMarkerClickListener(this)
-//        map?.setOnMarkerDragListener(this)
+        map?.setOnMarkerDragListener(this)
         map?.setOnPolylineClickListener(this)
         map?.mapType = MAP_TYPE_SATELLITE
         map?.uiSettings?.isCompassEnabled = true
@@ -2427,26 +2438,26 @@ class MainActivity :  LoginRequiredActivity(),
         }
     }
 
-//    override
-    fun onMarkerDragStart(p0: Marker?) {}
+    override
+    fun onMarkerDragStart(p0: Marker) {}
 
-//    override
-    fun onMarkerDrag(p0: Marker?) {}
+    override
+    fun onMarkerDrag(p0: Marker) {}
 
-//    override
-    fun onMarkerDragEnd(p0: Marker?) {
-//        draggingPolygonMarker?.apply {
-//            polygonUndoStack.add(PolygonUndoSnapp(this, points) { polygon ->
-//                updatePointsPolygonOnDb(polygon)
-//                onPolygonClick(polygon)
-//                onPolygonClick(polygon)
-//            })
-//            points = points.map { if (it == lastCircleLocation) p0?.position else it }
-//            updatePointsPolygonOnDb(this)
-//            onPolygonClick(this)
-//            onPolygonClick(this)
-//        }
-//        lastCircleLocation = p0?.position
+    override
+    fun onMarkerDragEnd(p0: Marker) {
+        draggingPolygonMarker?.apply {
+            polygonUndoStack.add(PolygonUndoSnapp(this, points) { polygon ->
+                updatePointsPolygonOnDb(polygon)
+                onPolygonClick(polygon)
+                onPolygonClick(polygon)
+            })
+            points = points.map { if (it == lastCircleLocation) p0?.position else it }
+            updatePointsPolygonOnDb(this)
+            onPolygonClick(this)
+            onPolygonClick(this)
+        }
+        lastCircleLocation = p0?.position
     }
 
     @Subscribe
