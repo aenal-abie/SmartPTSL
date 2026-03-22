@@ -162,12 +162,12 @@ class MainActivity :  LoginRequiredActivity(),
     private var tetanggaBerbatasan: Int = 0
     private var tetanggaBerbatasanSelected: String = ""
     private var isPolyline: Boolean = false
-//    private lateinit var rewardedAd: RewardedAd
+    //private lateinit var rewardedAd: RewardedAd
     private var pointsWorspace: Int = 30
     private var bidangWorkspace: Int = 0
-//    private lateinit var billingContainer: BillingProcessor
+    //private lateinit var billingContainer: BillingProcessor
     private var lastLocation = LatLng(-7.7827188, 110.343225)
-//    private val viewModel by viewModels<MainViewModel>()
+    //private val viewModel by viewModels<MainViewModel>()
     private lateinit var  wmsTileProvider1: TileProvider
     private lateinit var wmsTileProvider2: TileProvider
     private lateinit var wmsTileProvider3: TileProvider
@@ -208,8 +208,8 @@ class MainActivity :  LoginRequiredActivity(),
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        loadAds()
-//        registerEvent()
+        //loadAds()
+        registerEvent()
         clusterColorMaps = ClusterColorMapping(this)
         lineColorMaps = LineColorMapping(this)
         askLocationForPermissions()
@@ -219,7 +219,7 @@ class MainActivity :  LoginRequiredActivity(),
 
         workspace = intent.getParcelableExtra(Workspace.INTENT)!!
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-//        setSupportActionBar(toolbar)
+        //setSupportActionBar(toolbar)
         supportActionBar?.subtitle = workspace.name
         mapFragment.getMapAsync(this)
         setupLocation()
@@ -441,7 +441,7 @@ class MainActivity :  LoginRequiredActivity(),
             if (selectedPolygon.size <= 0 && selectedPolyline.size <= 0)
                 backToNormal()
         }
-
+        //todo: no fix
         binding.btnShapeDetail.setOnClickListener {
             if (isPolyline) {
                 val polygon =
@@ -1461,7 +1461,7 @@ class MainActivity :  LoginRequiredActivity(),
     }
 
     @SuppressLint("MissingPermission")
-//    @AfterPermissionGranted(ASK_LOCATION_PERMISSIONS_REQUEST_CODE)
+    //@AfterPermissionGranted(ASK_LOCATION_PERMISSIONS_REQUEST_CODE)
     private fun askLocationForPermissions() {
 //        if (EasyPermissions.hasPermissions(this, *locationPermissions())) {
 //            Log.i(localClassName, "location grated")
@@ -1646,20 +1646,20 @@ class MainActivity :  LoginRequiredActivity(),
 //        }
     }
 
-//    override
+    //override
     fun onPermissionsDenied(requestCode: Int, list: List<String>) {
         // Un-check the box until the layer has been enabled
         // and show dialog box with permission rationale.
         showPermissionDeniedDialog = true
     }
 
-//    override
+    //override
     fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
 
     }
 
 
-
+    //todo : no fix
     override fun onPolygonClick(polygon: Polygon) {
         binding.btnAddPointInBetween.gone()
         binding.tvProperty.text = ""
