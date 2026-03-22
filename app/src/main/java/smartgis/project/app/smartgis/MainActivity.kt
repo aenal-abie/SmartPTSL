@@ -45,6 +45,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import org.jscience.geography.coordinates.UTM
 import org.json.JSONArray
 import org.json.JSONObject
 import smartgis.project.app.smartgis.command.Actionable
@@ -83,12 +84,14 @@ import smartgis.project.app.smartgis.shape.defaultIconGenerator
 import smartgis.project.app.smartgis.shape.defaultMarker
 import smartgis.project.app.smartgis.shape.generateLabelBetween
 import smartgis.project.app.smartgis.utils.*
+import smartgis.project.app.smartgis.utils.geometry.CircleCircleIntersection
 import smartgis.project.app.smartgis.utils.geometry.Vector2
 import smartgis.project.app.smartgis.utils.shape.defaultMarkerPoint
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import javax.measure.unit.SI.METRE
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
@@ -221,6 +224,7 @@ class MainActivity :  LoginRequiredActivity(),
         mapFragment.getMapAsync(this)
         setupLocation()
         addLocationIfNotExist()
+        //fix
         binding.btnSPen.setOnClickListener {
             addSPenMode = true
             isMode = POLYGON_MODE
@@ -231,6 +235,7 @@ class MainActivity :  LoginRequiredActivity(),
             binding.btnAddMark.gone()
         }
         wmsObservers()
+        //fix
         binding.btnToggleListenRtkEvent.setOnClickListener {
             pausingRtk = !pausingRtk
             if (pausingRtk) {
@@ -239,7 +244,7 @@ class MainActivity :  LoginRequiredActivity(),
             } else
                 binding.btnToggleListenRtkEvent.setImageResource(R.drawable.ic_pause_white_24dp)
         }
-
+        //fix
         binding.btnTogglePolygonPoint.setOnClickListener {
             if (isMode == POLYGON_MODE) {
                 binding.btnTogglePolygonPoint.setImageResource(R.drawable.ic_location_pin)
@@ -252,11 +257,10 @@ class MainActivity :  LoginRequiredActivity(),
                 isMode = POLYGON_MODE
             }
         }
-
-//        logShower = ShowData()
+        //        logShower = ShowData()
         binding.tvRtkStatus.setOnClickListener {} //logShower?.showDialog() }
         binding.tvHvrms.setOnClickListener {}// logShower?.showDialog() }
-
+        //fix
         binding.btnPointerMarker.setOnClickListener {
             editing = true
             binding.ivMarker.show()
@@ -267,14 +271,14 @@ class MainActivity :  LoginRequiredActivity(),
             binding.btnToggleListenRtkEvent.show()
             binding.btnTogglePolygonPoint.show()
         }
-
+        //fix
         binding.btnAddMark.setOnClickListener {
-//            Log.e(TAG, gnssStatusHolder.data().toString())
+            //Log.e(TAG, gnssStatusHolder.data().toString())
             map?.cameraPosition?.target?.let { it1 ->
-//                Log.i(localClassName, "isrtkconnected: $isRtkConnected")
+                //Log.i(localClassName, "isrtkconnected: $isRtkConnected")
                 if (isRtkConnected || isMode == POINT_MODE) {
-//                    Log.i(localClassName, "adding point with status $gnssStatusHolder")
-//                    Log.i(localClassName, "$it1")
+                    //Log.i(localClassName, "adding point with status $gnssStatusHolder")
+                    //Log.i(localClassName, "$it1")
                     if (pausingRtk) {
                         gnssStatusHolder.reset()
                     }
@@ -289,7 +293,7 @@ class MainActivity :  LoginRequiredActivity(),
                     addPointMarkerSession(it1)
             }
         }
-
+        //fix
         binding.btnDoneMarking.setOnClickListener {
             doneClicked = true
             binding.ivMarker.gone()
@@ -315,13 +319,13 @@ class MainActivity :  LoginRequiredActivity(),
             addSPenMode = false
             editing = false
         }
-
+        //fix
         binding.btnActivateShape.setOnClickListener {
             activatingShape = true
             selectedPolygon.lastOrNull()?.points?.toSet()?.let { it1 -> addAreaToDb(it1) }
             backToNormal()
         }
-
+        //fix
         binding.btnAddPointInBetween.setOnClickListener {
             val tmpPolygon = selectedPolygon.firstOrNull() ?: return@setOnClickListener
             val first = selectedCircle.firstOrNull() ?: return@setOnClickListener
@@ -356,9 +360,9 @@ class MainActivity :  LoginRequiredActivity(),
                     }
                 }
             }
-//            else toast("Silahkan pilih marker yang berjarak tidak lebih dari 1").show()
+            //else toast("Silahkan pilih marker yang berjarak tidak lebih dari 1").show()
         }
-
+        //fix
         binding.btnDeleteActiveShape.setOnClickListener {
             if (selectedPointWithStatus.isNotEmpty()) {
                 selectedPointWithStatus.forEach { marker ->
@@ -558,7 +562,7 @@ class MainActivity :  LoginRequiredActivity(),
                 dialog.show()
             }
         }
-
+        //fix
         binding.btnChangeDistance.setOnClickListener {
             if (binding.etPointDistance.text.trim().isEmpty()) return@setOnClickListener
             selectedCircle.firstOrNull()?.apply {
@@ -572,40 +576,40 @@ class MainActivity :  LoginRequiredActivity(),
                 changedDistanceCircle.add(CircleFromLatLng(position, newDestCoordinate))
 
                 if (changedDistanceCircle.size > 1) {
-//                    val firstCircle = changedDistanceCircle.firstOrNull()?.toGeometryCircle()
-//                    val secondCircle = changedDistanceCircle.lastOrNull()?.toGeometryCircle()
-//                    CircleCircleIntersection(firstCircle, secondCircle)
-//                        .intersectionPoints.forEach { vector2 ->
-//                            val referenceUtm = position.toUtm()
-//                            val newLocation =
-//                                UTM.valueOf(
-//                                    referenceUtm.longitudeZone(),
-//                                    referenceUtm.latitudeZone(),
-//                                    vector2.x,
-//                                    vector2.y,
-//                                    METRE
-//                                )
-//                                    .toLatLng()
-                            // use threshold tollerants
-                            // use new location only when it's distance to the previous location is less then 1m
-//                            if (destinationPosition.distanceTo(newLocation) < 1) {
-//                                newDestCoordinate = newLocation
-//                                lastCircle.position = newLocation
-//                            }
+                    val firstCircle = changedDistanceCircle.firstOrNull()?.toGeometryCircle()
+                    val secondCircle = changedDistanceCircle.lastOrNull()?.toGeometryCircle()
+                    CircleCircleIntersection(firstCircle, secondCircle)
+                        .intersectionPoints.forEach { vector2 ->
+                            val referenceUtm = position.toUtm()
+                            val newLocation =
+                                UTM.valueOf(
+                                    referenceUtm.longitudeZone(),
+                                    referenceUtm.latitudeZone(),
+                                    vector2.x,
+                                    vector2.y,
+                                    METRE
+                                )
+                                    .toLatLng()
+                             //use threshold tollerants
+                             //use new location only when it's distance to the previous location is less then 1m
+                            if (destinationPosition.distanceTo(newLocation) < 1) {
+                                newDestCoordinate = newLocation
+                                lastCircle.position = newLocation
+                            }
                         }
                     changedDistanceCircle.remove(changedDistanceCircle.firstOrNull())
-//                }
+                }
 
-//                firstSelectedPolygon?.apply {
-//                    polygonUndoStack.add(PolygonUndoSnapp(this, points) { polygon ->
-//                        updatePointsPolygonOnDb(
-//                            polygon
-//                        )
-//                    })
-//                    points =
-//                        points.map { latLng -> if (latLng == destinationPosition) newDestCoordinate else latLng }
-//                    updatePointsPolygonOnDb(this)
-//                }
+                firstSelectedPolygon?.apply {
+                    polygonUndoStack.add(PolygonUndoSnapp(this, points) { polygon ->
+                        updatePointsPolygonOnDb(
+                            polygon
+                        )
+                    })
+                    points =
+                        points.map { latLng -> if (latLng == destinationPosition) newDestCoordinate else latLng }
+                    updatePointsPolygonOnDb(this)
+                }
 
                 if (selectedPolygon.size > 1) {
                     val first = selectedPolygon.firstOrNull()
@@ -624,7 +628,7 @@ class MainActivity :  LoginRequiredActivity(),
                 }
             }
         }
-
+        //fix
         binding.btnUndoLastPoint.setOnClickListener {
             circleMarkers.lastOrNull()?.apply {
                 remove()
