@@ -2,6 +2,7 @@ package smartgis.project.app.smartgis
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
@@ -14,6 +15,8 @@ import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
+import android.widget.ListView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -88,6 +91,7 @@ import smartgis.project.app.smartgis.utils.geometry.CircleCircleIntersection
 import smartgis.project.app.smartgis.utils.geometry.Vector2
 import smartgis.project.app.smartgis.utils.shape.defaultMarkerPoint
 import java.io.File
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -99,7 +103,8 @@ class MainActivity :  LoginRequiredActivity(),
     OnMapReadyCallback,GoogleMap.OnMarkerClickListener,GoogleMap.OnPolygonClickListener,
     GoogleMap.OnMapClickListener,
     GoogleMap.OnMarkerDragListener,
-    GoogleMap.OnPolylineClickListener {
+    SimpleLocation.Listener,
+GoogleMap.OnPolylineClickListener {
     private var map: GoogleMap? = null
     private lateinit var kantah: String
     private lateinit var gpsPosition: LatLng
@@ -1580,26 +1585,26 @@ class MainActivity :  LoginRequiredActivity(),
     override
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-//        if (resultCode == Activity.RESULT_OK) {
-//            when (requestCode) {
-//                SELECT_MBTILE -> {
-//                    data?.data?.let { uri ->
-//                        val inputStream = this.contentResolver.openInputStream(uri)
-//                        val outputFile = File.createTempFile("_shp_", ".mbtiles", this.cacheDir)
-//                        val outputStream = FileOutputStream(outputFile)
-//                        inputStream?.use {
-//                            it.copyTo(outputStream)
-//                        }
-//                        loadMbTiles(outputFile)
-//                    }
-//
-//                }
-//
-//                SEARCH_REQUEST_CODE -> {
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                SELECT_MBTILE -> {
+                    data?.data?.let { uri ->
+                        val inputStream = this.contentResolver.openInputStream(uri)
+                        val outputFile = File.createTempFile("_shp_", ".mbtiles", this.cacheDir)
+                        val outputStream = FileOutputStream(outputFile)
+                        inputStream?.use {
+                            it.copyTo(outputStream)
+                        }
+                        loadMbTiles(outputFile)
+                    }
+
+                }
+
+                SEARCH_REQUEST_CODE -> {
 //                    localPolygonDbReference.firstOrNull {
-//                        it.documentReference.id == data?.getStringExtra(
-//                            HandleNameNIKSearch.SEARCH_RESULT
-//                        )
+////                        it.documentReference.id == data?.getStringExtra(
+////                            HandleNameNIKSearch.SEARCH_RESULT
+////                        )
 //                    }
 //                        ?.let {
 //                            map?.animateCamera(
@@ -1611,39 +1616,39 @@ class MainActivity :  LoginRequiredActivity(),
 //
 //                            onPolygonClick(it.polygon)
 //                        }
-//                }
-//                UPLOAD_SHP_CODE -> {
-//                    data?.data?.let { uri ->
-//                        val inputStream = this.contentResolver.openInputStream(uri)
-//                        val outputFile = File.createTempFile("_shp_", ".zip", this.cacheDir)
-//                        val outputStream = FileOutputStream(outputFile)
-//                        inputStream?.use {
-//                            it.copyTo(outputStream)
-//                        }
-//                        importShpController?.handle(outputFile, getFileName(uri)) { load(0, it.length(), it) }
-//                    }
-//                }
-//                UPLOAD_GEOJSON_CODE -> {
-//                    data?.data?.let { uri ->
-//                        val inputStream = this.contentResolver.openInputStream(uri)
-//                        val outputFile = File.createTempFile("_shp_", ".zip", this.cacheDir)
-//                        val outputStream = FileOutputStream(outputFile)
-//                        inputStream?.use {
-//                            it.copyTo(outputStream)
-//                        }
-//                        importGeoJsonController?.handle(outputFile, getFileName(uri)) {
-//                            load(
-//                                0,
-//                                it.length(),
-//                                it
-//                            )
-//                        }
-//                    }
-//
-//                }
-//                else -> super.onActivityResult(requestCode, resultCode, data)
-//            }
-//        }
+                }
+                UPLOAD_SHP_CODE -> {
+                    data?.data?.let { uri ->
+                        val inputStream = this.contentResolver.openInputStream(uri)
+                        val outputFile = File.createTempFile("_shp_", ".zip", this.cacheDir)
+                        val outputStream = FileOutputStream(outputFile)
+                        inputStream?.use {
+                            it.copyTo(outputStream)
+                        }
+                        importShpController?.handle(outputFile, getFileName(uri)) { load(0, it.length(), it) }
+                    }
+                }
+                UPLOAD_GEOJSON_CODE -> {
+                    data?.data?.let { uri ->
+                        val inputStream = this.contentResolver.openInputStream(uri)
+                        val outputFile = File.createTempFile("_shp_", ".zip", this.cacheDir)
+                        val outputStream = FileOutputStream(outputFile)
+                        inputStream?.use {
+                            it.copyTo(outputStream)
+                        }
+                        importGeoJsonController?.handle(outputFile, getFileName(uri)) {
+                            load(
+                                0,
+                                it.length(),
+                                it
+                            )
+                        }
+                    }
+
+                }
+                else -> super.onActivityResult(requestCode, resultCode, data)
+            }
+        }
     }
 
     //override
@@ -1931,7 +1936,7 @@ class MainActivity :  LoginRequiredActivity(),
 //        if (viewModel.isWMSActive)
 //            viewModel.clickWms(coordinate, kantah)
     }
-
+    //fix
     private fun backToNormal() {
         binding.addShapeMenuContainer.show()
         binding.shapeMenuContainer.collapse()
@@ -2143,14 +2148,14 @@ class MainActivity :  LoginRequiredActivity(),
         return true
     }
 
-
+    //fix
     private fun toggleDeleteButtonText() {
         if (selectedCircle.size > 0)
             binding.btnDeleteActiveShape.text = getString(R.string.delete_point)
         else if (selectedPolygon.size > 0)
             binding.btnDeleteActiveShape.text = getString(R.string.delete_shape)
     }
-
+    //fix
     private fun updatePointsPolygonOnDb(polygon: Polygon) {
         polygon.apply {
             localPolygonDbReference.find { decorator -> decorator.polygon == this }?.apply {
@@ -2165,28 +2170,28 @@ class MainActivity :  LoginRequiredActivity(),
             }
         }
     }
-
+    //fix
     private fun unregisterEvent() {
         Log.i(localClassName, "unregistering event")
-//        if (EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this)
+        if (EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this)
     }
-
+    //fix
     private fun registerEvent() {
         if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this)
     }
-
+    //fix
     override fun onDestroy() {
         Log.i(localClassName, "ondestroy")
         unregisterEvent()
         connectionStateDisposable?.dispose()
         super.onDestroy()
     }
-
+    //fix
     override fun onPause() {
         super.onPause()
         connectionStateDisposable?.dispose()
     }
-
+    //fix
     override fun onResume() {
         registerEvent()
         listenConnectionState()
@@ -2486,7 +2491,7 @@ class MainActivity :  LoginRequiredActivity(),
 
     override
     fun onMarkerDrag(p0: Marker) {}
-
+    //fix
     override
     fun onMarkerDragEnd(p0: Marker) {
         draggingPolygonMarker?.apply {
@@ -2502,18 +2507,19 @@ class MainActivity :  LoginRequiredActivity(),
         }
         lastCircleLocation = p0?.position
     }
-
+    //fix
     @Subscribe
     fun onHrmsVrms(event: HrmsVrmsEvent) {
         setHvrms(event.hrms, event.vrms, event.rms)
     }
 
-
+    //fix
     @Subscribe
     fun onNtripMessage(event: NtripEvent) {
-//        longToast(event.message)
+        //longToast(event.message)
     }
 
+    //todo: unfix
     @Subscribe
     fun onMountpoint(event: MountpointEvent) {
         if (event.selected) {
@@ -2527,7 +2533,7 @@ class MainActivity :  LoginRequiredActivity(),
         }
     }
 
-
+    //fix
     private fun setHvrms(hrms: Double, vrms: Double, rms: Double) {
         binding.tvHvrms.show()
         binding.tvHvrms.text = "HRMS: %.3f - VRMS: %.3f".format(hrms, vrms)
@@ -2535,7 +2541,7 @@ class MainActivity :  LoginRequiredActivity(),
         gnssStatusHolder.vrms = vrms
         gnssStatusHolder.rms = rms
     }
-
+    //fix
     @Subscribe
     fun onLocation(event: LocationEvent) {
         binding.tvLatPreview.text = event.location?.latitude.toString()
@@ -2570,12 +2576,13 @@ class MainActivity :  LoginRequiredActivity(),
             }
     }
 
+    //fix
     @SuppressLint("SetTextI18n")
     @Subscribe
     fun onRtkData(event: RtkDataEvent) {
-//        logShower?.show(event.message)
+        //logShower?.show(event.message)
         event.message.hvrms().apply {
-            if (size > 0) {
+            if (isNotEmpty()) {
                 setHvrms(get(0), get(1), get(2))
             }
         }
@@ -2779,7 +2786,8 @@ class MainActivity :  LoginRequiredActivity(),
         val lines =
             sourcetable!!.split("\\r?\\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
         for (i in lines.indices) {
-            val fields = lines[i].split(";".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
+            val fields =
+                lines[i].split(";".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
             if (fields.size > 4) {
                 if (fields[0].lowercase(Locale.ENGLISH) == "str") {
                     Entries.add(fields[1])
@@ -2791,27 +2799,42 @@ class MainActivity :  LoginRequiredActivity(),
 
         val detailMenus = EntryValues
 
-//        this.dialogInterface = alert {
-//            customView {
-//                listView {
-//                    adapter = ArrayAdapter<String>(context, simple_list_item_1, detailMenus)
-//                    onItemClickListener =
-//                        AdapterView.OnItemClickListener { _, _, position, _ ->
-//
-//                            val ntripstream = if (position == 0) "" else EntryValues[position]
-//                            preferences.edit().putString("ntripstream", ntripstream).commit()
-//                            startService(
-//                                Intent(
-//                                    this@MainActivity,
-//                                    smartgis.project.app.smartgis.ntrip.service.NTRIPService::class.java
-//                                )
-//                            )
-//                            this@MainActivity.dialogInterface?.dismiss()
-//                        }
-//                }
-//            }
-//            cancelButton { }
-//        }.show()
+        val builder = AlertDialog.Builder(this)
+        val dialog = builder.create()
+
+        val listView = ListView(this)
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+            detailMenus
+        )
+
+        listView.adapter = adapter
+
+        listView.setOnItemClickListener { _, _, position, _ ->
+
+            val ntripstream = if (position == 0) "" else EntryValues[position]
+
+            preferences.edit()
+                .putString("ntripstream", ntripstream)
+                .apply()
+
+//            startService(
+//                Intent(
+//                    this@MainActivity,
+//                    smartgis.project.app.smartgis.ntrip.service.NTRIPService::class.java
+//                )
+//            )
+
+            dialog.dismiss()
+        }
+
+        builder.setView(listView)
+        builder.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun loadAds() {
@@ -2928,16 +2951,16 @@ class MainActivity :  LoginRequiredActivity(),
 //        getLastLocation()
     }
 
-//    override
+    override
     fun onPositionChanged() {
-//        try {
-//            altitude = locationHelper.altitude
-//            accuracy = locationHelper.lastLocation.accuracy
-//            gpsPosition = LatLng(locationHelper.latitude, locationHelper.longitude)
-//            if (accuracy <= 50 && gpsPosition.distanceTo(lastLocation) > 30)
-//                saveLocation(locationHelper.latitude, locationHelper.longitude)
-//        } catch (e: Exception) {
-//        }
+        try {
+            altitude = locationHelper.altitude
+            accuracy = locationHelper.lastLocation.accuracy
+            gpsPosition = LatLng(locationHelper.latitude, locationHelper.longitude)
+            if (accuracy <= 50 && gpsPosition.distanceTo(lastLocation) > 30)
+                saveLocation(locationHelper.latitude, locationHelper.longitude)
+        } catch (e: Exception) {
+        }
     }
 
     fun saveLocation(latitude: Double, longitude: Double) {
