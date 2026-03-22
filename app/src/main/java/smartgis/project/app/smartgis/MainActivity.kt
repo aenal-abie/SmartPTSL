@@ -1427,11 +1427,11 @@ class MainActivity :  LoginRequiredActivity(),
             }
         )
 
-//        map?.setOnPolygonClickListener(this)
-//        map?.setOnMapClickListener(this)
+        map?.setOnPolygonClickListener(this)
+        map?.setOnMapClickListener(this)
         map?.setOnMarkerClickListener(this)
 //        map?.setOnMarkerDragListener(this)
-//        map?.setOnPolylineClickListener(this)
+        map?.setOnPolylineClickListener(this)
         map?.mapType = MAP_TYPE_SATELLITE
         map?.uiSettings?.isCompassEnabled = true
 
