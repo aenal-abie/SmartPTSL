@@ -32,6 +32,7 @@ rxandroid = "2.1.1"
 rxjava = "2.2.21"
 shapefile = "1.0.0"
 ztZip = "1.17"
+databindingRuntime = "9.1.0"
 
 [libraries]
 albfernandez-javadbf = { module = "com.github.albfernandez:javadbf", version.ref = "javadbfVersion" }
@@ -68,6 +69,7 @@ rxandroid = { module = "io.reactivex.rxjava2:rxandroid", version.ref = "rxandroi
 rxjava = { module = "io.reactivex.rxjava2:rxjava", version.ref = "rxjava" }
 shapefile = { module = "org.nocrala.tools:shapefile", version.ref = "shapefile" }
 zt-zip = { module = "org.zeroturnaround:zt-zip", version.ref = "ztZip" }
+androidx-databinding-runtime = { group = "androidx.databinding", name = "databinding-runtime", version.ref = "databindingRuntime" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

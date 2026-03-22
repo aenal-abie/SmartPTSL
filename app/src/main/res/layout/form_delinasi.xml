@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/yuri_file_no"/>
+
+        <EditText
+                android:id="@+id/etYuriFileNo"
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/yuri_file_no"/>
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="@string/cluster" />
+
+        <Spinner
+            android:id="@+id/sCluster"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/cluster_items" />
+
+        <TextView
+            android:id="@+id/textNoHak"
+            style="@style/WizardFormLabelPaLeRi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/hak" />
+
+        <EditText
+            android:id="@+id/etNoHak"
+            style="@style/FormInputStyle"
+            android:inputType="text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hak" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="@string/jenis_hak" />
+
+        <Spinner
+            android:id="@+id/sJenisHak"
+            android:entries="@array/jenis_hak_items"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</ScrollView>

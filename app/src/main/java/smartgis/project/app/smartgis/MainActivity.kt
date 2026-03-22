@@ -59,6 +59,7 @@ import smartgis.project.app.smartgis.decorators.ShapeImportedDecorator
 import smartgis.project.app.smartgis.decorators.ShapeWMSDecorator
 import smartgis.project.app.smartgis.documents.Collections
 import smartgis.project.app.smartgis.events.*;
+import smartgis.project.app.smartgis.forms.delinasi.DelinasiFormActivity
 import smartgis.project.app.smartgis.models.Area
 import smartgis.project.app.smartgis.models.GnssStatusHolder
 import smartgis.project.app.smartgis.models.ImportedHolder
@@ -473,12 +474,12 @@ class MainActivity :  LoginRequiredActivity(),
                     .setItems(items) { dialogInterface, position ->
                         when (position) {
                             0 -> {
-//                                val intent = Intent(this, DelinasiFormActivity::class.java)
-//                                intent.putExtra("AREA_ID", areaId)
-//                                intent.putExtra("WORKSPACE", workspace)
-//                                intent.putExtra("DATA_SIZE", polygon?.index?.plus(1))
-//                                intent.putExtra("AREA", computedArea)
-//                                startActivity(intent)
+                                val intent = Intent(this, DelinasiFormActivity::class.java)
+                                intent.putExtra("AREA_ID", areaId)
+                                intent.putExtra("WORKSPACE", workspace)
+                                intent.putExtra("DATA_SIZE", polygon?.index?.plus(1))
+                                intent.putExtra("AREA", computedArea)
+                                startActivity(intent)
                             }
 
                             1 -> {
