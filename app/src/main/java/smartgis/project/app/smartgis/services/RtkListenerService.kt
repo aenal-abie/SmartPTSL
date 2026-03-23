@@ -1,210 +1,223 @@
 package smartgis.project.app.smartgis.services
 
 import android.annotation.SuppressLint
-import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.app.Service
 import android.content.Intent
-import android.os.Handler
 import android.os.IBinder
-import android.os.Messenger
 import android.util.Log
-import androidx.core.app.NotificationCompat
-import app.akexorcist.bluetotohspp.library.BluetoothSPP
-import app.akexorcist.bluetotohspp.library.BluetoothState
-
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import smartgis.project.app.smartgis.BluetoothDevices
 import smartgis.project.app.smartgis.BluetoothDevices.Companion.CONNECT
 import smartgis.project.app.smartgis.BluetoothDevices.Companion.ITEM_INDEX
-import smartgis.project.app.smartgis.R
 import smartgis.project.app.smartgis.events.*
-//import smartgis.project.app.smartgis.handlers.HandleParsingRtk
-//import smartgis.project.app.smartgis.handlers.RtkDeviceBluetoothHandler
-//import smartgis.project.app.smartgis.ntrip.service.NTRIPService
 import smartgis.project.app.smartgis.utils.hvrms
 import smartgis.project.app.smartgis.utils.rtkQuality
-import java.lang.ref.WeakReference
+import java.io.InputStream
+import java.io.OutputStream
+import java.util.*
+import android.bluetooth.*
 
 class RtkListenerService : Service() {
 
-  companion object {
-    const val BLUETOOTH_ADDRESS = "BLUETOOTH_ADDRESS"
-    const val NOTIFICATION_ID = 1
-  }
-
-//  private var handler: RtkDeviceBluetoothHandler? = null
-  private var bluetoothAddress: String? = null
-//  private val bluetoothManager: BluetoothManager = BluetoothManager.getInstance()
-//  private var deviceInterface: SimpleBluetoothDeviceInterface? = null
-  private var pendingIntent: PendingIntent? = null
-  private var itemPosition: Int? = -1
-  private var rtkQuality = ""
-  private var hvrms = ""
-  private var bt: BluetoothSPP? = null
-  private var MODE = ""
-
-  override fun onCreate() {
-    super.onCreate()
-    registerEvent()
-    bt = BluetoothSPP(this) // sudah diinisialisasi disini
-    bt?.setupService()
-    bt?.startService(false)
-
-
-    bt?.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
-      override fun onDeviceDisconnected() {
-      }
-
-      override fun onDeviceConnectionFailed() {
-        Log.i(javaClass.name, "Closing all connections to bluetooth devices!")
-        onError()
-      }
-
-      override fun onDeviceConnected(name: String, address: String) {
-
-      }
-    })
-
-    bt?.setOnDataReceivedListener { _, message ->
-      onMessageReceived(message)
-    }
-  }
-
-  @SuppressLint("ForegroundServiceType")
-  override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
-    bluetoothAddress = intent?.getStringExtra(BLUETOOTH_ADDRESS)
-
-    itemPosition = intent?.getIntExtra(ITEM_INDEX, -1)
-    val connect = intent?.getBooleanExtra(CONNECT, false)
-    log(connect.toString())
-    connect?.apply {
-//      if (this) {
-//        connectDeviceTo(bluetoothAddress)
-//        handler = RtkDeviceBluetoothHandler.getInstance(HandleParsingRtk())
-//      } else closeConnection()
-    }
-//    pendingIntent = PendingIntent.getActivity(
-//      this,
-//      0,
-//      intentFor<BluetoothDevices>(ITEM_INDEX to itemPosition, CONNECT to connect),
-//      FLAG_IMMUTABLE
-//    )
-//    startForeground(NOTIFICATION_ID, getNotificationWith("Connecting to $bluetoothAddress", ""))
-    return START_NOT_STICKY
-  }
-
-
-  val inMessenger = Messenger(IncomingHandler(this))
-
-  class IncomingHandler internal constructor(target: RtkListenerService) :
-    Handler() { // Handler of incoming messages from clients.
-    private val mTarget: WeakReference<RtkListenerService>
-
-    init {
-      mTarget = WeakReference<RtkListenerService>(target)
+    companion object {
+        const val BLUETOOTH_ADDRESS = "BLUETOOTH_ADDRESS"
+        const val NOTIFICATION_ID = 1
     }
 
+    private var bluetoothAdapter: BluetoothAdapter? = null
+    private var bluetoothSocket: BluetoothSocket? = null
+    private var inputStream: InputStream? = null
+    private var outputStream: OutputStream? = null
+    private var readThread: Thread? = null
 
-  }
+    private var bluetoothAddress: String? = null
+    private var itemPosition: Int = -1
 
+    private var rtkQuality = ""
+    private var hvrms = ""
+    private var MODE = ""
 
-  override fun onBind(intent: Intent?): IBinder? = null
-
-  override fun onDestroy() {
-    Log.i("rtk_service", "destroying service")
-//    stopService(Intent(this, NTRIPService::class.java))
-//    bluetoothManager.close()
-    super.onDestroy()
-  }
-
-  private fun connectDeviceTo(address: String?) {
-    Log.i(javaClass.name, "Connecting to $address")
-    bt?.apply {
-      connect(address)
-    } ?: let {
-      Log.e("bebe", "connectDeviceTo. bt state = bt")
-    }
-  }
-
-  private fun closeConnection() {
-    Log.i(javaClass.name, "Closing all connections to bluetooth devices!")
-    EventBus.getDefault().post(RtkEvent(false, -1))
-//    bluetoothManager.close()
-    bt?.disconnect()
-    unregisterEvent()
-    stopSelf()
-  }
-
-
-  @SuppressLint("SetTextI18n", "ForegroundServiceType")
-  private fun onMessageReceived(message: String) {
-//    handler?.handleMessage(message)
-    EventBus.getDefault().post(RtkDataEvent(message))
-    var altitude: Double
-    message.rtkQuality().apply {
-      if (!isEmpty()) {
-        rtkQuality = "Status: $this"
-        EventBus.getDefault().post(QualityEvent(this, "GGA", 0.0))
-      }
+    override fun onCreate() {
+        super.onCreate()
+        registerEvent()
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     }
 
-    message.hvrms().apply {
-      if (size > 0) {
-        hvrms = "HRMS: %.3f - VRMS: %.3f".format(get(0), get(1))
-      }
+    @SuppressLint("MissingPermission")
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
+        bluetoothAddress = intent?.getStringExtra(BLUETOOTH_ADDRESS)
+        itemPosition = intent?.getIntExtra(ITEM_INDEX, -1) ?: -1
+        val connect = intent?.getBooleanExtra(CONNECT, false) ?: false
+
+        log("Connect: $connect")
+
+        if (connect) {
+            connectDeviceTo(bluetoothAddress)
+        } else {
+            closeConnection()
+        }
+
+        return START_NOT_STICKY
     }
 
-    val bigContent = "$rtkQuality\n$hvrms$MODE"
-//    startForeground(NOTIFICATION_ID, getNotificationWith("Terhubung ", bigContent))
-  }
+    override fun onBind(intent: Intent?): IBinder? = null
 
-//  private fun getNotificationWith(content: String, bigText: String) =
-//    NotificationCompat.Builder(this, CHANNEL_ID)
-//      .setContentTitle("External GNSS Connection Status")
-//      .setContentText(content)
-//      .setStyle(NotificationCompat.BigTextStyle().bigText(bigText))
-//      .setSmallIcon(R.drawable.logo)
-//      .setContentIntent(pendingIntent)
-//      .build()
-
-
-  private fun onError() {
-//    longToast("Gagal terhubung. Device tidak aktif atau koneksi ke device terhambat.")
-    itemPosition?.apply {
-      EventBus.getDefault().post(RtkEvent(false, this))
+    override fun onDestroy() {
+        log("Service destroyed")
+        closeConnection()
+        super.onDestroy()
     }
-    stopSelf()
-  }
 
-  fun log(msg: String?) {
-    Log.i(javaClass.name, msg ?: "")
-  }
+    // =========================
+    // 🔹 CONNECT
+    // =========================
+    @SuppressLint("MissingPermission")
+    private fun connectDeviceTo(address: String?) {
+        try {
+            log("Connecting to $address")
 
-  @Subscribe
-  fun onRtcm3Event(event: Rtcm3Event) {
-    bt?.apply {
-      send(event.buffer, false)
-    } ?: let {
-      Log.e("bebe", "bt state = $bt")
+            val device = bluetoothAdapter?.getRemoteDevice(address)
+
+            val uuid = device?.uuids?.getOrNull(0)?.uuid
+                ?: UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+
+            bluetoothSocket = device?.createRfcommSocketToServiceRecord(uuid)
+
+            bluetoothAdapter?.cancelDiscovery()
+            bluetoothSocket?.connect()
+
+            inputStream = bluetoothSocket?.inputStream
+            outputStream = bluetoothSocket?.outputStream
+
+            startReading()
+
+            EventBus.getDefault().post(RtkEvent(true, itemPosition))
+            log("Connected successfully")
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError()
+        }
     }
-    this.MODE = "\nMode: NTRIP"
-  }
 
-  @Subscribe
-  fun onModeEvent(event: ModeEvent) {
-    this.MODE = event.mode
-  }
+    // =========================
+    // 🔹 READ DATA
+    // =========================
+    private fun startReading() {
+        readThread = Thread {
+            val buffer = ByteArray(1024)
 
-  private fun unregisterEvent() {
-    Log.i(javaClass.name, "unregistering event")
-    if (EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this)
-  }
+            try {
+                while (!Thread.currentThread().isInterrupted) {
+                    val bytes = inputStream?.read(buffer) ?: -1
 
-  private fun registerEvent() {
-    if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this)
-  }
+                    if (bytes > 0) {
+                        val message = String(buffer, 0, bytes)
+                        onMessageReceived(message)
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError()
+            }
+        }
+        readThread?.start()
+    }
 
+    // =========================
+    // 🔹 SEND DATA
+    // =========================
+    private fun sendData(data: ByteArray) {
+        try {
+            outputStream?.write(data)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    // =========================
+    // 🔹 RECEIVE MESSAGE
+    // =========================
+    private fun onMessageReceived(message: String) {
+
+        EventBus.getDefault().post(RtkDataEvent(message))
+
+        message.rtkQuality().apply {
+            if (isNotEmpty()) {
+                rtkQuality = "Status: $this"
+                EventBus.getDefault().post(QualityEvent(this, "GGA", 0.0))
+            }
+        }
+
+        message.hvrms().apply {
+            if (isNotEmpty()) {
+                hvrms = "HRMS: %.3f - VRMS: %.3f".format(get(0), get(1))
+            }
+        }
+
+        val bigContent = "$rtkQuality\n$hvrms$MODE"
+        log(bigContent)
+    }
+
+    // =========================
+    // 🔹 DISCONNECT
+    // =========================
+    private fun closeConnection() {
+        try {
+            readThread?.interrupt()
+            inputStream?.close()
+            outputStream?.close()
+            bluetoothSocket?.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        EventBus.getDefault().post(RtkEvent(false, itemPosition))
+        unregisterEvent()
+        stopSelf()
+    }
+
+    // =========================
+    // 🔹 ERROR HANDLER
+    // =========================
+    private fun onError() {
+        log("Connection error")
+
+        EventBus.getDefault().post(RtkEvent(false, itemPosition))
+        stopSelf()
+    }
+
+    // =========================
+    // 🔹 EVENTBUS
+    // =========================
+    @Subscribe
+    fun onRtcm3Event(event: Rtcm3Event) {
+        sendData(event.buffer)
+        MODE = "\nMode: NTRIP"
+    }
+
+    @Subscribe
+    fun onModeEvent(event: ModeEvent) {
+        MODE = event.mode
+    }
+
+    private fun registerEvent() {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
+    }
+
+    private fun unregisterEvent() {
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this)
+        }
+    }
+
+    // =========================
+    // 🔹 LOG
+    // =========================
+    private fun log(msg: String?) {
+        Log.i("RTK_SERVICE", msg ?: "")
+    }
 }
