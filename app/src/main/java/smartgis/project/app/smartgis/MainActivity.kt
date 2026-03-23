@@ -1054,7 +1054,7 @@ GoogleMap.OnPolylineClickListener {
     @SuppressLint("MissingPermission")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
-//            R.id.undo -> performUndo()
+            R.id.undo -> performUndo()
             R.id.mbtile -> {
                 if (askStorageForPermissions())
                     showMbtilesChooserDialog()
@@ -1064,12 +1064,12 @@ GoogleMap.OnPolylineClickListener {
 //                    showExcelChooserDialog()
             }
             R.id.importShp -> {
-//                if (askStorageForPermissions())
-//                    loadFileSHP()
+                if (askStorageForPermissions())
+                    loadFileSHP()
             }
             R.id.importGeoJSON -> {
-//                if (askStorageForPermissions())
-//                    loadFileGeoJson()
+                if (askStorageForPermissions())
+                    loadFileGeoJson()
             }
             R.id.exportToShp -> {
 //                if (askStorageForPermissions())
@@ -1120,17 +1120,17 @@ GoogleMap.OnPolylineClickListener {
 //                    checkYuridisIsComplete()
 
             }
-//            R.id.petaKerja -> showWMSKantah()
+            R.id.petaKerja -> showWMSKantah()
 
 
-//            R.id.mapType -> showMapTypeChooserDialog()
-//            R.id.show_wws -> showWms()
+            R.id.mapType -> showMapTypeChooserDialog()
+            R.id.show_wws -> showWms()
             R.id.toggleLocation -> map?.apply {
                 isMyLocationEnabled = !isMyLocationEnabled
             }
 //            R.id.saksi -> startActivity<WorkspaceForms>(Workspace.INTENT to workspace.id)
-//            R.id.connectRtk -> askBluetoothForPermissions()
-//            R.id.ntripService -> {
+            R.id.connectRtk -> askBluetoothForPermissions()
+            R.id.ntripService -> {
 //                //startActivity<NTRIPActivity>()
 //                startService(
 //                    Intent(
@@ -1138,7 +1138,7 @@ GoogleMap.OnPolylineClickListener {
 //                        smartgis.project.app.smartgis.ntrip.service.NTRIPService::class.java
 //                    )
 //                )
-//            }
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -1487,7 +1487,8 @@ GoogleMap.OnPolylineClickListener {
 
     private fun askBluetoothForPermissions() {
 //        if (EasyPermissions.hasPermissions(this, *bluetoothPermissions())) {
-//            startActivity<BluetoothDevices>()
+        val intent = Intent(this, BluetoothDevices::class.java)
+        startActivity(intent)
 //        } else {
 //            requestPermissionsCompat(bluetoothPermissions(), ASK_BLUETOOTH_PERMISSIONS_REQUEST_CODE)
 //        }

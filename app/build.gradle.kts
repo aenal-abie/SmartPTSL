@@ -139,5 +139,8 @@ dependencies {
     //messaging
     implementation(libs.firebase.messaging)
 
+    //bluetooth
+//    implementation(libs.android.bluetooth.serial)
+
 
 }
