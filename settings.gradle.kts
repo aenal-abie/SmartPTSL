@@ -27,5 +27,5 @@ plugins {
 rootProject.name = "SmartPTSL"
 include(":app")
 include(":library:gdal-release")
-//include(":library:bluetooth")
+include(":library:bluetooth")
 

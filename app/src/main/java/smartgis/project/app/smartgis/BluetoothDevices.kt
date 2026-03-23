@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -20,6 +21,7 @@ import smartgis.project.app.smartgis.adapter.BluetoothRtkAdapter
 import smartgis.project.app.smartgis.databinding.ActivityBluetoothDevicesBinding
 import smartgis.project.app.smartgis.decorators.BluetoothDeviceDecorator
 import smartgis.project.app.smartgis.events.RtkEvent
+import smartgis.project.app.smartgis.services.RtkListenerService
 
 class BluetoothDevices : LoginRequiredActivity() {
 
@@ -134,14 +136,12 @@ class BluetoothDevices : LoginRequiredActivity() {
     // 🔌 CONNECT (RTK / GPS)
     // =========================
     private fun connectToDevice(device: BluetoothDevice, position: Int) {
-//        ContextCompat.startForegroundService(
-//            this,
-//            intentFor<RtkListenerService>(
-//                RtkListenerService.BLUETOOTH_ADDRESS to data[position].device.address,
-//                ITEM_INDEX to position,
-//                CONNECT to isChecked
-//            )
-//        )
+        val intent = Intent(this, RtkListenerService::class.java).apply {
+            putExtra(RtkListenerService.BLUETOOTH_ADDRESS, this@BluetoothDevices.data[position].device.address)
+            putExtra(ITEM_INDEX, position)
+            putExtra(CONNECT, true)
+        }
+        ContextCompat.startForegroundService(this, intent)
     }
 
     // =========================

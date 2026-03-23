@@ -140,7 +140,7 @@ dependencies {
     implementation(libs.firebase.messaging)
 
     //bluetooth
-//    implementation(libs.android.bluetooth.serial)
+    implementation(project(":library:bluetooth"))
 
 
 }
