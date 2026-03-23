@@ -35,7 +35,7 @@ class RtkListenerService : Service() {
   }
 
 //  private var handler: RtkDeviceBluetoothHandler? = null
-//  private var bluetoothAddress: String? = null
+  private var bluetoothAddress: String? = null
 //  private val bluetoothManager: BluetoothManager = BluetoothManager.getInstance()
 //  private var deviceInterface: SimpleBluetoothDeviceInterface? = null
   private var pendingIntent: PendingIntent? = null
@@ -50,7 +50,7 @@ class RtkListenerService : Service() {
     registerEvent()
     bt = BluetoothSPP(this) // sudah diinisialisasi disini
     bt?.setupService()
-    bt?.startService(BluetoothState.DEVICE_OTHER)
+    bt?.startService(false)
 
 
     bt?.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
@@ -75,17 +75,17 @@ class RtkListenerService : Service() {
   @SuppressLint("ForegroundServiceType")
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-//    bluetoothAddress = intent?.getStringExtra(BLUETOOTH_ADDRESS)
-//
-//    itemPosition = intent?.getIntExtra(ITEM_INDEX, -1)
-//    val connect = intent?.getBooleanExtra(CONNECT, false)
-//    log(connect.toString())
-//    connect?.apply {
+    bluetoothAddress = intent?.getStringExtra(BLUETOOTH_ADDRESS)
+
+    itemPosition = intent?.getIntExtra(ITEM_INDEX, -1)
+    val connect = intent?.getBooleanExtra(CONNECT, false)
+    log(connect.toString())
+    connect?.apply {
 //      if (this) {
 //        connectDeviceTo(bluetoothAddress)
 //        handler = RtkDeviceBluetoothHandler.getInstance(HandleParsingRtk())
 //      } else closeConnection()
-//    }
+    }
 //    pendingIntent = PendingIntent.getActivity(
 //      this,
 //      0,

@@ -11,7 +11,8 @@ import android.os.Build
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-//import io.realm.Realm
+
+
 //import io.realm.RealmConfiguration
 //import org.jetbrains.anko.toast
 
@@ -27,12 +28,6 @@ class App : Application() {
     super.onCreate()
     createRtkNotification()
     createAnnouncementNotificationManager()
-//    Realm.init(this)
-//    val configuration = RealmConfiguration.Builder()
-//      .schemaVersion(1)
-//      .build()
-//    Realm.setDefaultConfiguration(configuration)
-//    Realm.getInstance(configuration)
   }
 
   private fun createAnnouncementNotificationManager() {
