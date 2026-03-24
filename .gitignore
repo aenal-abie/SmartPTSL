@@ -969,3 +969,6 @@ local.properties
 /library/bluetooth/build/.transforms
 /.kotlin/errors
 /library/bluetooth/build/intermediates/incremental/packageDebugAssets/merger.xml
+/library/gdal-release/build/.transforms/770a6c3d0630ed78976654ffd2fba1a5/results.bin
+/library/gdal-release/build/.transforms/770a6c3d0630ed78976654ffd2fba1a5/transformed/jetified-gdal-release-runtime/jetified-gdal-release-runtime_dex/classes.dex
+/.kotlin/sessions/kotlin-compiler-10323700534142021797.salive
