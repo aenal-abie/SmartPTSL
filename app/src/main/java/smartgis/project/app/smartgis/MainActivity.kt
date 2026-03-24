@@ -1073,8 +1073,7 @@ GoogleMap.OnPolylineClickListener {
 //                    loadFileSHP()
             }
             R.id.importGeoJSON -> {
-//                if (askStorageForPermissions())
-//                    loadFileGeoJson()
+                    loadFileGeoJson()
             }
             R.id.exportToShp -> {
                 val intent = Intent(this, ExportAreaDetailToShp::class.java)
@@ -1525,7 +1524,7 @@ GoogleMap.OnPolylineClickListener {
         }
     }
 
-    private fun askStorageForPermissions() {
+    private fun askStorageForPermissions(isResult: Boolean = false) {
             val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 arrayOf(
                     Manifest.permission.READ_MEDIA_IMAGES,
@@ -1538,18 +1537,22 @@ GoogleMap.OnPolylineClickListener {
                 )
             }
 
-            val notGranted = permissions.filter {
-                ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
-            }
+        val notGranted = permissions.filter {
+            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        }
 
-            if (notGranted.isEmpty()) {
+
+        if (notGranted.isEmpty()) {
+            if (!isResult) {
                 pendingIntentAfterPermission?.let {
                     startActivity(it)
                     pendingIntentAfterPermission = null
                 }
-            } else {
-                storagePermissionLauncher.launch(notGranted.toTypedArray())
             }
+        } else {
+            storagePermissionLauncher.launch(notGranted.toTypedArray())
+        }
+
     }
 
     private fun locationPermissions(): Array<String> {
@@ -3133,8 +3136,11 @@ GoogleMap.OnPolylineClickListener {
     private fun loadFileGeoJson() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "application/octet-stream"
+        pendingIntentAfterPermission = intent
+        askStorageForPermissions(true)
         try {
-            startActivityForResult(intent, UPLOAD_GEOJSON_CODE)
+            pendingIntentAfterPermission?.let { startActivityForResult(it, UPLOAD_GEOJSON_CODE) }
+            pendingIntentAfterPermission = null
         } catch (e: ActivityNotFoundException) {
         }
     }
