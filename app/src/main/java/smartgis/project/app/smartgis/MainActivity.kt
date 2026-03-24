@@ -102,6 +102,7 @@ import javax.measure.unit.SI.METRE
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import androidx.core.content.ContextCompat
+import smartgis.project.app.smartgis.forms.signature.SignatureFormActivity
 
 class MainActivity :  LoginRequiredActivity(),
     OnMapReadyCallback,GoogleMap.OnMarkerClickListener,GoogleMap.OnPolygonClickListener,
@@ -523,9 +524,9 @@ GoogleMap.OnPolylineClickListener {
                             }
 
                             5 -> {
-//                                val intent = Intent(this, SignatureFormActivity::class.java)
-//                                intent.putExtra("AREA_ID", areaId)
-//                                startActivity(intent)
+                                val intent = Intent(this, SignatureFormActivity::class.java)
+                                intent.putExtra("AREA_ID", areaId)
+                                startActivity(intent)
                             }
 
                             6 -> {

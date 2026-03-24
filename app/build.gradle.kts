@@ -158,5 +158,9 @@ dependencies {
     //retrofit
     implementation(libs.retrofit)
 
+    //signature
+    implementation("com.github.gcacace:signature-pad:1.3.1")
+    implementation("com.github.bumptech.glide:glide:5.0.5")
+
 
 }

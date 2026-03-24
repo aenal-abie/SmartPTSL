@@ -42,6 +42,7 @@
         <activity android:name=".forms.delinasi.DelinasiFormActivity" />
         <activity android:name=".BluetoothDevices" />
         <activity android:name=".export.ExportAreaDetailToShp" />
+        <activity android:name=".forms.signature.SignatureFormActivity" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
