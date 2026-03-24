@@ -47,6 +47,7 @@ android {
     buildFeatures {
         buildConfig = true
         viewBinding = true
+        dataBinding = true
     }
 
     flavorDimensions += "env"
@@ -150,6 +151,12 @@ dependencies {
 
     //bluetooth
     implementation(project(":library:bluetooth"))
+
+    //gdal
+    implementation(project(":library:gdal-release"))
+
+    //retrofit
+    implementation(libs.retrofit)
 
 
 }
