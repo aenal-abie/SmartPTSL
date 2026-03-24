@@ -5,65 +5,99 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.view.LayoutInflater
-import android.view.View
 import com.google.gson.Gson
-//import kotlinx.android.synthetic.main.activity_import.view.*
 import org.json.JSONArray
 import org.json.JSONObject
 import org.zeroturnaround.zip.ZipUtil
-import smartgis.project.app.smartgis.R
+import smartgis.project.app.smartgis.databinding.ActivityImportBinding
 import smartgis.project.app.smartgis.utils.gone
 import smartgis.project.app.smartgis.utils.show
 import smartgis.project.app.smartgis.utils.shp.ShpToGeoJson.transformShpDbfToGeoJson
 import java.io.File
 
-
 class ImportShpController(private val context: Context) {
 
-  private var jsonObject: JSONObject? = null
-  private var dialogInterface: DialogInterface? = null
-  private var active: Boolean = false
+    private var jsonObject: JSONObject? = null
+    private var dialogInterface: DialogInterface? = null
+    private var active: Boolean = false
 
-  @SuppressLint("SetTextI18n")
-  fun handle(file: File, fileName: String, handler: (JSONArray) -> Unit) {
-//    val dialog = AlertDialog.Builder(context)
-//    dialog.setCancelable(false)
-//    val importView: View =
-//      LayoutInflater.from(context).inflate(R.layout.activity_import, null, false)
-//    dialog.setView(importView)
-//    dialog.setView(importView)
-//    importView.tvImportLocation.text = fileName
-//    val tmpDir = context.getDir("tmp-extract", Context.MODE_PRIVATE)
-//    if (!tmpDir.exists()) tmpDir.createNewFile()
-//    tmpDir.listFiles().forEach { it.delete() }
-//    ZipUtil.unpack(file, tmpDir)
-//    val shpFile = tmpDir.listFiles().first { it.extension == "shp" }
-//    val dbfFile = tmpDir.listFiles().first { it.extension == "dbf" }
-//
-//    val json = Gson().toJson(transformShpDbfToGeoJson(shpFile, dbfFile))
-//    jsonObject = JSONObject(json)
-//    jsonObject?.apply {
-//      importView.tvDesc.text =
-//        "Jumlah area yang akan diimport: ${this.getJSONArray("features")?.length()}"
-//      importView.btnImport.isEnabled = true
-//      importView.loadingContainer.gone()
-//      if (getJSONArray("features").length() > 500) importView.tvNote.show()
-//      else importView.tvNote.gone()
-//    }
-//    importView.btnCancel.setOnClickListener { dialogInterface?.dismiss() }
-//    importView.btnImport.setOnClickListener {
-//      dialogInterface?.dismiss()
-//      jsonObject?.apply {
-//        var features = this.getJSONArray("features")
-//        val size = this.getJSONArray("features").length()
-//        when {
-//          active -> features.put(size, "1")
-//        }
-//        features.apply {
-//          handler(this)
-//        }
-//      }
-//    }
-//    dialogInterface = dialog.show()
-  }
+    @SuppressLint("SetTextI18n")
+    fun handle(file: File, fileName: String, handler: (JSONArray) -> Unit) {
+
+        val binding = ActivityImportBinding.inflate(LayoutInflater.from(context))
+
+        val dialog = AlertDialog.Builder(context)
+            .setCancelable(false)
+            .setView(binding.root)
+            .create()
+
+        binding.tvImportLocation.text = fileName
+        binding.loadingContainer.show()
+        binding.btnImport.isEnabled = false
+
+        // 🔽 Extract ZIP
+        val tmpDir = context.getDir("tmp-extract", Context.MODE_PRIVATE)
+
+        if (!tmpDir.exists()) tmpDir.mkdirs()
+        tmpDir.listFiles()?.forEach { it.delete() }
+
+        ZipUtil.unpack(file, tmpDir)
+
+        val shpFile = tmpDir.listFiles()?.firstOrNull { it.extension == "shp" }
+        val dbfFile = tmpDir.listFiles()?.firstOrNull { it.extension == "dbf" }
+
+        if (shpFile == null || dbfFile == null) {
+            binding.loadingContainer.gone()
+            binding.tvDesc.text = "File shp/dbf tidak ditemukan"
+            dialog.show()
+            return
+        }
+
+        try {
+            val json = Gson().toJson(transformShpDbfToGeoJson(shpFile, dbfFile))
+            jsonObject = JSONObject(json)
+
+            val features = jsonObject!!.getJSONArray("features")
+
+            binding.tvDesc.text =
+                "Jumlah area yang akan diimport: ${features.length()}"
+
+            if (features.length() > 500) {
+                binding.tvNote.show()
+            } else {
+                binding.tvNote.gone()
+            }
+
+            binding.btnImport.isEnabled = true
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            binding.tvDesc.text = "Gagal membaca file"
+        }
+
+        binding.loadingContainer.gone()
+
+        // Actions
+        binding.btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        binding.btnImport.setOnClickListener {
+            dialog.dismiss()
+
+            jsonObject?.let {
+                val features = it.getJSONArray("features")
+                val size = features.length()
+
+                if (active) {
+                    features.put(size, "1")
+                }
+
+                handler(features)
+            }
+        }
+
+        dialogInterface = dialog
+        dialog.show()
+    }
 }

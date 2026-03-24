@@ -1069,8 +1069,7 @@ GoogleMap.OnPolylineClickListener {
 //                    showExcelChooserDialog()
             }
             R.id.importShp -> {
-//                if (askStorageForPermissions())
-//                    loadFileSHP()
+                    loadFileSHP()
             }
             R.id.importGeoJSON -> {
                     loadFileGeoJson()
@@ -3121,8 +3120,11 @@ GoogleMap.OnPolylineClickListener {
     private fun loadFileSHP() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "application/zip"
+        pendingIntentAfterPermission = intent
+        askStorageForPermissions(true)
         try {
-            startActivityForResult(intent, UPLOAD_SHP_CODE)
+            pendingIntentAfterPermission?.let { startActivityForResult(it, UPLOAD_SHP_CODE) }
+            pendingIntentAfterPermission = null
         } catch (e: ActivityNotFoundException) {
         }
     }
