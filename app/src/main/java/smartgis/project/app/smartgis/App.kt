@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import dagger.hilt.android.HiltAndroidApp
 //import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
 //import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 //import dagger.hilt.android.HiltAndroidApp
@@ -18,7 +19,7 @@ import io.reactivex.schedulers.Schedulers
 //import org.jetbrains.anko.toast
 
 
-//@HiltAndroidApp
+@HiltAndroidApp
 class App : Application() {
 
   companion object {

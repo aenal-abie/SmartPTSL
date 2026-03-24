@@ -3,10 +3,10 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+    id("org.jetbrains.kotlin.plugin.parcelize")
+    alias(libs.plugins.hilt)
     id("com.google.gms.google-services")
-    id("kotlin-parcelize")
-//    id("com.google.devtools.ksp")
-//    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -67,8 +67,12 @@ android {
         }
     }
 }
-
-
+configurations.all {
+    resolutionStrategy {
+        force("androidx.core:core-ktx:1.15.0")
+        force("androidx.core:core:1.15.0")
+    }
+}
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -79,8 +83,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-//    implementation(libs.hilt.android)
-//    ksp(libs.hilt.android.compiler)
+
+    // Hilt
+    implementation(libs.hilt.android.core)
+    ksp(libs.hilt.compiler)
 
     // Import the BoM for the Firebase platform
     implementation(platform(libs.firebase.bom))

@@ -967,3 +967,5 @@ local.properties
 /library/bluetooth/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin
 /library/bluetooth/build/tmp/compileProductionJavaWithJavac/previous-compilation-data.bin
 /library/bluetooth/build/.transforms
+/.kotlin/errors
+/library/bluetooth/build/intermediates/incremental/packageDebugAssets/merger.xml
