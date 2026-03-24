@@ -17,6 +17,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -63,6 +65,7 @@ import smartgis.project.app.smartgis.decorators.ShapeImportedDecorator
 import smartgis.project.app.smartgis.decorators.ShapeWMSDecorator
 import smartgis.project.app.smartgis.documents.Collections
 import smartgis.project.app.smartgis.events.*;
+import smartgis.project.app.smartgis.export.ExportAreaDetailToShp
 import smartgis.project.app.smartgis.forms.delinasi.DelinasiFormActivity
 import smartgis.project.app.smartgis.models.Area
 import smartgis.project.app.smartgis.models.GnssStatusHolder
@@ -98,6 +101,7 @@ import java.util.Locale
 import javax.measure.unit.SI.METRE
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
+import androidx.core.content.ContextCompat
 
 class MainActivity :  LoginRequiredActivity(),
     OnMapReadyCallback,GoogleMap.OnMarkerClickListener,GoogleMap.OnPolygonClickListener,
@@ -177,6 +181,7 @@ GoogleMap.OnPolylineClickListener {
     private lateinit var wmsTileProvider2: TileProvider
     private lateinit var wmsTileProvider3: TileProvider
     private  val tileOverlays = mutableListOf<TileOverlay>()
+    private var pendingIntentAfterPermission: Intent? = null
 
     companion object {
         private val TAG = MainActivity::class.java.name
@@ -1056,24 +1061,26 @@ GoogleMap.OnPolylineClickListener {
         when (item?.itemId) {
             R.id.undo -> performUndo()
             R.id.mbtile -> {
-                if (askStorageForPermissions())
-                    showMbtilesChooserDialog()
+//                if (askStorageForPermissions())
+//                    showMbtilesChooserDialog()
             }
             R.id.importExcel -> {
 //                if (askStorageForPermissions())
 //                    showExcelChooserDialog()
             }
             R.id.importShp -> {
-                if (askStorageForPermissions())
-                    loadFileSHP()
+//                if (askStorageForPermissions())
+//                    loadFileSHP()
             }
             R.id.importGeoJSON -> {
-                if (askStorageForPermissions())
-                    loadFileGeoJson()
+//                if (askStorageForPermissions())
+//                    loadFileGeoJson()
             }
             R.id.exportToShp -> {
-//                if (askStorageForPermissions())
-//                    startActivity<ExportAreaDetailToShp>(Workspace.INTENT to workspace)
+                val intent = Intent(this, ExportAreaDetailToShp::class.java)
+                pendingIntentAfterPermission = intent
+                askStorageForPermissions()
+
             }
             R.id.exportBidangBapenda -> {
 //                if (askStorageForPermissions())
@@ -1494,15 +1501,55 @@ GoogleMap.OnPolylineClickListener {
 //        }
     }
 
-    private fun askStorageForPermissions(): Boolean {
-        return  false;
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-//            return true;
-//        }
-//        else if (!EasyPermissions.hasPermissions(this, *storagePermissions())) {
-//            requestPermissionsCompat(storagePermissions(), ASK_STORAGE_PERMISSIONS_REQUEST_CODE)
-//        }
-//        return EasyPermissions.hasPermissions(this, *storagePermissions())
+    private fun onStoragePermissionGranted() {
+        // lanjut export / akses storage
+    }
+
+    private fun onStoragePermissionDenied() {
+        Toast.makeText(this, "Permission ditolak", Toast.LENGTH_SHORT).show()
+    }
+
+    private val storagePermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+
+        val granted = permissions.all { it.value }
+
+        if (granted) {
+            pendingIntentAfterPermission?.let {
+                startActivity(it)
+                pendingIntentAfterPermission = null
+            }
+        } else {
+            Toast.makeText(this, "Permission ditolak", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun askStorageForPermissions() {
+            val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                arrayOf(
+                    Manifest.permission.READ_MEDIA_IMAGES,
+                    Manifest.permission.READ_MEDIA_VIDEO
+                )
+            } else {
+                arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+            }
+
+            val notGranted = permissions.filter {
+                ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+            }
+
+            if (notGranted.isEmpty()) {
+                pendingIntentAfterPermission?.let {
+                    startActivity(it)
+                    pendingIntentAfterPermission = null
+                }
+            } else {
+                storagePermissionLauncher.launch(notGranted.toTypedArray())
+            }
     }
 
     private fun locationPermissions(): Array<String> {
