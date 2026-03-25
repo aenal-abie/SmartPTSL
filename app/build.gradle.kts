@@ -157,10 +157,11 @@ dependencies {
 
     //retrofit
     implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 
     //signature
-    implementation("com.github.gcacace:signature-pad:1.3.1")
-    implementation("com.github.bumptech.glide:glide:5.0.5")
+    implementation(libs.gcacace.signature.pad)
+    implementation(libs.glide)
 
 
 }

@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 //import retrofit2.converter.gson.GsonConverterFactory
 import smartgis.project.app.smartgis.data.repositories.service.WMSService
 import java.util.concurrent.TimeUnit
@@ -32,7 +33,7 @@ class NetworkModule {
     return Retrofit.Builder()
       .baseUrl(BASE_WMS_URL)
       .client(okHttpClient)
-//      .addConverterFactory(GsonConverterFactory.create(gson))
+      .addConverterFactory(GsonConverterFactory.create(gson))
       .build()
   }
 

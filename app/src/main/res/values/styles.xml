@@ -1,35 +1,36 @@
 <resources>
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
+    <!-- ✅ Base application theme (Material) -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorSecondary">@color/colorAccent</item>
+
+        <!-- penting untuk Material -->
+        <item name="colorSurface">@android:color/white</item>
         <item name="android:fontFamily">@font/sf_r</item>
     </style>
 
-    <style name="Theme_Dialog" parent="Theme.AppCompat.Light.Dialog">
+    <!-- ✅ Dialog theme (FIX ERROR kamu) -->
+    <style name="Theme_Dialog" parent="Theme.MaterialComponents.Light.Dialog">
         <item name="android:windowMinWidthMajor">96%</item>
         <item name="android:windowMinWidthMinor">96%</item>
     </style>
 
-    <style name="MarkerTitle" parent="TextAppearance.AppCompat">
+    <!-- ✅ Text Appearance (Material) -->
+    <style name="MarkerTitle" parent="TextAppearance.MaterialComponents.Body2">
         <item name="android:textColor">@android:color/black</item>
         <item name="android:fontFamily">@font/sf_r</item>
         <item name="android:textSize">10sp</item>
     </style>
 
-    <style name="PolyLineLabelTextStyle" parent="TextAppearance.AppCompat">
+    <style name="PolyLineLabelTextStyle" parent="TextAppearance.MaterialComponents.Body2">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:fontFamily">@font/sf_r</item>
         <item name="android:textSize">10sp</item>
     </style>
 
+    <!-- Wizard -->
     <style name="WizardPageTitle">
-        <item name="android:id">@android:id/title</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">23sp</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:fontFamily">sans-serif-thin</item>
@@ -41,27 +42,22 @@
 
     <style name="WizardPageTitleLargeWithMargin" parent="WizardPageTitleLarge">
         <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginStart">16dp</item>
         <item name="android:layout_marginTop">20dp</item>
-        <item name="android:layout_marginRight">16dp</item>
-        <item name="android:paddingLeft">?android:attr/listPreferredItemPaddingLeft</item>
+        <item name="android:layout_marginEnd">16dp</item>
     </style>
 
+    <!-- Form -->
     <style name="WizardFormLabel">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">0dp</item>
-        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Caption</item>
         <item name="android:textColor">@color/text_light</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:paddingLeft">3dp</item>
-        <item name="android:paddingRight">3dp</item>
     </style>
 
     <style name="WizardFormLabelPaLeRi" parent="WizardFormLabel">
-        <item name="android:paddingLeft">12dp</item>
-        <item name="android:paddingRight">12dp</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
     </style>
 
     <style name="FormInputStyle">
@@ -70,15 +66,16 @@
         <item name="android:layout_marginBottom">10dp</item>
     </style>
 
+    <!-- ✅ Overlay diganti ke Material -->
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="SmallRSBToolbar" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <style name="SmallRSBToolbar" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="android:fontFamily">@font/r_sb</item>
     </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
 
+    <!-- FAB -->
     <style name="MenuButtonsStyle">
         <item name="fab_showAnimation">@anim/jump_from_down</item>
         <item name="fab_hideAnimation">@anim/jump_to_down</item>
@@ -88,33 +85,29 @@
         <item name="fab_colorRipple">#D99200</item>
     </style>
 
-    <style name="ImageViewTextTitle" parent="@style/TextAppearance.AppCompat.Menu">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+    <!-- Image title -->
+    <style name="ImageViewTextTitle" parent="TextAppearance.MaterialComponents.Body1">
         <item name="android:background">@drawable/linear_scrim_mirror</item>
         <item name="android:fontFamily">@font/r_sb</item>
         <item name="android:padding">20dp</item>
-        <item name="android:text">@string/example</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <!-- No Action Bar -->
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
+    <!-- Input -->
     <style name="FormInputStylePengtan">
         <item name="android:background">@drawable/rounded_edit</item>
         <item name="android:textSize">14sp</item>
-<!--        <item name="ms_background_color">#4B3F3F</item>-->
         <item name="android:textColor">#000000</item>
         <item name="android:textColorHint">#31FFFFFF</item>
         <item name="android:paddingTop">10dp</item>
-        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingStart">10dp</item>
         <item name="android:paddingBottom">10dp</item>
-        <item name="android:layout_marginStart">5dp</item>
-        <item name="android:layout_marginEnd">5dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
     </style>
 
     <style name="TvInputStylePengtan">
@@ -122,4 +115,5 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#000000</item>
     </style>
+
 </resources>

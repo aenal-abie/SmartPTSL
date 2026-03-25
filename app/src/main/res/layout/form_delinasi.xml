@@ -19,9 +19,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/yuri_file_no"/>
 
-        <TextView
-            style="@style/WizardFormLabelPaLeRi"
-            android:text="@string/cluster" />
+
 
         <Spinner
             android:id="@+id/sCluster"
