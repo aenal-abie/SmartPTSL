@@ -7,6 +7,7 @@ import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
 import android.net.NetworkInfo
 import android.os.Build
@@ -102,7 +103,11 @@ import javax.measure.unit.SI.METRE
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import androidx.core.content.ContextCompat
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.TileOverlayOptions
+import smartgis.project.app.smartgis.forms.signature.BaseSignatureFormContainer
 import smartgis.project.app.smartgis.forms.signature.SignatureFormActivity
+import smartgis.project.app.smartgis.utils.tiles.ExpandedMBTilesTileProvider
 
 class MainActivity :  LoginRequiredActivity(),
     OnMapReadyCallback,GoogleMap.OnMarkerClickListener,GoogleMap.OnPolygonClickListener,
@@ -204,8 +209,8 @@ GoogleMap.OnPolylineClickListener {
         private const val POLYLINE_MODE = 3
         const val DATA_SIZE = "DATA_SIZE"
         const val AREA = "AREA"
-//        val TTD_PEMILIK_URL =
-//            BaseSignatureFormContainer.TTD_URL_PATTERN.format(SignatureFormActivity.INFIX)
+        val TTD_PEMILIK_URL =
+            BaseSignatureFormContainer.TTD_URL_PATTERN.format(SignatureFormActivity.INFIX)
 //        val TTD_SAKSI2_URL =
 //            BaseSignatureFormContainer.TTD_URL_PATTERN.format(SignatureSaksiKedua.INFIX)
 //        val TTD_SAKSI1_URL =
@@ -1413,29 +1418,29 @@ GoogleMap.OnPolylineClickListener {
     }
 
     private fun loadMbTiles(file: File) {
-//        tileProvider = ExpandedMBTilesTileProvider(file, 256, 256)
-//        tileOverlay = map?.addTileOverlay(TileOverlayOptions().tileProvider(tileProvider))
-//        try {
-//            val db = SQLiteDatabase.openDatabase(file.path, null, SQLiteDatabase.OPEN_READONLY)
-//            val cursor = db.rawQuery("SELECT value FROM metadata WHERE name='bounds';", null)
-//            cursor.moveToFirst()
-//            val coordinates = cursor.getString(0).split(",").map { it.toDouble() }.toList()
-//            val p1 = LatLng(coordinates[1], coordinates[0])
-//            val p2 = LatLng(coordinates[3], coordinates[2])
-//            val bounds = LatLngBounds(p1, p2)
-//            cursor.close()
-//            db.close()
-//            map?.apply {
-//                moveCamera(
-//                    CameraUpdateFactory.newLatLngZoom(
-//                        bounds.center,
-//                        cameraPosition.zoom
-//                    )
-//                )
-//            }
-//        } catch (e: Exception) {
+        tileProvider = ExpandedMBTilesTileProvider(file, 256, 256)
+        tileOverlay = map?.addTileOverlay(TileOverlayOptions().tileProvider(tileProvider))
+        try {
+            val db = SQLiteDatabase.openDatabase(file.path, null, SQLiteDatabase.OPEN_READONLY)
+            val cursor = db.rawQuery("SELECT value FROM metadata WHERE name='bounds';", null)
+            cursor.moveToFirst()
+            val coordinates = cursor.getString(0).split(",").map { it.toDouble() }.toList()
+            val p1 = LatLng(coordinates[1], coordinates[0])
+            val p2 = LatLng(coordinates[3], coordinates[2])
+            val bounds = LatLngBounds(p1, p2)
+            cursor.close()
+            db.close()
+            map?.apply {
+                moveCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                        bounds.center,
+                        cameraPosition.zoom
+                    )
+                )
+            }
+        } catch (e: Exception) {
 //            rootLayout.longSnackbar(getString(R.string.cant_get_center_bounds_mbtiles))
-//        }
+        }
     }
     //fix
     override fun onMapReady(googleMap: GoogleMap) {
@@ -1636,7 +1641,7 @@ GoogleMap.OnPolylineClickListener {
     override
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             when (requestCode) {
                 SELECT_MBTILE -> {
                     data?.data?.let { uri ->
