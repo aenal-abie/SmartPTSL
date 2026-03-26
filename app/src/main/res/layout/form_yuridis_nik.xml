@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:fab="http://schemas.android.com/apk/res-auto"
+            xmlns:app="http://schemas.android.com/tools" android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:ignore="NamespaceTypo">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="NIK"/>
+        <LinearLayout
+
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <EditText
+                    android:layout_weight="1.7"
+                    android:id="@+id/etNIK"
+                    android:inputType="number"
+                    style="@style/FormInputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="NIK"/>
+        </LinearLayout>
+
+        <LinearLayout
+
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <LinearLayout
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <TextView
+                        android:layout_weight="3"
+                        style="@style/WizardFormLabelPaLeRi"
+                        android:text="@string/nama"/>
+                <EditText
+                        android:layout_weight="1"
+                        android:id="@+id/etNama"
+                        style="@style/FormInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/nama"/>
+            </LinearLayout>
+
+        </LinearLayout>
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/alamat"/>
+        <EditText
+                android:layout_weight="1"
+                android:id="@+id/etAlamat"
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/alamat"/>
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/lokasi"/>
+        <EditText
+                android:layout_weight="1"
+                android:id="@+id/etLokasi"
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/lokasi"/>
+        <LinearLayout
+
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <LinearLayout
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <TextView
+                        android:layout_weight="2"
+                        style="@style/WizardFormLabelPaLeRi"
+                        android:text="@string/kode_pos"/>
+                <EditText
+                        android:layout_weight="2"
+                        android:inputType="number"
+                        android:id="@+id/etKodePos"
+                        style="@style/FormInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/kode_pos"/>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <TextView
+                        android:layout_weight="2"
+                        style="@style/WizardFormLabelPaLeRi"
+                        android:text="@string/rt_rw"/>
+                <EditText
+                        android:layout_weight="2"
+                        android:id="@+id/etrtrw"
+                        style="@style/FormInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/rt_rw" app:ignore="DuplicateIds"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <LinearLayout
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <TextView
+                        android:layout_weight="2"
+                        style="@style/WizardFormLabelPaLeRi"
+                        android:text="@string/tempat_lahir"/>
+                <EditText
+                        android:layout_weight="2"
+                        android:id="@+id/etTempatLahir"
+                        style="@style/FormInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/tempat_lahir"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <LinearLayout
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <TextView
+                        android:layout_weight="2"
+                        style="@style/WizardFormLabelPaLeRi"
+                        android:text="@string/tgl_lahir"/>
+                <EditText
+                        android:layout_weight="2"
+                        android:inputType="date"
+                        android:focusable="false"
+                        android:id="@+id/ettgllahir"
+                        style="@style/FormInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/tgl_lahir"/>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <TextView
+                        android:layout_weight="2"
+                        style="@style/WizardFormLabelPaLeRi"
+                        android:text="@string/agama"/>
+                <EditText
+                        android:layout_weight="2"
+                        android:id="@+id/etagama"
+                        style="@style/FormInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/agama"/>
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+        <LinearLayout
+
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <LinearLayout
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <TextView
+                        android:layout_weight="2"
+                        style="@style/WizardFormLabelPaLeRi"
+                        android:text="@string/status"/>
+                <EditText
+                        android:layout_weight="2"
+                        android:id="@+id/etStatus"
+                        style="@style/FormInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/status"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <TextView
+                        android:layout_weight="2"
+                        style="@style/WizardFormLabelPaLeRi"
+                        android:text="@string/gol_darah"/>
+                <EditText
+                        android:layout_weight="2"
+                        android:id="@+id/etgoldarah"
+                        style="@style/FormInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/gol_darah"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/pekerjaan"/>
+        <EditText
+                android:layout_weight="1"
+                android:id="@+id/etPekerjaan"
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/pekerjaan"/>
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/nomor_kk"/>
+        <EditText
+                android:layout_weight="1"
+                android:id="@+id/etNomorKK"
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/nomor_kk"/>
+
+        <LinearLayout
+
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <TextView
+                android:layout_marginTop="5dp"
+                    android:layout_weight="2"
+                    style="@style/WizardFormLabelPaLeRi"
+                    android:text="@string/jenis_kelamin"/>
+            <RadioGroup
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:id="@+id/radioGroupNb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/textView1" >
+
+                <RadioButton
+                    android:layout_weight="1"
+                        android:id="@+id/radiolakilaki"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:text="@string/laki_laki" />
+
+                <RadioButton
+                    android:layout_weight="1"
+                        android:id="@+id/radioPerempuan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/perempuan" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+        <Button
+            android:id="@+id/btnCompeleteEmpetyValue"
+            android:background="@color/yellow_transparent"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:text="@string/lengkapi_formulir_yang_kosong"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+
+</ScrollView>

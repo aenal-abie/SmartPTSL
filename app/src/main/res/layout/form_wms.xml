@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/badan_hukum_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="URL" />
+
+        <EditText
+            android:id="@+id/et_url"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="URL" />
+
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="USER" />
+
+        <EditText
+            android:id="@+id/et_user"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="User" />
+
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Pasword" />
+
+        <EditText
+            android:id="@+id/et_password"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Passrword" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Layer" />
+
+        <EditText
+            android:id="@+id/et_layer"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Layer" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Versi" />
+
+        <EditText
+            android:id="@+id/et_version"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Versi" />
+
+
+    </LinearLayout>
+</ScrollView>

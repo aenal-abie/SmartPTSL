@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:fab="http://schemas.android.com/apk/res-auto"
+            xmlns:app="http://schemas.android.com/tools" android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:ignore="NamespaceTypo">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/sts_air_bersih_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_sts_sumber_air_bersih"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/status_sumber_air_bersih_bappeda"/>
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/sumber_air_bersih_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_air_bersih"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/sumber_air_bersih_bappeda"/>
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/keterangan_sumber_air_bersih_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_keterangan_air_bersih"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/keterangan_sumber_air_bersih_bappeda"/>
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/pengolahan_sampah_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_pengolahan_sampah_dirumah"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/pengolahan_sampah_dirumah_bappeda"/>
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/akses_dan_sarana_sampah_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_akses_dan_sarana_pembuanagan_sampah"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/akses_dan_saranapembuangansampah_bappeda"/>
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/ctps_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_ctps"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/CTPS_bappeda"/>
+
+    </LinearLayout>
+
+
+</ScrollView>

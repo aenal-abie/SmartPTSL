@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/badan_hukum_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Alas HAK" />
+
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/sp_jenis_alas_hak"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Pilih alas hak" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="SPPT (NOP)" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_sppt"
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="SPPT (NOP)" />
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/ms_sppt_tahun"
+                style="@style/FormInputStyle"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Luas" />
+
+        <EditText
+            android:id="@+id/et_luas"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Luas" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="NJOP per M2 (Rp)" />
+
+        <EditText
+            android:id="@+id/et_njop"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="NJOP per M2 (Rp)" />
+
+
+    </LinearLayout>
+</ScrollView>

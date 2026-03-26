@@ -105,10 +105,28 @@ import kotlin.math.roundToInt
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.TileOverlayOptions
+import smartgis.project.app.smartgis.documents.Storages
+import smartgis.project.app.smartgis.forms.BaseFormContainer.Companion.AREA_ID
+import smartgis.project.app.smartgis.forms.BaseFormContainer.Companion.DOC_TYPE
 import smartgis.project.app.smartgis.forms.signature.BaseSignatureFormContainer
 import smartgis.project.app.smartgis.forms.signature.SignatureFormActivity
 import smartgis.project.app.smartgis.forms.workspaceforms.saksi.SignatureSaksiKedua
 import smartgis.project.app.smartgis.forms.workspaceforms.saksi.SignatureSaksiPertama
+import smartgis.project.app.smartgis.forms.yuridis2.Yuridis2FormActivity
+import smartgis.project.app.smartgis.forms.yuridis_ptsl.GeneratePdfContent
+import smartgis.project.app.smartgis.forms.yuridis_ptsl.GeneratePdfContent.Companion.AKTA_JUAL_BELI
+import smartgis.project.app.smartgis.forms.yuridis_ptsl.GeneratePdfContent.Companion.AKTA_WAKAF
+import smartgis.project.app.smartgis.forms.yuridis_ptsl.GeneratePdfContent.Companion.BPHTB
+import smartgis.project.app.smartgis.forms.yuridis_ptsl.GeneratePdfContent.Companion.PBB
+import smartgis.project.app.smartgis.forms.yuridis_ptsl.GeneratePdfContent.Companion.PERORANGAN
+import smartgis.project.app.smartgis.forms.yuridis_ptsl.GeneratePdfContent.Companion.PERSIL
+import smartgis.project.app.smartgis.forms.yuridis_ptsl.GeneratePdfContent.Companion.PPH
+//import smartgis.project.app.smartgis.forms.yuridis_ptsl.GeneratePdfContent.Companion.*
+import smartgis.project.app.smartgis.forms.yuridis_ptsl.UploadImageFormActivity
+import smartgis.project.app.smartgis.forms.yuridis_ptsl.UploadImageFormActivity.Companion.FORM
+import smartgis.project.app.smartgis.forms.yuridis_ptsl.UploadImageFormActivity.Companion.WORSKPACE_NAME
+import smartgis.project.app.smartgis.forms.yuridis_ptsl.YuridisAlasHak.Companion.ALAS_HAK
+import smartgis.project.app.smartgis.forms.yuridis_ptsl.YuridisPTSLFormActivity
 import smartgis.project.app.smartgis.utils.tiles.ExpandedMBTilesTileProvider
 
 class MainActivity :  LoginRequiredActivity(),
@@ -509,11 +527,11 @@ GoogleMap.OnPolylineClickListener {
                             }
 
                             2 -> {
-//                                val intent = Intent(this, Yuridis2FormActivity::class.java)
-//                                intent.putExtra("AREA_ID", areaId)
-//                                intent.putExtra("WORKSPACE", workspace)
-//                                intent.putExtra("DATA_SIZE", polygon?.index?.plus(1))
-//                                startActivity(intent)
+                                val intent = Intent(this, Yuridis2FormActivity::class.java)
+                                intent.putExtra("AREA_ID", areaId)
+                                intent.putExtra("WORKSPACE", workspace)
+                                intent.putExtra("DATA_SIZE", polygon?.index?.plus(1))
+                                startActivity(intent)
                             }
 
                             3 -> {
@@ -525,9 +543,9 @@ GoogleMap.OnPolylineClickListener {
                             }
 
                             4 -> {
-//                                val intent = Intent(this, UploadImageFormActivity::class.java)
-//                                intent.putExtra("AREA_ID", areaId)
-//                                startActivity(intent)
+                                val intent = Intent(this, UploadImageFormActivity::class.java)
+                                intent.putExtra("AREA_ID", areaId)
+                                startActivity(intent)
                             }
 
                             5 -> {
@@ -671,18 +689,18 @@ GoogleMap.OnPolylineClickListener {
                     typeDocExist.add(doc.id)
                 }
 
-//                val typeDoc =
-//                    mutableListOf(
-////                        PERORANGAN,
-////                        PERSIL,
-////                        ALAS_HAK,
-////                        BPHTB,
-////                        PPH,
-////                        PBB,
-////                        AKTA_JUAL_BELI,
-////                        AKTA_WAKAF,
-////                        DOC_TYPE
-//                    )
+                val typeDoc =
+                    mutableListOf(
+                        PERORANGAN,
+                        PERSIL,
+                        ALAS_HAK,
+                        BPHTB,
+                        PPH,
+                        PBB,
+                        AKTA_JUAL_BELI,
+                        AKTA_WAKAF,
+                        DOC_TYPE
+                    )
 
                 val detailMenus: MutableList<String> = mutableListOf()
 
@@ -716,35 +734,36 @@ GoogleMap.OnPolylineClickListener {
 
                 var dialogInterfaceMenu: DialogInterface? = null
 
-//                dialogInterfaceMenu = alert {
-//                    customView {
-//                        listView {
-//                            adapter = ArrayAdapter<String>(context, simple_list_item_1, detailMenus)
-//                            onItemClickListener =
-//                                AdapterView.OnItemClickListener { _, _, position, _ ->
-//
-//                                    when (position) {
-//                                        1 -> {
-//                                            toast("Persil tidak memiliki inputan data")
-//                                        }
-//                                        8 -> {
-//                                            menuYuridisSelectDocument(areaId, dataSize, worksapceName)
-//                                        }
-//                                        else -> {
-//                                            startActivity<YuridisPTSLFormActivity>(
-//                                                AREA_ID to areaId,
-//                                                Workspace.INTENT to workspace,
-//                                                DATA_SIZE to dataSize,
-//                                                AREA to position
-//                                            )
-//                                        }
-//                                    }
-//                                }
-//                            dialogInterfaceMenu?.dismiss()
-//                        }
-//                    }
-//                    cancelButton { }
-//                }.show()
+                val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                    .setTitle("Pilih Menu Yuridis")
+                    .setItems(detailMenus.toTypedArray()) { dialogInterface, position ->
+
+                        when (position) {
+
+                            1 -> {
+//                                toast("Persil tidak memiliki inputan data")
+                            }
+
+                            8 -> {
+                                menuYuridisSelectDocument(areaId, dataSize, worksapceName)
+                            }
+
+                            else -> {
+                                startActivity(
+                                    Intent(this, YuridisPTSLFormActivity::class.java).apply {
+                                        putExtra(AREA_ID, areaId)
+                                        putExtra(Workspace.INTENT, workspace)
+                                        putExtra(DATA_SIZE, dataSize)
+                                        putExtra(AREA, position)
+                                    }
+                                )
+                            }
+                        }
+
+                        dialogInterface.dismiss()
+                    }
+                    .setNegativeButton("Batal", null)
+                    .show()
             }
 
 
@@ -752,47 +771,50 @@ GoogleMap.OnPolylineClickListener {
 
     private fun menuYuridisSelectDocument(areaId: String, dataSize: Int, worksapceName: String) {
 
-//        val detailMenus =
-//            listOf(
-//                "Fotocopy KTP / Identitas Pemohon",
-//                "Persil",
-//                "Bukti Alas Hak",
-//                "Fotocopy Bea Perolehan Hak Tanah dan Bangunan",
-//                "Fotocopy Surat Setoran Pajak/PPH",
-//                "Fotocopy Pajak Bumi dan Bangunan",
-//                "Akta Jual Beli",
-//                "Akta Ikrar Wakaf"
-//            )
-//        var dialogInterfaceMenu: DialogInterface? = null
-//
-//        val typeDoc = mutableMapOf(
-//            0 to PERORANGAN,
-//            1 to GeneratePdfContent.PERSIL,
-//            2 to GeneratePdfContent.ALAS_HAK,
-//            3 to GeneratePdfContent.BPHTB,
-//            4 to GeneratePdfContent.PPH,
-//            5 to GeneratePdfContent.PBB,
-//            6 to GeneratePdfContent.AKTA_JUAL_BELI,
-//            7 to GeneratePdfContent.AKTA_WAKAF
-//        )
-//        dialogInterfaceMenu = alert {
-//            customView {
-//                listView {
-//                    adapter = ArrayAdapter<String>(context, simple_list_item_1, detailMenus)
-//                    onItemClickListener =
-//                        AdapterView.OnItemClickListener { _, _, position, _ ->
-//                            startActivity<smartgis.project.app.smartgis.forms.yuridis_ptsl.UploadImageFormActivity>(
-//                                AREA_ID to areaId,
-//                                DOC_TYPE to typeDoc[position],
-//                                FORM to detailMenus[position],
-//                                WORSKPACE_NAME to worksapceName
-//                            )
-//                        }
-//                    dialogInterfaceMenu?.dismiss()
-//                }
-//            }
-//            cancelButton { }
-//        }.show()
+        val detailMenus =
+            listOf(
+                "Fotocopy KTP / Identitas Pemohon",
+                "Persil",
+                "Bukti Alas Hak",
+                "Fotocopy Bea Perolehan Hak Tanah dan Bangunan",
+                "Fotocopy Surat Setoran Pajak/PPH",
+                "Fotocopy Pajak Bumi dan Bangunan",
+                "Akta Jual Beli",
+                "Akta Ikrar Wakaf"
+            )
+        var dialogInterfaceMenu: DialogInterface? = null
+
+        val typeDoc = mutableMapOf(
+            0 to PERORANGAN,
+            1 to PERSIL,
+            2 to ALAS_HAK,
+            3 to BPHTB,
+            4 to PPH,
+            5 to PBB,
+            6 to AKTA_JUAL_BELI,
+            7 to AKTA_WAKAF
+        )
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Pilih Form")
+            .setItems(detailMenus.toTypedArray()) { dialogInterface, position ->
+
+                startActivity(
+                    Intent(this, UploadImageFormActivity::class.java).apply {
+                        putExtra(AREA_ID, areaId)
+                        putExtra(DOC_TYPE, typeDoc[position])
+                        putExtra(FORM, detailMenus[position])
+                        putExtra(WORSKPACE_NAME, worksapceName)
+                    }
+                )
+
+                dialogInterface.dismiss()
+            }
+            .setNegativeButton("Batal") { dialogInterface, _ ->
+                dialogInterface.dismiss()
+            }
+            .create()
+
+        dialog.show()
     }
 
     private fun listenConnectionState() {
@@ -811,102 +833,102 @@ GoogleMap.OnPolylineClickListener {
 //            rootLayout.longSnackbar(getString(R.string.no_internet_connection))
 //            return
 //        }
-//        isCreatingSuratPernyataan = true
+        isCreatingSuratPernyataan = true
 //        globalIndefiniteSnackbar =
 //            rootLayout.indefiniteSnackbar("Sedang menyiapkan berkas surat pernyataan")
-//        val data = mutableMapOf<String?, Any?>()
-//        Collections.getUserAreaDetailDelinasi(currentUser()?.email, areaId).get()
-//            .addOnSuccessListener { snapshot ->
-//                snapshot.data?.let { it1 -> data.putAll(it1) }
-//                Collections.getUserAreaDetailYuridis(currentUser()?.email, areaId).get()
-//                    .addOnSuccessListener { documentSnapshot ->
-//                        documentSnapshot.data?.let { it1 -> data.putAll(it1) }
-//                        Collections.getWorkspaceYuridisDataSaksiPertama(
-//                            workspace?.id,
-//                            currentUser()?.email.toString()
-//                        ).get()
-//                            .addOnSuccessListener { referenceSaksiPertama ->
-//                                referenceSaksiPertama.data?.let { it1 -> data.putAll(it1) }
-//                                referenceSaksiPertama.data?.get(BaseSignatureFormContainer.PATH).toString().apply {
-//                                    if (this.noNull().isEmpty()) {
-//                                        globalIndefiniteSnackbar?.dismiss()
+        val data = mutableMapOf<String?, Any?>()
+        Collections.getUserAreaDetailDelinasi(currentUser()?.email, areaId).get()
+            .addOnSuccessListener { snapshot ->
+                snapshot.data?.let { it1 -> data.putAll(it1) }
+                Collections.getUserAreaDetailYuridis(currentUser()?.email, areaId).get()
+                    .addOnSuccessListener { documentSnapshot ->
+                        documentSnapshot.data?.let { it1 -> data.putAll(it1) }
+                        Collections.getWorkspaceYuridisDataSaksiPertama(
+                            workspace?.id,
+                            currentUser()?.email.toString()
+                        ).get()
+                            .addOnSuccessListener { referenceSaksiPertama ->
+                                referenceSaksiPertama.data?.let { it1 -> data.putAll(it1) }
+                                referenceSaksiPertama.data?.get(BaseSignatureFormContainer.PATH).toString().apply {
+                                    if (this.noNull().isEmpty()) {
+                                        globalIndefiniteSnackbar?.dismiss()
 //                                        rootLayout.longSnackbar("Surat pernyataan tidak bisa dibuat. TTD Saksi Pertama belum ada")
-//                                    } else {
-//                                        referenceSaksiPertama.data?.get(TTD_SAKSI1_URL).toString().let { url ->
-//                                            if (!url.noNull().isEmpty()) createSuratPernyataan(data)
-//                                            else {
-//                                                Storages.getFile(this)
-//                                                    .downloadUrl
-//                                                    .addOnSuccessListener { uri ->
-//                                                        referenceSaksiPertama.reference.set(
-//                                                            mapOf(TTD_SAKSI1_URL to "$uri"),
-//                                                            SetOptions.merge()
-//                                                        )
-//                                                        data[TTD_SAKSI1_URL] = "$uri"
-//                                                        createSuratPernyataan(data)
-//                                                    }
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        Collections.getWorkspaceYuridisDataSaksiKedua(
-//                            workspace.id,
-//                            currentUser()?.email.toString()
-//                        ).get()
-//                            .addOnSuccessListener { referenceSaksiKedua ->
-//                                referenceSaksiKedua.data?.let { it1 -> data.putAll(it1) }
-//                                referenceSaksiKedua.data?.get(BaseSignatureFormContainer.PATH).toString().apply {
-//                                    if (this.noNull().isEmpty()) {
-//                                        globalIndefiniteSnackbar?.dismiss()
+                                    } else {
+                                        referenceSaksiPertama.data?.get(TTD_SAKSI1_URL).toString().let { url ->
+                                            if (!url.noNull().isEmpty()) createSuratPernyataan(data)
+                                            else {
+                                                Storages.getFile(this)
+                                                    .downloadUrl
+                                                    .addOnSuccessListener { uri ->
+                                                        referenceSaksiPertama.reference.set(
+                                                            mapOf(TTD_SAKSI1_URL to "$uri"),
+                                                            SetOptions.merge()
+                                                        )
+                                                        data[TTD_SAKSI1_URL] = "$uri"
+                                                        createSuratPernyataan(data)
+                                                    }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        Collections.getWorkspaceYuridisDataSaksiKedua(
+                            workspace.id,
+                            currentUser()?.email.toString()
+                        ).get()
+                            .addOnSuccessListener { referenceSaksiKedua ->
+                                referenceSaksiKedua.data?.let { it1 -> data.putAll(it1) }
+                                referenceSaksiKedua.data?.get(BaseSignatureFormContainer.PATH).toString().apply {
+                                    if (this.noNull().isEmpty()) {
+                                        globalIndefiniteSnackbar?.dismiss()
 //                                        rootLayout.longSnackbar("Surat pernyataan tidak bisa dibuat. TTD Saksi Kedua belum ada")
-//                                    } else {
-//                                        referenceSaksiKedua.data?.get(TTD_SAKSI2_URL).toString().let { url ->
-//                                            if (!url.noNull().isEmpty()) createSuratPernyataan(data)
-//                                            else {
-//                                                Storages.getFile(this)
-//                                                    .downloadUrl
-//                                                    .addOnSuccessListener { uri ->
-//                                                        referenceSaksiKedua.reference.set(
-//                                                            mapOf(TTD_SAKSI2_URL to "$uri"),
-//                                                            SetOptions.merge()
-//                                                        )
-//                                                        data[TTD_SAKSI2_URL] = "$uri"
-//                                                        createSuratPernyataan(data)
-//                                                    }
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        Collections.getUserAreaSignature(currentUser()?.email.toString(), areaId).get()
-//                            .addOnSuccessListener { referencePemilikData ->
-//                                referencePemilikData.data?.let { it1 -> data.putAll(it1) }
-//                                referencePemilikData.data?.get(BaseSignatureFormContainer.PATH).toString().apply {
-//                                    if (this.noNull().isEmpty()) {
-//                                        globalIndefiniteSnackbar?.dismiss()
+                                    } else {
+                                        referenceSaksiKedua.data?.get(TTD_SAKSI2_URL).toString().let { url ->
+                                            if (!url.noNull().isEmpty()) createSuratPernyataan(data)
+                                            else {
+                                                Storages.getFile(this)
+                                                    .downloadUrl
+                                                    .addOnSuccessListener { uri ->
+                                                        referenceSaksiKedua.reference.set(
+                                                            mapOf(TTD_SAKSI2_URL to "$uri"),
+                                                            SetOptions.merge()
+                                                        )
+                                                        data[TTD_SAKSI2_URL] = "$uri"
+                                                        createSuratPernyataan(data)
+                                                    }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        Collections.getUserAreaSignature(currentUser()?.email.toString(), areaId).get()
+                            .addOnSuccessListener { referencePemilikData ->
+                                referencePemilikData.data?.let { it1 -> data.putAll(it1) }
+                                referencePemilikData.data?.get(BaseSignatureFormContainer.PATH).toString().apply {
+                                    if (this.noNull().isEmpty()) {
+                                        globalIndefiniteSnackbar?.dismiss()
 //                                        rootLayout.longSnackbar("Surat pernyataan tidak bisa dibuat. TTD Pemilik belum ada")
-//                                    } else {
-//                                        referencePemilikData.data?.get(TTD_PEMILIK_URL).toString().let { url ->
-//                                            if (!url.noNull().isEmpty()) createSuratPernyataan(data)
-//                                            else {
-//                                                Storages.getFile(this)
-//                                                    .downloadUrl
-//                                                    .addOnSuccessListener { uri ->
-//                                                        referencePemilikData.reference.set(
-//                                                            mapOf(TTD_PEMILIK_URL to "$uri"),
-//                                                            SetOptions.merge()
-//                                                        )
-//                                                        data[TTD_PEMILIK_URL] = "$uri"
-//                                                        createSuratPernyataan(data)
-//                                                    }
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                    }
-//            }
+                                    } else {
+                                        referencePemilikData.data?.get(TTD_PEMILIK_URL).toString().let { url ->
+                                            if (!url.noNull().isEmpty()) createSuratPernyataan(data)
+                                            else {
+                                                Storages.getFile(this)
+                                                    .downloadUrl
+                                                    .addOnSuccessListener { uri ->
+                                                        referencePemilikData.reference.set(
+                                                            mapOf(TTD_PEMILIK_URL to "$uri"),
+                                                            SetOptions.merge()
+                                                        )
+                                                        data[TTD_PEMILIK_URL] = "$uri"
+                                                        createSuratPernyataan(data)
+                                                    }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                    }
+            }
     }
 
     private fun createSuratPernyataan(data: MutableMap<String?, Any?>) {

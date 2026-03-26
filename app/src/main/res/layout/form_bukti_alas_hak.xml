@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/badan_hukum_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Alas HAK" />
+
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:layout_marginTop="10dp"
+            android:id="@+id/sp_jenis_alas_hak"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Pilih alas hak" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="PEMBUAT" />
+
+        <EditText
+            android:id="@+id/et_pembuat"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nama Pembuat" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Tanggal" />
+
+        <EditText
+            android:id="@+id/et_tanggal_buat"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tanggal Buat (Tanggal - Bulan - Tahun)" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="NO PERSIL" />
+
+        <EditText
+            android:id="@+id/et_no_persil"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="No Persil" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Desa/Kelurahan" />
+
+        <EditText
+            android:id="@+id/et_desa_kelurahan"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Desa/Kelurahan" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Alamat" />
+
+        <EditText
+            android:id="@+id/et_alamat"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Alamat" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Nomor" />
+
+        <EditText
+            android:id="@+id/et_nomor"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nomor" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Kelas" />
+
+        <EditText
+            android:id="@+id/et_kelas"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Kelas" />
+
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Luas (M-Persegi)" />
+
+        <EditText
+            android:id="@+id/et_luas"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Luas (Meter Persegi)" />
+        <Button
+            android:id="@+id/btnCompeleteEmpetyValue"
+            android:background="@color/yellow_transparent"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:text="@string/lengkapi_formulir_yang_kosong"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+</ScrollView>

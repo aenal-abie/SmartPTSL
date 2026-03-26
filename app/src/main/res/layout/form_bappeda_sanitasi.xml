@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:fab="http://schemas.android.com/apk/res-auto"
+            xmlns:app="http://schemas.android.com/tools" android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:ignore="NamespaceTypo">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/sts_kepemilikan_jamban_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_sts_kep_jamban"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/status_kep_sarana_bappeda"/>
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/tinja_dan_urin_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_tinja_urin"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/status_pem_tinja_bappeda"/>
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/periode_pengurasan_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_periode_pengurasan"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/periode_pengurasan_bappeda"/>
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/akses_dan_status_kamarmandi_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_aksesstatus_kamarmandi"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/akses_dan_status_kamarmandi_bappeda"/>
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/akses_pembuangan_limbah_cair_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_akses_pembuangan_limbah_cair"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/akses_limbah_cair_bappeda"/>
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/ketersedian_tangki_septik_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_ketersediaan_tangki_septik"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/ketersediaan_lahan_tangki_septik_bappeda"/>
+
+    </LinearLayout>
+
+
+</ScrollView>

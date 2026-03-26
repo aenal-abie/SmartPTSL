@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/badan_hukum_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Alas HAK" />
+
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/ms_jenis_alas_hak"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Pilih alas hak" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Pembuat Akta" />
+
+        <EditText
+            android:id="@+id/et_pembuat_akta"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Pembuat Akta" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Tanggal Akta" />
+
+        <EditText
+            android:id="@+id/et_tanggal_akta"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tanggal Akta" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Nomor Akta" />
+
+        <EditText
+            android:id="@+id/et_nomor_akta"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nomor Akta" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Mata Uang" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/ms_mata_uang"
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <EditText
+                android:id="@+id/et_nilai_kurs"
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Nilai Kurs" />
+
+
+        </LinearLayout>
+
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Nilai" />
+
+        <EditText
+            android:id="@+id/et_nilai"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nilai" />
+
+    </LinearLayout>
+</ScrollView>

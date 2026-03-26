@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/bphtb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Status" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_lunas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Lunas" />
+
+            <RadioButton
+                android:id="@+id/rb_terhutang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Terhutang" />
+
+            <RadioButton
+                android:id="@+id/rb_nihil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Nihil" />
+
+        </RadioGroup>
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Tanggal" />
+
+        <EditText
+            android:id="@+id/et_tanggal"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tanggal" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Nomor" />
+
+        <EditText
+            android:id="@+id/et_nomor"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nomor" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Nilai" />
+
+        <EditText
+            android:id="@+id/et_nilai"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nilai" />
+
+
+    </LinearLayout>
+</ScrollView>

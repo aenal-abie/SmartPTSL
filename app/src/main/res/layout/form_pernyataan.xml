@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/WizardFormLabelPaLeRi"
+        android:text="@string/statement" />
+
+    <EditText
+        android:id="@+id/etStatement"
+        style="@style/FormInputStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:height="0dp"
+        android:gravity="top|left"
+        android:hint="@string/other_statement" />
+
+</LinearLayout>

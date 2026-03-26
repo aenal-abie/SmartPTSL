@@ -163,5 +163,9 @@ dependencies {
     implementation(libs.gcacace.signature.pad)
     implementation(libs.glide)
 
+    //pdf
+    implementation("com.itextpdf:itextpdf:5.5.13.3")
+
+    implementation("com.jaredrummler:material-spinner:1.3.1")
 
 }

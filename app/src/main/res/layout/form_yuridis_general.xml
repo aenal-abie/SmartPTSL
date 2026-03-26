@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="@string/nub" />
+
+        <EditText
+            android:id="@+id/etNub"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/nub" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="@string/religions" />
+
+        <Spinner
+            android:id="@+id/sReligions"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/religion_items" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="@string/jalan_block" />
+
+        <EditText
+            android:id="@+id/etJalanBlok"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/jalan_block" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="@string/njop" />
+
+        <EditText
+            android:id="@+id/etNjop"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/njop" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="@string/tanggal_penguasaan" />
+
+        <Spinner
+            android:id="@+id/sDikuasaiSejak"
+            android:spinnerMode="dropdown"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="@string/batas" />
+
+        <LinearLayout
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/etUtara"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/utara" />
+
+            <EditText
+                android:id="@+id/etTimur"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/timur" />
+
+
+            <EditText
+                android:id="@+id/etSelatan"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/selatan" />
+
+
+            <EditText
+                android:id="@+id/etBarat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/barat" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Jenis" />
+
+        <RadioGroup
+            android:id="@+id/rgJenis"
+            style="@style/FormInputStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbPerorangan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/perorangan" />
+
+            <RadioButton
+                android:id="@+id/rbBadanHukum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/badan_hukum" />
+        </RadioGroup>
+
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:fab="http://schemas.android.com/apk/res-auto"
+            xmlns:app="http://schemas.android.com/tools" android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:ignore="NamespaceTypo">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/kepemilikan_rumah_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_kep_rumah"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/kepemilikan_rumah_bappeda"/>
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/butki_kepemilikan_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_bukti_rumah"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/bukti_kepemilikan_bappeda"/>
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/kondisi_rumah_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_kondisi_rumah"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/kondisi_rumah_bappeda"/>
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/material_atap_rumah_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_material_atap_rumah"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/material_atap_bappeda"/>
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/material_dinding_rumah_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_material_dinding"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/material_dinding_bappeda"/>
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/material_lantai_rumah_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_material_lantai"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/material_lantai_bappeda"/>
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/kepemilikan_imb_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_imb_kepemilikan"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/kepemilikan_IMB_bappeda"/>
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/lebar_akses_jalan_bappeda"/>
+        <EditText
+                android:layout_weight="1"
+                android:id="@+id/etbap_lebar_akses_jalan"
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/lebar_akses_jalan_bappeda"/>
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/pengerasan_jalan_bappeda"/>
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/bap_pengerasan_jalan"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/pengerasan_jalan_bappeda"/>
+
+    </LinearLayout>
+
+
+</ScrollView>

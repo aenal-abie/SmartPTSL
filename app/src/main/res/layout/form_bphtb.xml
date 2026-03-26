@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/bphtb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Status" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_lunas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Lunas" />
+
+            <RadioButton
+                android:id="@+id/rb_terhutang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Terhutang" />
+
+            <RadioButton
+                android:id="@+id/rb_nihil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Nihil" />
+
+        </RadioGroup>
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Nomor Obyek Pajak (NOP)" />
+
+        <EditText
+            android:id="@+id/et_nop"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nomor Obyek Pajak (NOP)" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Nomor Bukti Pembayaran" />
+
+        <EditText
+            android:id="@+id/et_nomor_bukti_pembayaran"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nomor Bukti Pembayaran" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="Nilai BPHTB (Rp.)" />
+
+        <EditText
+            android:id="@+id/et_nilai_bphtb"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nilai BPHTB (Rp.)" />
+
+        <Button
+            android:id="@+id/btnCompeleteEmpetyValue"
+            android:background="@color/yellow_transparent"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:text="@string/lengkapi_formulir_yang_kosong"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+</ScrollView>

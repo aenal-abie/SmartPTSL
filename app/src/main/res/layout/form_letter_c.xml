@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="NAMA LETTER C"/>
+
+        <EditText
+                android:id="@+id/etnama_letter_c"
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="NAMA LETTER C"/>
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="NOMOR LETTER C"/>
+
+        <EditText
+                android:id="@+id/etno_letter_c"
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="NOMOR LETTER C"/>
+
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="NOMOR PERSIL"
+                android:layout_width="253dp"/>
+
+        <EditText
+                android:id="@+id/etpersil_letter_c"
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="NOMOR PERSIL"/>
+
+        <LinearLayout
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        style="@style/WizardFormLabelPaLeRi"
+                        android:text="KELAS"/>
+                <EditText
+                        android:id="@+id/etkelas_letter_c"
+                        style="@style/FormInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="KELAS"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                <TextView
+                        style="@style/WizardFormLabelPaLeRi"
+                        android:text="LUAS"/>
+                <EditText
+                        android:id="@+id/etluas_letter_c"
+                        style="@style/FormInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="LUAS"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

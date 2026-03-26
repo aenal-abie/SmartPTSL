@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="Nomor SHM dan SU"/>
+
+        <EditText
+                android:id="@+id/etshm_su"
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="NOMOR SHM DAN SU (JIKA ADA)"/>
+
+        <LinearLayout
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        style="@style/WizardFormLabel"
+                        android:text="STATUS PERKAWINAN"
+                        android:layout_width="253dp"/>
+
+                <Spinner android:layout_width="match_parent"
+                         android:layout_height="32dp"
+                         android:id="@+id/sstatus_perkawinan"
+                         style="@style/FormInputStyle"
+                         android:entries="@array/status_perkawinan_items"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        style="@style/WizardFormLabel"
+                        android:text="JENIS KELAMIN"/>
+
+                <Spinner android:layout_width="match_parent"
+                         android:layout_height="32dp"
+                         android:id="@+id/sjenis_kelamin"
+                         style="@style/FormInputStyle"
+                         android:entries="@array/jenis_kelamin_items"/>
+
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        style="@style/WizardFormLabel"
+                        android:text="NAMA IBU KANDUNG"
+                        android:layout_width="253dp"/>
+
+                <EditText
+                        android:id="@+id/etnama_ibu"
+                        style="@style/FormInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="NAMA IBU KANDUNG"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        style="@style/WizardFormLabelPaLeRi"
+                        android:text="NOMOR HANDPHONE"/>
+
+                <EditText
+                        android:id="@+id/etno_hp"
+                        style="@style/FormInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="NOMOR HANDPHONE"/>
+
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="NAMA WAJIB PAJAK"/>
+
+        <EditText
+                android:id="@+id/etnama_wp"
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="NAMA WAJIB PAJAK"/>
+
+        <LinearLayout
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        style="@style/WizardFormLabelPaLeRi"
+                        android:text="NOMOR SPPT"
+                       />
+
+                <EditText
+                        android:id="@+id/etno_Sppt"
+                        style="@style/FormInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="NOMOR SPPT"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        style="@style/WizardFormLabelPaLeRi"
+                        android:text="LUAS TANAH SPPT"/>
+
+                <EditText
+                        android:id="@+id/etluas_sppt"
+                        style="@style/FormInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="LUAS TANAH SPPT"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        style="@style/WizardFormLabelPaLeRi"
+                        android:text="LUAS PERMOHONAN"/>
+
+                <EditText
+                        android:id="@+id/etluas_mohon"
+                        style="@style/FormInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="LUAS PERMOHONAN"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        style="@style/WizardFormLabelPaLeRi"
+                        android:text="NJOP PER M2"/>
+
+                <EditText
+                        android:id="@+id/etnjop_per_m2"
+                        style="@style/FormInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="NJOP PER M2" android:inputType="number"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

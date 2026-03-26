@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/nub" />
+
+        <EditText
+                android:id="@+id/etNub1"
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/nub" />
+
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="@string/name"/>
+
+        <EditText
+                android:id="@+id/etName1"
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/name"/>
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="PENUNJUK BATAS"
+                android:layout_width="253dp"/>
+
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="32dp"
+                 android:id="@+id/spenunjukbatas"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/penunjuk_items"/>
+
+
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="TANDA BATAS &amp; PERSETUJUAN BATAS"
+
+        />
+
+        <LinearLayout
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        style="@style/WizardFormLabel"
+                        android:text="UTARA"
+                        android:layout_width="253dp"/>
+
+                <Spinner android:layout_width="match_parent"
+                         android:layout_height="32dp"
+                         android:id="@+id/sbatas_utara"
+                         style="@style/FormInputStyle"
+                         android:entries="@array/tanda_batas_items"/>
+                <Spinner android:layout_width="match_parent"
+                         android:layout_height="32dp"
+                         android:id="@+id/spersetujuanbatas_utara"
+                         style="@style/FormInputStyle"
+                         android:entries="@array/persetujuan_batas_items"/>
+                <TextView
+                        style="@style/WizardFormLabel"
+                        android:text="TIMUR"
+                        android:layout_width="253dp"/>
+
+                <Spinner android:layout_width="match_parent"
+                         android:layout_height="32dp"
+                         android:id="@+id/sbatas_timur"
+                         style="@style/FormInputStyle"
+                         android:entries="@array/tanda_batas_items"/>
+                <Spinner android:layout_width="match_parent"
+                         android:layout_height="32dp"
+                         android:id="@+id/spersetujuanbatas_timur"
+                         style="@style/FormInputStyle"
+                         android:entries="@array/persetujuan_batas_items"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        style="@style/WizardFormLabel"
+                        android:text="SELATAN"/>
+
+                <Spinner android:layout_width="match_parent"
+                         android:layout_height="32dp"
+                         android:id="@+id/sbatas_selatan"
+                         style="@style/FormInputStyle"
+                         android:entries="@array/tanda_batas_items"/>
+                <Spinner android:layout_width="match_parent"
+                         android:layout_height="32dp"
+                         android:id="@+id/spersetujuanbatas_selatan"
+                         style="@style/FormInputStyle"
+                         android:entries="@array/persetujuan_batas_items"/>
+                <TextView
+                        style="@style/WizardFormLabel"
+                        android:text="BARAT"/>
+
+                <Spinner android:layout_width="match_parent"
+                         android:layout_height="32dp"
+                         android:id="@+id/sbatas_barat"
+                         style="@style/FormInputStyle"
+                         android:entries="@array/tanda_batas_items"/>
+                <Spinner android:layout_width="match_parent"
+                         android:layout_height="32dp"
+                         android:id="@+id/spersetujuanbatas_barat"
+                         style="@style/FormInputStyle"
+                         android:entries="@array/persetujuan_batas_items"/>
+
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="PETUGAS PENETAPAN BATAS"
+
+        />
+        <LinearLayout
+                style="@style/FormInputStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        style="@style/WizardFormLabel"
+                        android:text="PILIH PETUGAS"
+                        android:layout_width="253dp"/>
+
+                <Spinner android:layout_width="match_parent"
+                         android:layout_height="43dp"
+                         android:id="@+id/spetugas_penetapan"
+                         style="@style/FormInputStyle"
+                         android:entries="@array/petugas_penetapan_items"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        style="@style/WizardFormLabelPaLeRi"
+                        android:text="NAMA PETUGAS"/>
+
+                <EditText
+                        android:id="@+id/etnama_petugas"
+                        style="@style/FormInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="NAMA PETUGAS"/>
+
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="TEKNIK PENGUKURAN DAN PEMETAAN"
+
+        />
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="PENGUKURAN"/>
+
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="43dp"
+                 android:id="@+id/spengukuran"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/teknik_pengukuran_items"/>
+        <TextView
+                style="@style/WizardFormLabelPaLeRi"
+                android:text="PETA DASAR"/>
+
+        <Spinner android:layout_width="match_parent"
+                 android:layout_height="43dp"
+                 android:id="@+id/spetadasar"
+                 style="@style/FormInputStyle"
+                 android:entries="@array/ketelitian_peta_dasar_items"/>
+
+
+    </LinearLayout>
+</ScrollView>
