@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="@string/name" />
+
+        <EditText
+            android:id="@+id/etName"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/name" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="@string/nik" />
+
+        <EditText
+            android:id="@+id/etNik"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/nik"
+            android:inputType="number" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="@string/religions" />
+
+        <Spinner
+            android:id="@+id/sReligions"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/religion_items" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="@string/born_date" />
+
+        <EditText
+            android:id="@+id/etUsia"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:hint="@string/born_date"
+            android:inputType="date" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="@string/job" />
+
+        <EditText
+            android:id="@+id/etJob"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/job" />
+
+        <TextView
+            style="@style/WizardFormLabelPaLeRi"
+            android:text="@string/address" />
+
+        <EditText
+            android:id="@+id/etAddress"
+            style="@style/FormInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/address" />
+
+    </LinearLayout>
+</ScrollView>

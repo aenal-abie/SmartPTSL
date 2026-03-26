@@ -107,6 +107,8 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.TileOverlayOptions
 import smartgis.project.app.smartgis.forms.signature.BaseSignatureFormContainer
 import smartgis.project.app.smartgis.forms.signature.SignatureFormActivity
+import smartgis.project.app.smartgis.forms.workspaceforms.saksi.SignatureSaksiKedua
+import smartgis.project.app.smartgis.forms.workspaceforms.saksi.SignatureSaksiPertama
 import smartgis.project.app.smartgis.utils.tiles.ExpandedMBTilesTileProvider
 
 class MainActivity :  LoginRequiredActivity(),
@@ -211,11 +213,11 @@ GoogleMap.OnPolylineClickListener {
         const val AREA = "AREA"
         val TTD_PEMILIK_URL =
             BaseSignatureFormContainer.TTD_URL_PATTERN.format(SignatureFormActivity.INFIX)
-//        val TTD_SAKSI2_URL =
-//            BaseSignatureFormContainer.TTD_URL_PATTERN.format(SignatureSaksiKedua.INFIX)
-//        val TTD_SAKSI1_URL =
-//            BaseSignatureFormContainer.TTD_URL_PATTERN.format(SignatureSaksiPertama.INFIX)
-//        val updateIntervalInMilliseconds = 5 * 1 * 1000.toLong()
+        val TTD_SAKSI2_URL =
+            BaseSignatureFormContainer.TTD_URL_PATTERN.format(SignatureSaksiKedua.INFIX)
+        val TTD_SAKSI1_URL =
+            BaseSignatureFormContainer.TTD_URL_PATTERN.format(SignatureSaksiPertama.INFIX)
+        val updateIntervalInMilliseconds = 5 * 1 * 1000.toLong()
     }
 
     private lateinit var binding: ActivityMainBinding
