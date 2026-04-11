@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -128,6 +129,7 @@ import smartgis.project.app.smartgis.forms.yuridis_ptsl.UploadImageFormActivity.
 import smartgis.project.app.smartgis.forms.yuridis_ptsl.YuridisAlasHak.Companion.ALAS_HAK
 import smartgis.project.app.smartgis.forms.yuridis_ptsl.YuridisPTSLFormActivity
 import smartgis.project.app.smartgis.utils.tiles.ExpandedMBTilesTileProvider
+import smartgis.project.app.smartgis.viewmodels.MainViewModel
 
 class MainActivity :  LoginRequiredActivity(),
     OnMapReadyCallback,GoogleMap.OnMarkerClickListener,GoogleMap.OnPolygonClickListener,
@@ -202,7 +204,7 @@ GoogleMap.OnPolylineClickListener {
     private var bidangWorkspace: Int = 0
     //private lateinit var billingContainer: BillingProcessor
     private var lastLocation = LatLng(-7.7827188, 110.343225)
-    //private val viewModel by viewModels<MainViewModel>()
+    private val viewModel by viewModels<MainViewModel>()
     private lateinit var  wmsTileProvider1: TileProvider
     private lateinit var wmsTileProvider2: TileProvider
     private lateinit var wmsTileProvider3: TileProvider
@@ -930,7 +932,7 @@ GoogleMap.OnPolylineClickListener {
                     }
             }
     }
-
+    //yet fix
     private fun createSuratPernyataan(data: MutableMap<String?, Any?>) {
 //        if (data.containsKey(TTD_PEMILIK_URL) && data.containsKey(TTD_SAKSI1_URL) && data.containsKey(
 //                TTD_SAKSI2_URL
@@ -1092,11 +1094,11 @@ GoogleMap.OnPolylineClickListener {
             R.id.undo -> performUndo()
             R.id.mbtile -> {
 //                if (askStorageForPermissions())
-//                    showMbtilesChooserDialog()
+                    showMbtilesChooserDialog()
             }
             R.id.importExcel -> {
 //                if (askStorageForPermissions())
-//                    showExcelChooserDialog()
+                    showExcelChooserDialog()
             }
             R.id.importShp -> {
                     loadFileSHP()
@@ -1106,6 +1108,7 @@ GoogleMap.OnPolylineClickListener {
             }
             R.id.exportToShp -> {
                 val intent = Intent(this, ExportAreaDetailToShp::class.java)
+                intent.putExtra(Workspace.INTENT, workspace)
                 pendingIntentAfterPermission = intent
                 askStorageForPermissions()
 
@@ -1680,11 +1683,11 @@ GoogleMap.OnPolylineClickListener {
 
                 }
 
-                SEARCH_REQUEST_CODE -> {
+//                SEARCH_REQUEST_CODE -> {
 //                    localPolygonDbReference.firstOrNull {
-////                        it.documentReference.id == data?.getStringExtra(
-////                            HandleNameNIKSearch.SEARCH_RESULT
-////                        )
+//                        it.documentReference.id == data?.getStringExtra(
+//                            HandleNameNIKSearch.SEARCH_RESULT
+//                        )
 //                    }
 //                        ?.let {
 //                            map?.animateCamera(
@@ -1696,7 +1699,7 @@ GoogleMap.OnPolylineClickListener {
 //
 //                            onPolygonClick(it.polygon)
 //                        }
-                }
+//                }
                 UPLOAD_SHP_CODE -> {
                     data?.data?.let { uri ->
                         val inputStream = this.contentResolver.openInputStream(uri)

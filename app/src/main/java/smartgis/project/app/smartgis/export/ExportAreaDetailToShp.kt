@@ -17,8 +17,16 @@ import org.gdal.ogr.ogr
 import org.zeroturnaround.zip.FileSource
 import org.zeroturnaround.zip.ZipUtil
 import org.zeroturnaround.zip.commons.IOUtils
+import smartgis.project.app.smartgis.MainActivity.Companion.TTD_PEMILIK_URL
+import smartgis.project.app.smartgis.MainActivity.Companion.TTD_SAKSI1_URL
+import smartgis.project.app.smartgis.MainActivity.Companion.TTD_SAKSI2_URL
 import smartgis.project.app.smartgis.R
 import smartgis.project.app.smartgis.forms.delinasi.*
+import smartgis.project.app.smartgis.forms.workspaceforms.saksi.SaksiFormContainer
+import smartgis.project.app.smartgis.forms.yuridis.BadanHukum
+import smartgis.project.app.smartgis.forms.yuridis.Pernyataan
+import smartgis.project.app.smartgis.forms.yuridis.YuridisGeneral
+import smartgis.project.app.smartgis.forms.yuridis2.ElemenKadaster
 //import smartgis.project.app.smartgis.forms.workspaceforms.saksi.SaksiFormContainer
 //import smartgis.project.app.smartgis.forms.yuridis.BadanHukum
 //import smartgis.project.app.smartgis.forms.yuridis.Pernyataan
@@ -28,6 +36,7 @@ import smartgis.project.app.smartgis.models.Area
 import smartgis.project.app.smartgis.models.RtkStatusHolder
 import smartgis.project.app.smartgis.utils.*
 import java.io.*
+import kotlin.collections.forEach
 
 
 class ExportAreaDetailToShp : BaseExportableAreaDetail() {
@@ -81,34 +90,34 @@ class ExportAreaDetailToShp : BaseExportableAreaDetail() {
         delinasiDataRef?.get(AreaPosition.LUAS_TANAH.prefix(AreaPosition.PREFIX)).toString()
       val hak = delinasiDataRef?.get(AreaPosition.KETERANGAN.prefix(AreaPosition.PREFIX)).toString()
 
-//      val nub1 = delinasiDataRef?.get(ElemenKadaster.NUB.prefix(ElemenKadaster.PREFIX)).toString()
-//      val nama1 = delinasiDataRef?.get(ElemenKadaster.NAMA.prefix(ElemenKadaster.PREFIX)).toString()
-//      val penunjuk_batas =
-//        delinasiDataRef?.get(ElemenKadaster.PENUNJUK_BATAS.prefix(ElemenKadaster.PREFIX)).toString()
-//      val tanda_batas_utara =
-//        delinasiDataRef?.get(ElemenKadaster.TANDA_UTARA.prefix(ElemenKadaster.PREFIX)).toString()
-//      val tanda_batas_timur =
-//        delinasiDataRef?.get(ElemenKadaster.TANDA_TIMUR.prefix(ElemenKadaster.PREFIX)).toString()
-//      val tanda_batas_barat =
-//        delinasiDataRef?.get(ElemenKadaster.TANDA_BARAT.prefix(ElemenKadaster.PREFIX)).toString()
-//      val tanda_batas_selatan =
-//        delinasiDataRef?.get(ElemenKadaster.TANDA_SELATAN.prefix(ElemenKadaster.PREFIX)).toString()
-//      val pers_utara =
-//        delinasiDataRef?.get(ElemenKadaster.PERS_UTARA.prefix(ElemenKadaster.PREFIX)).toString()
-//      val pers_barat =
-//        delinasiDataRef?.get(ElemenKadaster.PERS_BARAT.prefix(ElemenKadaster.PREFIX)).toString()
-//      val pers_timur =
-//        delinasiDataRef?.get(ElemenKadaster.PERS_TIMUR.prefix(ElemenKadaster.PREFIX)).toString()
-//      val pers_selatan =
-//        delinasiDataRef?.get(ElemenKadaster.PERS_SELATAN.prefix(ElemenKadaster.PREFIX)).toString()
-//      val petugas_batas =
-//        delinasiDataRef?.get(ElemenKadaster.PETUGAS.prefix(ElemenKadaster.PREFIX)).toString()
-//      val nama_petugas =
-//        delinasiDataRef?.get(ElemenKadaster.NAMA_PETUGAS.prefix(ElemenKadaster.PREFIX)).toString()
-//      val pengukuran =
-//        delinasiDataRef?.get(ElemenKadaster.PENGUKURAN.prefix(ElemenKadaster.PREFIX)).toString()
-//      val peta_dasar =
-//        delinasiDataRef?.get(ElemenKadaster.PETA_DASAR.prefix(ElemenKadaster.PREFIX)).toString()
+      val nub1 = delinasiDataRef?.get(ElemenKadaster.NUB.prefix(ElemenKadaster.PREFIX)).toString()
+      val nama1 = delinasiDataRef?.get(ElemenKadaster.NAMA.prefix(ElemenKadaster.PREFIX)).toString()
+      val penunjuk_batas =
+        delinasiDataRef?.get(ElemenKadaster.PENUNJUK_BATAS.prefix(ElemenKadaster.PREFIX)).toString()
+      val tanda_batas_utara =
+        delinasiDataRef?.get(ElemenKadaster.TANDA_UTARA.prefix(ElemenKadaster.PREFIX)).toString()
+      val tanda_batas_timur =
+        delinasiDataRef?.get(ElemenKadaster.TANDA_TIMUR.prefix(ElemenKadaster.PREFIX)).toString()
+      val tanda_batas_barat =
+        delinasiDataRef?.get(ElemenKadaster.TANDA_BARAT.prefix(ElemenKadaster.PREFIX)).toString()
+      val tanda_batas_selatan =
+        delinasiDataRef?.get(ElemenKadaster.TANDA_SELATAN.prefix(ElemenKadaster.PREFIX)).toString()
+      val pers_utara =
+        delinasiDataRef?.get(ElemenKadaster.PERS_UTARA.prefix(ElemenKadaster.PREFIX)).toString()
+      val pers_barat =
+        delinasiDataRef?.get(ElemenKadaster.PERS_BARAT.prefix(ElemenKadaster.PREFIX)).toString()
+      val pers_timur =
+        delinasiDataRef?.get(ElemenKadaster.PERS_TIMUR.prefix(ElemenKadaster.PREFIX)).toString()
+      val pers_selatan =
+        delinasiDataRef?.get(ElemenKadaster.PERS_SELATAN.prefix(ElemenKadaster.PREFIX)).toString()
+      val petugas_batas =
+        delinasiDataRef?.get(ElemenKadaster.PETUGAS.prefix(ElemenKadaster.PREFIX)).toString()
+      val nama_petugas =
+        delinasiDataRef?.get(ElemenKadaster.NAMA_PETUGAS.prefix(ElemenKadaster.PREFIX)).toString()
+      val pengukuran =
+        delinasiDataRef?.get(ElemenKadaster.PENGUKURAN.prefix(ElemenKadaster.PREFIX)).toString()
+      val peta_dasar =
+        delinasiDataRef?.get(ElemenKadaster.PETA_DASAR.prefix(ElemenKadaster.PREFIX)).toString()
 
       /**
        * Data Fisik
@@ -135,172 +144,172 @@ class ExportAreaDetailToShp : BaseExportableAreaDetail() {
       properties["shatNo"] = shatNo
       properties["luas"] = luas
       properties["hak"] = hak
-//      properties["ttd_pmlk"] =
-//        pemilikSignatureHolders.find { it.id == snapshot.id }?.values?.get(TTD_PEMILIK_URL)
-//          .toString()
+      properties["ttd_pmlk"] =
+          pemilikSignatureHolders.find { it.id == snapshot.id }?.values?.get(TTD_PEMILIK_URL)
+          .toString()
       /**
        * Data Yuridis
        */
       val yuridisDataRef = yuridisHolders.find { holder -> holder.id == snapshot.id }?.values
-//      val agama = yuridisDataRef?.get(YuridisGeneral.AGAMA.prefix(YuridisGeneral.PREFIX)).toString()
-//      val jalan =
-//        yuridisDataRef?.get(YuridisGeneral.JALAN_BLOK.prefix(YuridisGeneral.PREFIX)).toString()
-//      val njop = yuridisDataRef?.get(YuridisGeneral.NJOP.prefix(YuridisGeneral.PREFIX)).toString()
-//      val kuasaiSejak =
-//        yuridisDataRef?.get(YuridisGeneral.DIKUASAI_SEJAK.prefix(YuridisGeneral.PREFIX)).toString()
-//      val batasTimur =
-//        yuridisDataRef?.get(YuridisGeneral.TIMUR.prefix(YuridisGeneral.PREFIX)).toString()
-//      val batasBarat =
-//        yuridisDataRef?.get(YuridisGeneral.BARAT.prefix(YuridisGeneral.PREFIX)).toString()
-//      val batasUtara =
-//        yuridisDataRef?.get(YuridisGeneral.UTARA.prefix(YuridisGeneral.PREFIX)).toString()
-//      val batasSelatan =
-//        yuridisDataRef?.get(YuridisGeneral.SELATAN.prefix(YuridisGeneral.PREFIX)).toString()
-//      val jenis = yuridisDataRef?.get(YuridisGeneral.JENIS.prefix(YuridisGeneral.PREFIX)).toString()
-//      val badanHukum =
-//        yuridisDataRef?.get(BadanHukum.BADAN_HUKUM.prefix(BadanHukum.PREFIX)).toString()
-//      val noAkta =
-//        yuridisDataRef?.get(BadanHukum.NO_AKTA_PENDIRIAN.prefix(BadanHukum.PREFIX)).toString()
-//      val tglAkta =
-//        yuridisDataRef?.get(BadanHukum.TANGGAL_AKTA_PENDIRIAN.prefix(BadanHukum.PREFIX)).toString()
-//      val peryataan =
-//        yuridisDataRef?.get(Pernyataan.PERNYATAAN.prefix(Pernyataan.PREFIX)).toString()
+      val agama = yuridisDataRef?.get(YuridisGeneral.AGAMA.prefix(YuridisGeneral.PREFIX)).toString()
+      val jalan =
+        yuridisDataRef?.get(YuridisGeneral.JALAN_BLOK.prefix(YuridisGeneral.PREFIX)).toString()
+      val njop = yuridisDataRef?.get(YuridisGeneral.NJOP.prefix(YuridisGeneral.PREFIX)).toString()
+      val kuasaiSejak =
+        yuridisDataRef?.get(YuridisGeneral.DIKUASAI_SEJAK.prefix(YuridisGeneral.PREFIX)).toString()
+      val batasTimur =
+        yuridisDataRef?.get(YuridisGeneral.TIMUR.prefix(YuridisGeneral.PREFIX)).toString()
+      val batasBarat =
+        yuridisDataRef?.get(YuridisGeneral.BARAT.prefix(YuridisGeneral.PREFIX)).toString()
+      val batasUtara =
+        yuridisDataRef?.get(YuridisGeneral.UTARA.prefix(YuridisGeneral.PREFIX)).toString()
+      val batasSelatan =
+        yuridisDataRef?.get(YuridisGeneral.SELATAN.prefix(YuridisGeneral.PREFIX)).toString()
+      val jenis = yuridisDataRef?.get(YuridisGeneral.JENIS.prefix(YuridisGeneral.PREFIX)).toString()
+      val badanHukum =
+        yuridisDataRef?.get(BadanHukum.BADAN_HUKUM.prefix(BadanHukum.PREFIX)).toString()
+      val noAkta =
+        yuridisDataRef?.get(BadanHukum.NO_AKTA_PENDIRIAN.prefix(BadanHukum.PREFIX)).toString()
+      val tglAkta =
+        yuridisDataRef?.get(BadanHukum.TANGGAL_AKTA_PENDIRIAN.prefix(BadanHukum.PREFIX)).toString()
+      val peryataan =
+        yuridisDataRef?.get(Pernyataan.PERNYATAAN.prefix(Pernyataan.PREFIX)).toString()
 
       /**
        * Data Yuridis 2
        */
-//      val no_shm = delinasiDataRef?.get(MoreSubject.NOMOR_SHM.prefix(MoreSubject.PREFIX)).toString()
-//      val status_perkawinan =
-//        delinasiDataRef?.get(MoreSubject.STATUS_PERKAWINAN.prefix(MoreSubject.PREFIX)).toString()
-//      val jenis_kelamin =
-//        delinasiDataRef?.get(MoreSubject.JENIS_KELAMIN.prefix(MoreSubject.PREFIX)).toString()
-//      val nama_ibu_kandung =
-//        delinasiDataRef?.get(MoreSubject.NAMA_IBU_KANDUNG.prefix(MoreSubject.PREFIX)).toString()
-//      val no_hp =
-//        delinasiDataRef?.get(MoreSubject.NOMOR_HANDPHONE.prefix(MoreSubject.PREFIX)).toString()
-//      val nama_wajib_pajak =
-//        delinasiDataRef?.get(MoreSubject.NAMA_WAJIB_PAJAK.prefix(MoreSubject.PREFIX)).toString()
-//      val no_sppt =
-//        delinasiDataRef?.get(MoreSubject.NOMOR_SPPT.prefix(MoreSubject.PREFIX)).toString()
-//      val luas_sppt =
-//        delinasiDataRef?.get(MoreSubject.LUAS_SPPT.prefix(MoreSubject.PREFIX)).toString()
-//      val luas_mohon =
-//        delinasiDataRef?.get(MoreSubject.LUAS_PERMOHONAN.prefix(MoreSubject.PREFIX)).toString()
-//      val njop_per_m2 =
-//        delinasiDataRef?.get(MoreSubject.NJOP_PER_M2.prefix(MoreSubject.PREFIX)).toString()
-//
-//      val nama_letter_c =
-//        delinasiDataRef?.get(LetterC.NAMA_LETTER_C.prefix(LetterC.PREFIX)).toString()
-//      val nomor_letter_c =
-//        delinasiDataRef?.get(LetterC.NOMOR_LETTER_C.prefix(LetterC.PREFIX)).toString()
-//      val kelas_letter_c =
-//        delinasiDataRef?.get(LetterC.KELAS_LETTER_C.prefix(LetterC.PREFIX)).toString()
-//      val luas_letter_c =
-//        delinasiDataRef?.get(LetterC.LUAS_LETTER_C.prefix(LetterC.PREFIX)).toString()
-//      val nomor_persil =
-//        delinasiDataRef?.get(LetterC.NOMOR_PERSIL.prefix(LetterC.PREFIX)).toString()
-//
-//      val saksi1Nama = saksi1[SaksiFormContainer.NAMA.prefix(
-//        SaksiFormContainer.SAKSI_PERTAMA
-//      )].toString()
-//      val saksi1NIK = saksi1[SaksiFormContainer.NIK.prefix(
-//        SaksiFormContainer.SAKSI_PERTAMA
-//      )].toString()
-//      val saksi1Agama = saksi1[SaksiFormContainer.AGAMA.prefix(
-//        SaksiFormContainer.SAKSI_PERTAMA
-//      )].toString()
-//      val saksi1TanggalLahir = saksi1[SaksiFormContainer.USIA.prefix(
-//        SaksiFormContainer.SAKSI_PERTAMA
-//      )].toString()
-//      val saksi1Pekerjaan = saksi1[SaksiFormContainer.PEKERJAAN.prefix(
-//        SaksiFormContainer.SAKSI_PERTAMA
-//      )].toString()
-//      val saksi1Alamat = saksi1[SaksiFormContainer.ALAMAT.prefix(
-//        SaksiFormContainer.SAKSI_PERTAMA
-//      )].toString()
-//
-//      val saksi2Nama = saksi2[SaksiFormContainer.NAMA.prefix(
-//        SaksiFormContainer.SAKSI_KEDUA
-//      )].toString()
-//      val saksi2NIK = saksi2[SaksiFormContainer.NIK.prefix(
-//        SaksiFormContainer.SAKSI_KEDUA
-//      )].toString()
-//      val saksi2Agama = saksi2[SaksiFormContainer.AGAMA.prefix(
-//        SaksiFormContainer.SAKSI_KEDUA
-//      )].toString()
-//      val saksi2TanggalLahir = saksi2[SaksiFormContainer.USIA.prefix(
-//        SaksiFormContainer.SAKSI_KEDUA
-//      )].toString()
-//      val saksi2Pekerjaan = saksi2[SaksiFormContainer.PEKERJAAN.prefix(
-//        SaksiFormContainer.SAKSI_KEDUA
-//      )].toString()
-//      val saksi2Alamat = saksi2[SaksiFormContainer.ALAMAT.prefix(
-//        SaksiFormContainer.SAKSI_KEDUA
-//      )].toString()
-//
-//      properties["agama"] = agama
-//      properties["jalan"] = jalan
-//      properties["njop"] = njop
-//      properties["kuasai_sjk"] = kuasaiSejak
-//      properties["bts_timur"] = batasTimur
-//      properties["bts_barat"] = batasBarat
-//      properties["bt_selatan"] = batasSelatan
-//      properties["bts_utara"] = batasUtara
-//      properties["jenis"] = jenis
-//      properties["bdn_hukum"] = badanHukum
-//      properties["no_akta"] = noAkta
-//      properties["tgl_akta"] = tglAkta
-//      properties["peryataan"] = peryataan
-//      properties["sks1_nama"] = saksi1Nama
-//      properties["sks1_nik"] = saksi1NIK
-//      properties["sks1_agama"] = saksi1Agama
-//      properties["sks1_tgl"] = saksi1TanggalLahir
-//      properties["sks1_kerja"] = saksi1Pekerjaan
-//      properties["sks1_almt"] = saksi1Alamat
-//      properties["ttd_sks1"] = saksi1[TTD_SAKSI1_URL].toString()
-//      properties["ttd_sks2"] = saksi2[TTD_SAKSI2_URL].toString()
-//      properties["sks2_nama"] = saksi2Nama
-//      properties["sks2_nik"] = saksi2NIK
-//      properties["sks2_agama"] = saksi2Agama
-//      properties["sks2_tgl"] = saksi2TanggalLahir
-//      properties["sks2_kerja"] = saksi2Pekerjaan
-//      properties["sks2_almt"] = saksi2Alamat
+      val no_shm = delinasiDataRef?.get(MoreSubject.NOMOR_SHM.prefix(MoreSubject.PREFIX)).toString()
+      val status_perkawinan =
+        delinasiDataRef?.get(MoreSubject.STATUS_PERKAWINAN.prefix(MoreSubject.PREFIX)).toString()
+      val jenis_kelamin =
+        delinasiDataRef?.get(MoreSubject.JENIS_KELAMIN.prefix(MoreSubject.PREFIX)).toString()
+      val nama_ibu_kandung =
+        delinasiDataRef?.get(MoreSubject.NAMA_IBU_KANDUNG.prefix(MoreSubject.PREFIX)).toString()
+      val no_hp =
+        delinasiDataRef?.get(MoreSubject.NOMOR_HANDPHONE.prefix(MoreSubject.PREFIX)).toString()
+      val nama_wajib_pajak =
+        delinasiDataRef?.get(MoreSubject.NAMA_WAJIB_PAJAK.prefix(MoreSubject.PREFIX)).toString()
+      val no_sppt =
+        delinasiDataRef?.get(MoreSubject.NOMOR_SPPT.prefix(MoreSubject.PREFIX)).toString()
+      val luas_sppt =
+        delinasiDataRef?.get(MoreSubject.LUAS_SPPT.prefix(MoreSubject.PREFIX)).toString()
+      val luas_mohon =
+        delinasiDataRef?.get(MoreSubject.LUAS_PERMOHONAN.prefix(MoreSubject.PREFIX)).toString()
+      val njop_per_m2 =
+        delinasiDataRef?.get(MoreSubject.NJOP_PER_M2.prefix(MoreSubject.PREFIX)).toString()
+
+      val nama_letter_c =
+        delinasiDataRef?.get(LetterC.NAMA_LETTER_C.prefix(LetterC.PREFIX)).toString()
+      val nomor_letter_c =
+        delinasiDataRef?.get(LetterC.NOMOR_LETTER_C.prefix(LetterC.PREFIX)).toString()
+      val kelas_letter_c =
+        delinasiDataRef?.get(LetterC.KELAS_LETTER_C.prefix(LetterC.PREFIX)).toString()
+      val luas_letter_c =
+        delinasiDataRef?.get(LetterC.LUAS_LETTER_C.prefix(LetterC.PREFIX)).toString()
+      val nomor_persil =
+        delinasiDataRef?.get(LetterC.NOMOR_PERSIL.prefix(LetterC.PREFIX)).toString()
+
+      val saksi1Nama = saksi1[SaksiFormContainer.NAMA.prefix(
+        SaksiFormContainer.SAKSI_PERTAMA
+      )].toString()
+      val saksi1NIK = saksi1[SaksiFormContainer.NIK.prefix(
+        SaksiFormContainer.SAKSI_PERTAMA
+      )].toString()
+      val saksi1Agama = saksi1[SaksiFormContainer.AGAMA.prefix(
+        SaksiFormContainer.SAKSI_PERTAMA
+      )].toString()
+      val saksi1TanggalLahir = saksi1[SaksiFormContainer.USIA.prefix(
+        SaksiFormContainer.SAKSI_PERTAMA
+      )].toString()
+      val saksi1Pekerjaan = saksi1[SaksiFormContainer.PEKERJAAN.prefix(
+        SaksiFormContainer.SAKSI_PERTAMA
+      )].toString()
+      val saksi1Alamat = saksi1[SaksiFormContainer.ALAMAT.prefix(
+        SaksiFormContainer.SAKSI_PERTAMA
+      )].toString()
+
+      val saksi2Nama = saksi2[SaksiFormContainer.NAMA.prefix(
+        SaksiFormContainer.SAKSI_KEDUA
+      )].toString()
+      val saksi2NIK = saksi2[SaksiFormContainer.NIK.prefix(
+        SaksiFormContainer.SAKSI_KEDUA
+      )].toString()
+      val saksi2Agama = saksi2[SaksiFormContainer.AGAMA.prefix(
+        SaksiFormContainer.SAKSI_KEDUA
+      )].toString()
+      val saksi2TanggalLahir = saksi2[SaksiFormContainer.USIA.prefix(
+        SaksiFormContainer.SAKSI_KEDUA
+      )].toString()
+      val saksi2Pekerjaan = saksi2[SaksiFormContainer.PEKERJAAN.prefix(
+        SaksiFormContainer.SAKSI_KEDUA
+      )].toString()
+      val saksi2Alamat = saksi2[SaksiFormContainer.ALAMAT.prefix(
+        SaksiFormContainer.SAKSI_KEDUA
+      )].toString()
+
+      properties["agama"] = agama
+      properties["jalan"] = jalan
+      properties["njop"] = njop
+      properties["kuasai_sjk"] = kuasaiSejak
+      properties["bts_timur"] = batasTimur
+      properties["bts_barat"] = batasBarat
+      properties["bt_selatan"] = batasSelatan
+      properties["bts_utara"] = batasUtara
+      properties["jenis"] = jenis
+      properties["bdn_hukum"] = badanHukum
+      properties["no_akta"] = noAkta
+      properties["tgl_akta"] = tglAkta
+      properties["peryataan"] = peryataan
+      properties["sks1_nama"] = saksi1Nama
+      properties["sks1_nik"] = saksi1NIK
+      properties["sks1_agama"] = saksi1Agama
+      properties["sks1_tgl"] = saksi1TanggalLahir
+      properties["sks1_kerja"] = saksi1Pekerjaan
+      properties["sks1_almt"] = saksi1Alamat
+      properties["ttd_sks1"] = saksi1[TTD_SAKSI1_URL].toString()
+      properties["ttd_sks2"] = saksi2[TTD_SAKSI2_URL].toString()
+      properties["sks2_nama"] = saksi2Nama
+      properties["sks2_nik"] = saksi2NIK
+      properties["sks2_agama"] = saksi2Agama
+      properties["sks2_tgl"] = saksi2TanggalLahir
+      properties["sks2_kerja"] = saksi2Pekerjaan
+      properties["sks2_almt"] = saksi2Alamat
 
 
       /**
        * Yuridis 2
        */
-//      properties["nomor_shm"] = no_shm
-//      properties["sts_kawinan"] = status_perkawinan
-//      properties["jk"] = jenis_kelamin
-//      properties["nama_ibu"] = nama_ibu_kandung
-//      properties["nomor_hp"] = no_hp
-//      properties["nama_wp"] = nama_wajib_pajak
-//      properties["no_sppt"] = no_sppt
-//      properties["luas_sppt"] = luas_sppt
-//      properties["luas_permohonan"] = luas_mohon
-//      properties["njop_per_m2"] = njop_per_m2
-//      properties["nama_letter_c"] = nama_letter_c
-//      properties["nomor_letter_c"] = nomor_letter_c
-//      properties["kelas_letter_c"] = kelas_letter_c
-//      properties["luas_letter_c"] = luas_letter_c
-//      properties["nomor_persil"] = nomor_persil
-//
-//      properties["nub1"] = nub1
-//      properties["nama1"] = nama1
-//      properties["penunjuk_batas"] = penunjuk_batas
-//      properties["tanda_utara"] = tanda_batas_utara
-//      properties["tanda_barat"] = tanda_batas_barat
-//      properties["tanda_timur"] = tanda_batas_timur
-//      properties["tanda_selatan"] = tanda_batas_selatan
-//      properties["persetujuan_utara"] = pers_utara
-//      properties["persetujuan_timur"] = pers_timur
-//      properties["persetujuan_barat"] = pers_barat
-//      properties["persetujuan_selatan"] = pers_selatan
-//      properties["petugas"] = petugas_batas
-//      properties["nama_petugas"] = nama_petugas
-//      properties["pengukuran"] = pengukuran
-//      properties["peta_dasar"] = peta_dasar
+      properties["nomor_shm"] = no_shm
+      properties["sts_kawinan"] = status_perkawinan
+      properties["jk"] = jenis_kelamin
+      properties["nama_ibu"] = nama_ibu_kandung
+      properties["nomor_hp"] = no_hp
+      properties["nama_wp"] = nama_wajib_pajak
+      properties["no_sppt"] = no_sppt
+      properties["luas_sppt"] = luas_sppt
+      properties["luas_permohonan"] = luas_mohon
+      properties["njop_per_m2"] = njop_per_m2
+      properties["nama_letter_c"] = nama_letter_c
+      properties["nomor_letter_c"] = nomor_letter_c
+      properties["kelas_letter_c"] = kelas_letter_c
+      properties["luas_letter_c"] = luas_letter_c
+      properties["nomor_persil"] = nomor_persil
+
+      properties["nub1"] = nub1
+      properties["nama1"] = nama1
+      properties["penunjuk_batas"] = penunjuk_batas
+      properties["tanda_utara"] = tanda_batas_utara
+      properties["tanda_barat"] = tanda_batas_barat
+      properties["tanda_timur"] = tanda_batas_timur
+      properties["tanda_selatan"] = tanda_batas_selatan
+      properties["persetujuan_utara"] = pers_utara
+      properties["persetujuan_timur"] = pers_timur
+      properties["persetujuan_barat"] = pers_barat
+      properties["persetujuan_selatan"] = pers_selatan
+      properties["petugas"] = petugas_batas
+      properties["nama_petugas"] = nama_petugas
+      properties["pengukuran"] = pengukuran
+      properties["peta_dasar"] = peta_dasar
 
       /**
        * DATA gu

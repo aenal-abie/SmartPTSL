@@ -1,5 +1,6 @@
 package smartgis.project.app.smartgis.export
 
+import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
 //import kotlinx.android.synthetic.main.activity_export.*
 import smartgis.project.app.smartgis.documents.Collections
@@ -30,6 +31,7 @@ open class BaseExportableAreaDetail : BaseExportableData() {
   private var ip4tCounter = 0
 
   override fun loadData(dataLoaded: () -> Unit) {
+      Log.d("cek workspace", workspace?.id.toString());
     delinasiHolders.clear()
     dataHolders.clear()
     yuridisHolders.clear()
