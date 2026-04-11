@@ -9,6 +9,8 @@
             android:orientation="vertical">
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
                 style="@style/WizardFormLabelPaLeRi"
                 android:text="@string/name"/>
 
@@ -20,6 +22,8 @@
                 android:hint="@string/name"/>
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
                 style="@style/WizardFormLabelPaLeRi"
                 android:text="@string/nik"/>
 
@@ -32,6 +36,8 @@
                 android:inputType="number"/>
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
                 style="@style/WizardFormLabelPaLeRi"
                 android:text="@string/born_address"/>
 
@@ -43,6 +49,8 @@
                 android:hint="@string/born_address"/>
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
                 style="@style/WizardFormLabelPaLeRi"
                 android:text="@string/born_date"/>
 
@@ -56,6 +64,8 @@
                 android:inputType="date"/>
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
                 style="@style/WizardFormLabelPaLeRi"
                 android:text="@string/address"/>
 
@@ -67,6 +77,8 @@
                 android:hint="@string/address"/>
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
                 style="@style/WizardFormLabelPaLeRi"
                 android:text="@string/job"/>
 

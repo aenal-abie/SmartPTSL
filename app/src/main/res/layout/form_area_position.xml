@@ -10,6 +10,8 @@
         android:orientation="vertical">
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             style="@style/WizardFormLabelPaLeRi"
             android:text="@string/kelurahan" />
 
@@ -21,6 +23,8 @@
                 android:hint="@string/kelurahan"/>
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
                 style="@style/WizardFormLabelPaLeRi"
                 android:text="@string/dusun"/>
 
@@ -43,6 +47,8 @@
                     android:orientation="vertical">
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                         style="@style/WizardFormLabel"
                         android:text="@string/rt"/>
 
@@ -61,6 +67,8 @@
                     android:orientation="vertical">
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                         style="@style/WizardFormLabel"
                         android:text="@string/rw"/>
 
@@ -74,6 +82,8 @@
         </LinearLayout>
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
                 style="@style/WizardFormLabelPaLeRi"
                 android:text="@string/pbbb_block_no"/>
 
@@ -85,6 +95,8 @@
                 android:hint="@string/pbbb_block_no"/>
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
                 style="@style/WizardFormLabelPaLeRi"
                 android:text="@string/area_status"/>
 
@@ -96,6 +108,8 @@
                 android:layout_height="wrap_content"/>
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
                 style="@style/WizardFormLabelPaLeRi"
                 android:text="@string/status_penggunaan"/>
 
@@ -107,6 +121,8 @@
                 android:layout_height="wrap_content"/>
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             style="@style/WizardFormLabelPaLeRi"
             android:text="@string/bukti_penguasaan" />
 
@@ -118,6 +134,8 @@
             android:layout_height="wrap_content" />
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/shat_no_label"
             style="@style/WizardFormLabelPaLeRi"
             android:text="@string/shat_no"
@@ -135,6 +153,8 @@
             tools:visibility="visible" />
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             style="@style/WizardFormLabelPaLeRi"
             android:text="@string/luas_tanah" />
 
@@ -147,6 +167,8 @@
                 android:hint="@string/luas_tanah"/>
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
                 style="@style/WizardFormLabelPaLeRi"
                 android:text="@string/description"/>
 
