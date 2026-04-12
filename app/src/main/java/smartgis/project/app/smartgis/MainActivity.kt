@@ -106,13 +106,18 @@ import kotlin.math.roundToInt
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.TileOverlayOptions
+import smartgis.project.app.smartgis.contracts.ToParse
 import smartgis.project.app.smartgis.documents.Storages
 import smartgis.project.app.smartgis.forms.BaseFormContainer.Companion.AREA_ID
 import smartgis.project.app.smartgis.forms.BaseFormContainer.Companion.DOC_TYPE
+import smartgis.project.app.smartgis.forms.delinasi.AreaPosition
+import smartgis.project.app.smartgis.forms.delinasi.DelinasiGeneral
+import smartgis.project.app.smartgis.forms.delinasi.SubjectIdentity
 import smartgis.project.app.smartgis.forms.signature.BaseSignatureFormContainer
 import smartgis.project.app.smartgis.forms.signature.SignatureFormActivity
 import smartgis.project.app.smartgis.forms.workspaceforms.saksi.SignatureSaksiKedua
 import smartgis.project.app.smartgis.forms.workspaceforms.saksi.SignatureSaksiPertama
+import smartgis.project.app.smartgis.forms.yuridis.YuridisGeneral
 import smartgis.project.app.smartgis.forms.yuridis2.Yuridis2FormActivity
 import smartgis.project.app.smartgis.forms.yuridis_ptsl.GeneratePdfContent
 import smartgis.project.app.smartgis.forms.yuridis_ptsl.GeneratePdfContent.Companion.AKTA_JUAL_BELI
@@ -1226,26 +1231,17 @@ GoogleMap.OnPolylineClickListener {
     }
 
     private fun showWms() {
-//        dialogInterface = alert {
-//            customView {
-//                listView {
-//                    adapter = ArrayAdapter(
-//                        this@MainActivity,
-//                        simple_list_item_1,
-//                        listOf("Tampilkan Peta", "Pengaturan WMS")
-//                    )
-//                    onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-//                        when (position) {
-//                            0 -> {
-//                                wmsShowtoMap()
-//                                dialogInterface?.dismiss()
-//                            }
-//                            1 -> startActivity<WmsActivity>(AREA_ID to "0")
-//                        }
-//                    }
-//                }
-//            }
-//        }.show()
+        val options = arrayOf("Tampilkan Peta", "Pengaturan WMS")
+
+        AlertDialog.Builder(this)
+            .setItems(options) { dialog, which ->
+                when (which) {
+                    0 -> wmsShowtoMap()
+                    //1 -> startActivity<WmsActivity>(AREA_ID to "0")
+                }
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun wmsShowtoMap() {
@@ -1271,13 +1267,13 @@ GoogleMap.OnPolylineClickListener {
 
     private fun showWMSKantah() {
         fun loadWms() {
-//            Collections.getUserLocation(currentUser()?.email).document("kantah").get()
-//                .addOnSuccessListener {
-//                    kantah = it.data?.get("id").toString()
-//                    viewModel.isWMSActive = true
-//                    val type = appPreference().getInt("type_wms", 1)
-//
-//                    if(tileOverlays.isEmpty()) {
+            Collections.getUserLocation(currentUser()?.email).document("kantah").get()
+                .addOnSuccessListener {
+                    kantah = it.data?.get("id").toString()
+                    viewModel.isWMSActive = true
+                    val type = appPreference().getInt("type_wms", 1)
+
+                    if(tileOverlays.isEmpty()) {
 //                        wmsTileProvider1 = KantahTileProviderFactory.getOsgeoWmsTileProvider(kantah)
 //                        val over1 = TileOverlayOptions().tileProvider(wmsTileProvider1)
 //                        wmsTileProvider2 = KantahDroneTileProviderFactory.getOsgeoWmsTileProvider(kantah)
@@ -1287,67 +1283,53 @@ GoogleMap.OnPolylineClickListener {
 //                        map?.let { it1 -> tileOverlays.add(it1.addTileOverlay(over1)) }
 //                        map?.let { it1 -> tileOverlays.add(it1.addTileOverlay(over2)) }
 //                        map?.let { it1 -> tileOverlays.add(it1.addTileOverlay(over3)) }
-//                    }
-//
-//                    when (type) {
-//                        0 -> {
-//                            tileOverlays[0].isVisible = true
-//                            tileOverlays[1].isVisible = false
-//                            tileOverlays[2].isVisible = false
-//                        }
-//
-//                        1 -> {
-//                            tileOverlays[0].isVisible = false
-//                            tileOverlays[1].isVisible = true
-//                            tileOverlays[2].isVisible = false
-//                        }
-//
-//                        2 -> {
-//                            tileOverlays[0].isVisible = false
-//                            tileOverlays[1].isVisible = false
-//                            tileOverlays[2].isVisible = true
-//                        }
-//                    }
-//                }.addOnFailureListener {
+                    }
+
+                    when (type) {
+                        0 -> {
+                            tileOverlays[0].isVisible = true
+                            tileOverlays[1].isVisible = false
+                            tileOverlays[2].isVisible = false
+                        }
+
+                        1 -> {
+                            tileOverlays[0].isVisible = false
+                            tileOverlays[1].isVisible = true
+                            tileOverlays[2].isVisible = false
+                        }
+
+                        2 -> {
+                            tileOverlays[0].isVisible = false
+                            tileOverlays[1].isVisible = false
+                            tileOverlays[2].isVisible = true
+                        }
+                    }
+                }.addOnFailureListener {
 //                    longToast("Kantah tidak ditemukan")
-//                }
+                }
         }
 
-//        dialogInterface = alert {
-//            customView {
-//                listView {
-//                    adapter = ArrayAdapter(
-//                        this@MainActivity,
-//                        simple_list_item_1,
-//                        listOf("Index", "Foto Drone/UAV", "Peta Kerja")
-//                    )
-//                    onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-//                        when (position) {
-//                            0 -> {
-//                                appPreference().edit().putInt("type_wms", 1).apply()
-//                                loadWms()
-//                                dialogInterface?.dismiss()
-//                            }
-//
-//                            1 -> {
-//                                appPreference().edit().putInt("type_wms", 2).apply()
-//                                loadWms()
-//                                dialogInterface?.dismiss()
-//                            }
-//
-//                            2 -> {
-//                                appPreference().edit().putInt("type_wms", 0).apply()
-//                                loadWms()
-//                                dialogInterface?.dismiss()
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }.show()
+        val options = arrayOf("Index", "Foto Drone/UAV", "Peta Kerja")
+
+        AlertDialog.Builder(this)
+            .setItems(options) { dialog, which ->
+                val type = when (which) {
+                    0 -> 1
+                    1 -> 2
+                    2 -> 0
+                    else -> 0
+                }
+                appPreference().edit()
+                    .putInt("type_wms", type)
+                    .apply()
+
+                loadWms()
+                dialog.dismiss()
+            }
+            .show()
 
     }
-
+    //fix
     private fun load(from: Int, to: Int, features: JSONArray) {
         val size = features.length()
         var to = to
@@ -1436,7 +1418,7 @@ GoogleMap.OnPolylineClickListener {
             }
         }
     }
-
+    //fix
     private fun loadMbTiles(file: File) {
         tileProvider = ExpandedMBTilesTileProvider(file, 256, 256)
         tileOverlay = map?.addTileOverlay(TileOverlayOptions().tileProvider(tileProvider))
@@ -1529,10 +1511,11 @@ GoogleMap.OnPolylineClickListener {
         // lanjut export / akses storage
     }
 
+    //fix
     private fun onStoragePermissionDenied() {
         Toast.makeText(this, "Permission ditolak", Toast.LENGTH_SHORT).show()
     }
-
+    //fix
     private val storagePermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -1548,7 +1531,7 @@ GoogleMap.OnPolylineClickListener {
             Toast.makeText(this, "Permission ditolak", Toast.LENGTH_SHORT).show()
         }
     }
-
+    //fix
     private fun askStorageForPermissions(isResult: Boolean = false) {
             val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 arrayOf(
@@ -1855,32 +1838,32 @@ GoogleMap.OnPolylineClickListener {
                     .get(Source.CACHE)
                     .addOnSuccessListener {
                         it?.apply {
-//                            nama = it.data?.get(SubjectIdentity.NAMA.prefix(SubjectIdentity.PREFIX)).toString()
+                            nama = it.data?.get(SubjectIdentity.NAMA.prefix(SubjectIdentity.PREFIX)).toString()
 //                            nub =
 //                                it.data?.get(DelinasiGeneral.YURI_FILE_NO.prefix(DelinasiGeneral.PREFIX)).toString()
-//                            var batasPilih = ""
-//                            var Tetangga: String = ""
-//                            if (tetanggaBerbatasan == TETANGGA_UTARA) {
-//                                batasPilih = YuridisGeneral.UTARA.prefix(YuridisGeneral.PREFIX)
-//                                Tetangga = "Utara"
-//                            } else if (tetanggaBerbatasan == TETANGGA_SELATAN) {
-//                                batasPilih = YuridisGeneral.SELATAN.prefix(YuridisGeneral.PREFIX)
-//                                Tetangga = "Selatan"
-//                            } else if (tetanggaBerbatasan == TETANGGA_BARAT) {
-//                                batasPilih = YuridisGeneral.BARAT.prefix(YuridisGeneral.PREFIX)
-//                                Tetangga = "Barat"
-//                            } else if (tetanggaBerbatasan == TETANGGA_TIMUR) {
-//                                batasPilih = YuridisGeneral.TIMUR.prefix(YuridisGeneral.PREFIX)
-//                                Tetangga = "Timur"
-//                            }
-//                            rootLayout.snackbar("Tetangga " + Tetangga + " sudah dipilih")
-//                            Collections.getUserAreaDetailYuridis(currentUser()?.email, tetanggaBerbatasanSelected)
-//                                .set(
-//                                    mapOf(
-//                                        batasPilih to nama
-//                                    ), SetOptions.merge()
-//                                )
-//                            tetanggaBerbatasan = 0
+                            var batasPilih = ""
+                            var Tetangga: String = ""
+                            if (tetanggaBerbatasan == TETANGGA_UTARA) {
+                                batasPilih = YuridisGeneral.UTARA.prefix(YuridisGeneral.PREFIX)
+                                Tetangga = "Utara"
+                            } else if (tetanggaBerbatasan == TETANGGA_SELATAN) {
+                                batasPilih = YuridisGeneral.SELATAN.prefix(YuridisGeneral.PREFIX)
+                                Tetangga = "Selatan"
+                            } else if (tetanggaBerbatasan == TETANGGA_BARAT) {
+                                batasPilih = YuridisGeneral.BARAT.prefix(YuridisGeneral.PREFIX)
+                                Tetangga = "Barat"
+                            } else if (tetanggaBerbatasan == TETANGGA_TIMUR) {
+                                batasPilih = YuridisGeneral.TIMUR.prefix(YuridisGeneral.PREFIX)
+                                Tetangga = "Timur"
+                            }
+                            //rootLayout.snackbar("Tetangga " + Tetangga + " sudah dipilih")
+                            Collections.getUserAreaDetailYuridis(currentUser()?.email, tetanggaBerbatasanSelected)
+                                .set(
+                                    mapOf(
+                                        batasPilih to nama
+                                    ), SetOptions.merge()
+                                )
+                            tetanggaBerbatasan = 0
                             backToNormal()
                         }
                     }
@@ -1894,18 +1877,18 @@ GoogleMap.OnPolylineClickListener {
                 )
                     .get(Source.CACHE)
                     .addOnSuccessListener {
-//                        it?.apply {
-//                            nama = it.data?.get(SubjectIdentity.NAMA.prefix(SubjectIdentity.PREFIX)).toString()
-//                            nik = it.data?.get(SubjectIdentity.NIK.prefix(SubjectIdentity.PREFIX)).toString()
-//                            hak = it.data?.get(AreaPosition.KETERANGAN.prefix(AreaPosition.PREFIX)).toString()
-//                                .noNull()
-//                            it.data?.get(DelinasiGeneral.YURI_FILE_NO.prefix(DelinasiGeneral.PREFIX))?.apply {
-//                                if (toString() != "null") nub = toString()
-//                            }
-//                            val properties =
-//                                "NUB: $nub, \tLuas: ${computedArea}m2, \tNama: $nama, \tNIK: $nik, \tHAK: $hak"
-//                            tvProperty.text = properties
-//                        }
+                        it?.apply {
+                            nama = it.data?.get(SubjectIdentity.NAMA.prefix(SubjectIdentity.PREFIX)).toString()
+                            nik = it.data?.get(SubjectIdentity.NIK.prefix(SubjectIdentity.PREFIX)).toString()
+                            hak = it.data?.get(AreaPosition.KETERANGAN.prefix(AreaPosition.PREFIX)).toString()
+                                .noNull()
+                            it.data?.get(DelinasiGeneral.YURI_FILE_NO.prefix(DelinasiGeneral.PREFIX))?.apply {
+                                if (toString() != "null") nub = toString()
+                            }
+                            val properties =
+                                "NUB: $nub, \tLuas: ${computedArea}m2, \tNama: $nama, \tNIK: $nik, \tHAK: $hak"
+                            binding.tvProperty.text = properties
+                        }
                     }
             }
         }
@@ -2562,9 +2545,10 @@ GoogleMap.OnPolylineClickListener {
         }
     }
 
+    //fix
     override
     fun onMarkerDragStart(p0: Marker) {}
-
+    //fix
     override
     fun onMarkerDrag(p0: Marker) {}
     //fix
@@ -2720,57 +2704,57 @@ GoogleMap.OnPolylineClickListener {
 //    }
 
 
-//    inner class ShowData : ToParse {
-//        private val data = mutableListOf<String>()
-//        private val adapter = ArrayAdapter<String>(this@MainActivity, R.layout.simple_small_item, data)
-//        private var lvLog: ListView? = null
-//        private var autoScroll: Boolean = false
-//        private var sendLog: Boolean = false
-//
-//        fun showDialog() {
-//            alert {
-//                customView {
-//                    verticalLayout {
-//                        lparams(width = matchParent, height = matchParent)
-//                        lvLog = listView {
-//                            title = "Log Data RTK"
-//                            adapter = this@ShowData.adapter
-//                        }.lparams(width = matchParent, height = dip(0), weight = 1f)
-//                        checkBox {
-//                            text = context.getString(R.string.auto_scroll)
-//                            onCheckedChange { _, isChecked -> autoScroll = isChecked }
-//                        }
-//                        checkBox {
-//                            text = "Kirim Log Data"
-//                            onCheckedChange { _, isChecked -> sendLog = isChecked }
-//                        }
-//                    }
-//                }
-//                positiveButton(getString(R.string.close)) { it.dismiss() }
-//            }.show()
-//        }
-//
-//        private fun scrollToLast() {
-//            lvLog?.setSelection(data.size - 1)
-//        }
-//
-//        override fun show(data: String?) {
-//            this@ShowData.data.add("$data")
-//            adapter.notifyDataSetChanged()
-//            if (autoScroll)
-//                scrollToLast()
-//            if (sendLog)
-//                Collections.getRtkData()
-//                    .add(
-//                        timeStamp(
-//                            mutableMapOf(
-//                                "from" to currentUser()?.email.toString(),
-//                                "data" to data.toString()
-//                            )
-//                        )
-//                    )
-//        }
-//    }
+    inner class ShowData : ToParse {
+        private val data = mutableListOf<String>()
+        private val adapter = ArrayAdapter<String>(this@MainActivity, R.layout.simple_small_item, data)
+        private var lvLog: ListView? = null
+        private var autoScroll: Boolean = false
+        private var sendLog: Boolean = false
+
+        fun showDialog() {
+            /*alert {
+                customView {
+                    verticalLayout {
+                        lparams(width = matchParent, height = matchParent)
+                        lvLog = listView {
+                            title = "Log Data RTK"
+                            adapter = this@ShowData.adapter
+                        }.lparams(width = matchParent, height = dip(0), weight = 1f)
+                        checkBox {
+                            text = context.getString(R.string.auto_scroll)
+                            onCheckedChange { _, isChecked -> autoScroll = isChecked }
+                        }
+                        checkBox {
+                            text = "Kirim Log Data"
+                            onCheckedChange { _, isChecked -> sendLog = isChecked }
+                        }
+                    }
+                }
+                positiveButton(getString(R.string.close)) { it.dismiss() }
+            }.show() */
+        }
+
+        private fun scrollToLast() {
+            lvLog?.setSelection(data.size - 1)
+        }
+
+        override fun show(data: String?) {
+            this@ShowData.data.add("$data")
+            adapter.notifyDataSetChanged()
+            if (autoScroll)
+                scrollToLast()
+            if (sendLog)
+                Collections.getRtkData()
+                    .add(
+                        timeStamp(
+                            mutableMapOf(
+                                "from" to currentUser()?.email.toString(),
+                                "data" to data.toString()
+                            )
+                        )
+                    )
+        }
+    }
 
 
     fun selectMenuTetangga() {
@@ -3038,7 +3022,7 @@ GoogleMap.OnPolylineClickListener {
         } catch (e: Exception) {
         }
     }
-
+    //fix
     fun saveLocation(latitude: Double, longitude: Double) {
         Collections.getUserLocation(currentUser()?.email).document("current")
             .update(
@@ -3080,7 +3064,7 @@ GoogleMap.OnPolylineClickListener {
                 }
             }
     }
-
+    //fix
     private fun addLocationIfNotExist() {
         val lat = -7.7827188
         val lng = 110.343225
