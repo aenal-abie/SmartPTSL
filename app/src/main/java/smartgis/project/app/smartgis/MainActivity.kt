@@ -1211,25 +1211,18 @@ GoogleMap.OnPolylineClickListener {
     }
 
     private fun showMapTypeChooserDialog() {
-//        dialogInterface = alert {
-//            title = getString(R.string.change_map_type)
-//            customView {
-//                listView {
-//                    adapter = ArrayAdapter<String>(
-//                        this@MainActivity,
-//                        simple_list_item_1,
-//                        listOf("Satellite", "Road Map")
-//                    )
-//                    onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-//                        when (position) {
-//                            0 -> map?.mapType = MAP_TYPE_SATELLITE
-//                            1 -> map?.mapType = MAP_TYPE_NORMAL
-//                        }
-//                        dialogInterface?.dismiss()
-//                    }
-//                }
-//            }
-//        }.show()
+        val options = arrayOf("Satellite", "Road Map")
+
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.change_map_type))
+            .setItems(options) { dialog, which ->
+                when (which) {
+                    0 -> map?.mapType = GoogleMap.MAP_TYPE_SATELLITE
+                    1 -> map?.mapType = GoogleMap.MAP_TYPE_NORMAL
+                }
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun showWms() {
